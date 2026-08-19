@@ -104,17 +104,39 @@ class handler(BaseHTTPRequestHandler):
         destination = _REDIRECTS.get(slug)
 
         if destination:
-            self.send_response(302)
-            self.send_header("Location", destination)
-            self.send_header("Cache-Control", "public, max-age=0, s-maxage=60")
-            self.end_headers()
+            if destination.endswith(".html"):
+                # Serve the HTML file from the 'pages' directory
+                pages_dir = os.path.join(os.path.dirname(__file__), "..", "pages")
+                html_path = os.path.join(pages_dir, destination)
+                
+                try:
+                    with open(html_path, "r", encoding="utf-8") as html_file:
+                        content = html_file.read()
+                        
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Cache-Control", "public, max-age=0, s-maxage=60")
+                    self.end_headers()
+                    self.wfile.write(content.encode("utf-8"))
+                except FileNotFoundError:
+                    # Fallback to 404 if the HTML file is missing
+                    self._send_404(slug)
+            else:
+                # Standard URL redirect
+                self.send_response(302)
+                self.send_header("Location", destination)
+                self.send_header("Cache-Control", "public, max-age=0, s-maxage=60")
+                self.end_headers()
         else:
-            body = _404_HTML.replace("{slug}", slug)
-            self.send_response(404)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Cache-Control", "no-cache")
-            self.end_headers()
-            self.wfile.write(body.encode())
+            self._send_404(slug)
+
+    def _send_404(self, slug):
+        body = _404_HTML.replace("{slug}", slug)
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-cache")
+        self.end_headers()
+        self.wfile.write(body.encode())
 
     # Vercel only invokes GET, but handle HEAD gracefully
     def do_HEAD(self):

@@ -10,20 +10,22 @@ A minimal URL forwarding service on Vercel. Clean short URLs → long destinatio
 
 | File | Purpose |
 |---|---|
-| `redirects.json` | Slug → destination URL mapping (the "database") |
-| `api/[slug].py` | Python serverless function — reads the JSON, redirects or 404s |
+| `redirects.json` | Slug → destination URL mapping (the "database"). Can also point to local `.html` files in `pages/` |
+| `api/index.py` | Python serverless function — reads the JSON, redirects, serves local HTML, or 404s |
 | `vercel.json` | Routes every incoming path to the serverless function |
 
 ---
 
-## Add a new redirect
+## Add a new redirect or HTML page
 
 1. Open `redirects.json`.
 2. Add one line:
 
    ```json
-   "my-new-slug": "https://example.com/some-long-url"
+   "my-new-slug": "https://example.com/some-long-url",
+   "my-page": "mypage.html"
    ```
+   *(If pointing to a `.html` file, it will serve that file from the `pages/` directory instead of redirecting.)*
 
 3. Commit and push to `main`:
 
