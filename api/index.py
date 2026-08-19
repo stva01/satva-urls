@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import time
+import urllib.parse
 
 # ── Load redirects once at cold start ──────────────────────────────────────────
 _REDIRECTS_PATH = os.path.join(os.path.dirname(__file__), "..", "redirects.json")
@@ -83,8 +84,13 @@ class handler(BaseHTTPRequestHandler):
     """Vercel Python serverless handler — redirects or 404s."""
 
     def do_GET(self):
-        # Extract slug from the path, strip leading slash
-        slug = self.path.lstrip("/").split("?")[0].split("#")[0].lower()
+        # Vercel rewrites the URL to /api/index.py?slug=...
+        # Extract slug from the query string instead of the path
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        
+        # 'slug' comes from the rewrite rule `/(.*)` -> `/api/index.py?slug=$1`
+        slug = qs.get("slug", [""])[0].strip("/").lower()
 
         # Treat empty slug as root
         if slug == "":
