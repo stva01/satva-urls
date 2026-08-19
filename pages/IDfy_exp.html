@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>IDfy Interview Experience</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      max-width: 780px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 4px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #222;
+    }
+
+    h3 {
+      margin-top: 24px;
+      color: #333;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .q {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-left: 4px solid #444;
+      border-radius: 4px;
+      padding: 14px 18px;
+      margin: 14px 0;
+    }
+
+    .q b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    .stress-note {
+      background: #fff3f0;
+      border-left: 4px solid #c0392b;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-style: italic;
+    }
+
+    ul {
+      padding-left: 22px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>IDfy Interview Experience</h1>
+  <p class="subtitle">Online Assessment + 2 Technical Rounds</p>
+
+  <h2>Online Assessment</h2>
+  <p>One SQL question and four DSA questions.</p>
+
+  <div class="q">
+    <b>SQL — Top Files by Month</b>
+    Count records per file and return the top 5 files logged in March, ordered by count descending.
+  </div>
+
+  <div class="q">
+    <b>DSA 1 — Cascading Shift</b>
+    Given a string (e.g. <code>"ABC"</code>) and an array of integers (e.g. <code>[1, 2, 3]</code>), for each value
+    <code>k</code> at position <code>i</code>, shift the first <code>k</code> characters of the string forward by one
+    letter (cyclically, A→B, etc.). Apply the shifts in sequence and return the final string.
+  </div>
+
+  <div class="q">
+    <b>DSA 2 — Unique Values at Minimum Cost</b>
+    Given an array of values (e.g. <code>[8, 9, 8]</code>) and a parallel cost array (e.g. <code>[1, 2, 3]</code>), make
+    all values unique by repeatedly incrementing duplicates by 1. Each increment costs the value at that index in the
+    cost array. Minimize total cost — e.g. with duplicate 8s at index 0 (cost 1) and index 2 (cost 3), increment the
+    cheaper one.
+  </div>
+
+  <div class="q">
+    <b>DSA 3 — Fill the Blanks Around a Substring</b>
+    Given a string containing wildcards (e.g. <code>??? D ?</code>) and a target substring (e.g. <code>"ABC"</code>),
+    place the substring so it fits fully within the wildcard positions at least once. Fill any remaining wildcards with
+    the lexicographically smallest letter (<code>'A'</code>).
+  </div>
+
+  <div class="q">
+    <b>DSA 4 — Sum of Absolute Differences per Query</b>
+    Given a price array (e.g. <code>[1, 2, 3]</code>) and a query array (e.g. <code>[2, 3, 4]</code>), for each query
+    value compute the sum of its absolute difference with every price in the array, and return the list of these sums.
+  </div>
+
+  <h2>Round 1 — Projects & Fundamentals</h2>
+
+  <h3>Resume / Project Deep-Dive</h3>
+  <ul>
+    <li>Why Snowflake specifically for the project?</li>
+    <li>Snowflake vs. Postgres vs. Redis — when do you reach for each?</li>
+    <li>What is a data warehouse, and when do you actually need one?</li>
+    <li>What storage/file formats do these different databases use under the hood?</li>
+  </ul>
+
+  <h3>Security & Access Control</h3>
+  <p>Since the project used an MCP-based tool to run SQL, the interviewer asked how access was controlled and how
+    accidental data deletion was prevented.</p>
+
+  <h3>OA Redemption</h3>
+  <p>Asked to live-solve the DSA question missed in the online assessment.</p>
+
+  <h3>Computer Networks</h3>
+  <ul>
+    <li>TCP/IP fundamentals</li>
+    <li>The classic: "What happens when you type www.google.com into a browser?"</li>
+  </ul>
+
+  <h3>Web Services</h3>
+  <ul>
+    <li>REST API basics and HTTP methods</li>
+    <li>Can you create a new resource using PUT vs. PATCH?</li>
+  </ul>
+
+  <h2>Round 2 — Database & Architecture Design</h2>
+  <p class="stress-note">This round was the toughest — the interviewer wasn't convinced by the existing data warehousing
+    project and pushed into a grueling, iterative system design exercise.</p>
+
+  <h3>Architecture Redesign</h3>
+  <p>Asked to redesign the project architecture from scratch, with the interviewer suggesting alternatives like EC2 or a
+    relational database instead of a data warehouse.</p>
+
+  <h3>The Schema Design Loop</h3>
+  <p>A repeating cycle:</p>
+  <ol>
+    <li>Propose a database schema</li>
+    <li>Interviewer gives a specific SQL query to run against it</li>
+    <li>If the schema can't support the query, redesign it</li>
+    <li>Repeat</li>
+  </ol>
+  <p><b>This loop repeated 14 times.</b></p>
+
+</body>
+
+</html>
