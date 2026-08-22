@@ -1,385 +1,587 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Satva Shah — Software Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg: #F6F5F1;
-    --ink: #171717;
-    --muted: #6B6B63;
-    --line: #DDDACC;
-    --accent: #2F5D50;
-    --accent-soft: #E4EBE7;
-    --max: 700px;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satva Shah — Software Engineer</title>
 
-  *{ margin:0; padding:0; box-sizing:border-box; }
+  <!-- Open Graph / WhatsApp / social preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Satva Shah — Software Engineer">
+  <meta property="og:description"
+    content="Backend-leaning CS student building async systems, multi-agent pipelines, and the CI/CD behind them.">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <!-- Replace with your live URL once hosted, e.g. https://satva.dev -->
+  <meta property="og:url" content="https://satva-urls-nine.vercel.app/">
 
-  html{ scroll-behavior:smooth; }
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Satva Shah — Software Engineer">
+  <meta name="twitter:description"
+    content="Backend-leaning CS student building async systems, multi-agent pipelines, and the CI/CD behind them.">
+  <meta name="twitter:image" content="og-image.png">
 
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Inter', sans-serif;
-    font-size:16px;
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-  }
+  <meta name="theme-color" content="#2F5D50">
 
-  ::selection{ background:var(--accent); color:#fff; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F6F5F1;
+      --ink: #171717;
+      --muted: #6B6B63;
+      --line: #DDDACC;
+      --accent: #2F5D50;
+      --accent-soft: #E4EBE7;
+      --max: 700px;
+    }
 
-  a{ color:inherit; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  .wrap{
-    max-width:var(--max);
-    margin:0 auto;
-    padding:0 24px;
-  }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* ---------- NAV ---------- */
-  header{
-    position:sticky; top:0;
-    background:rgba(246,245,241,0.88);
-    backdrop-filter:blur(6px);
-    border-bottom:1px solid var(--line);
-    z-index:10;
-  }
-  nav.wrap{
-    display:flex; align-items:center; justify-content:space-between;
-    padding-top:16px; padding-bottom:16px;
-  }
-  .brand{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:14px;
-    letter-spacing:0.02em;
-  }
-  .navlinks{ display:flex; gap:22px; font-size:14px; }
-  .navlinks a{
-    text-decoration:none; color:var(--muted);
-    transition:color .15s ease;
-  }
-  .navlinks a:hover{ color:var(--ink); }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
 
-  /* ---------- HERO ---------- */
-  .hero{ padding:96px 0 72px; }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    color:var(--accent);
-    letter-spacing:0.06em;
-    margin-bottom:18px;
-  }
-  h1{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:700;
-    font-size:clamp(2.2rem, 5vw, 3.4rem);
-    line-height:1.08;
-    letter-spacing:-0.01em;
-    margin-bottom:20px;
-  }
-  .lede{
-    max-width:52ch;
-    color:#3a3a35;
-    font-size:1.08rem;
-    margin-bottom:34px;
-  }
+    ::selection {
+      background: var(--accent);
+      color: #fff;
+    }
 
-  .terminal{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13.5px;
-    background:#14171A;
-    color:#EDEAE0;
-    border-radius:6px;
-    padding:14px 18px;
-    display:inline-flex;
-    align-items:center;
-    gap:2px;
-    max-width:100%;
-    overflow-x:auto;
-    white-space:nowrap;
-  }
-  .terminal .prompt{ color:#7FBFA8; }
-  .terminal .cmd{ color:#EDEAE0; }
-  .cursor{
-    display:inline-block; width:7px; height:15px;
-    background:#7FBFA8; margin-left:4px;
-    animation:blink 1.1s steps(1) infinite;
-    vertical-align:middle;
-  }
-  @keyframes blink{ 50%{ opacity:0; } }
+    a {
+      color: inherit;
+    }
 
-  .links{ margin-top:30px; display:flex; gap:18px; flex-wrap:wrap; }
-  .links a{
-    font-size:14px;
-    text-decoration:none;
-    padding:9px 16px;
-    border:1px solid var(--line);
-    border-radius:100px;
-    transition:border-color .15s ease, background .15s ease;
-  }
-  .links a:hover{ border-color:var(--accent); background:var(--accent-soft); }
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  /* ---------- SECTIONS ---------- */
-  section{ padding:56px 0; border-top:1px solid var(--line); }
-  section:first-of-type{ border-top:none; }
+    /* ---------- NAV ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(246, 245, 241, 0.88);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--line);
+      z-index: 10;
+    }
 
-  .label{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    color:var(--muted);
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    margin-bottom:26px;
-  }
+    nav.wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
 
-  h2.title{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:1.6rem;
-    font-weight:600;
-    margin-bottom:16px;
-  }
+    .brand {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
 
-  p.body-text{ color:#3a3a35; max-width:60ch; }
+    .navlinks {
+      display: flex;
+      gap: 22px;
+      font-size: 14px;
+    }
 
-  /* ---------- EXPERIENCE ---------- */
-  .entry{ margin-bottom:36px; }
-  .entry:last-child{ margin-bottom:0; }
-  .entry-head{
-    display:flex; justify-content:space-between; align-items:baseline;
-    flex-wrap:wrap; gap:6px 16px;
-    margin-bottom:8px;
-  }
-  .entry-role{ font-weight:600; font-size:1.05rem; }
-  .entry-meta{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px; color:var(--muted);
-  }
-  .entry ul{ list-style:none; margin-top:10px; }
-  .entry li{
-    position:relative; padding-left:18px; margin-bottom:8px;
-    color:#3a3a35; font-size:0.96rem;
-  }
-  .entry li::before{
-    content:"—"; position:absolute; left:0; color:var(--accent);
-  }
-  .phase-tag{
-    display:inline-block;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    color:var(--accent);
-    background:var(--accent-soft);
-    border-radius:4px;
-    padding:2px 7px;
-    margin-right:8px;
-  }
+    .navlinks a {
+      text-decoration: none;
+      color: var(--muted);
+      transition: color .15s ease;
+    }
 
-  /* ---------- PROJECTS ---------- */
-  .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px;
-  }
-  @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+    .navlinks a:hover {
+      color: var(--ink);
+    }
 
-  .card{
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:20px;
-    text-decoration:none;
-    color:inherit;
-    display:block;
-    transition:border-color .15s ease, transform .15s ease;
-  }
-  .card:hover{ border-color:var(--accent); transform:translateY(-2px); }
-  .card-name{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600; font-size:1.05rem;
-    margin-bottom:6px;
-  }
-  .card-stack{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px; color:var(--accent);
-    margin-bottom:10px; display:block;
-  }
-  .card-desc{ font-size:0.92rem; color:#4a4a44; }
+    /* ---------- HERO ---------- */
+    .hero {
+      padding: 96px 0 72px;
+    }
 
-  /* ---------- BEYOND ---------- */
-  .beyond-grid{ display:flex; flex-direction:column; gap:22px; }
-  .beyond-item{ display:flex; gap:16px; }
-  .beyond-mark{
-    font-family:'IBM Plex Mono', monospace;
-    color:var(--accent); font-size:13px; padding-top:3px; flex-shrink:0;
-  }
-  .beyond-text b{ font-weight:600; }
-  .beyond-text{ font-size:0.96rem; color:#3a3a35; }
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      margin-bottom: 18px;
+    }
 
-  /* ---------- FOOTER ---------- */
-  footer{
-    padding:48px 0 64px;
-    border-top:1px solid var(--line);
-  }
-  .footer-quote{
-    font-family:'Space Grotesk', sans-serif;
-    font-size:1.15rem;
-    font-weight:500;
-    max-width:46ch;
-    margin-bottom:28px;
-    color:var(--ink);
-  }
-  .footer-bottom{
-    display:flex; justify-content:space-between; align-items:center;
-    flex-wrap:wrap; gap:12px;
-    font-size:13px; color:var(--muted);
-  }
-  .footer-links a{ text-decoration:none; margin-left:16px; }
-  .footer-links a:hover{ color:var(--ink); }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+    }
 
-  /* ---------- REVEAL ---------- */
-  .reveal{ opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease; }
-  .reveal.in{ opacity:1; transform:translateY(0); }
+    .lede {
+      max-width: 52ch;
+      color: #3a3a35;
+      font-size: 1.08rem;
+      margin-bottom: 34px;
+    }
 
-  @media (prefers-reduced-motion: reduce){
-    .reveal{ opacity:1; transform:none; transition:none; }
-    .cursor{ animation:none; }
-  }
-</style>
+    .terminal {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13.5px;
+      background: #14171A;
+      color: #EDEAE0;
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .terminal .prompt {
+      color: #7FBFA8;
+    }
+
+    .terminal .cmd {
+      color: #EDEAE0;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 7px;
+      height: 15px;
+      background: #7FBFA8;
+      margin-left: 4px;
+      animation: blink 1.1s steps(1) infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .links {
+      margin-top: 30px;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      font-size: 14px;
+      text-decoration: none;
+      padding: 9px 16px;
+      border: 1px solid var(--line);
+      border-radius: 100px;
+      transition: border-color .15s ease, background .15s ease;
+    }
+
+    .links a:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    /* ---------- SECTIONS ---------- */
+    section {
+      padding: 56px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    section:first-of-type {
+      border-top: none;
+    }
+
+    .label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    h2.title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    p.body-text {
+      color: #3a3a35;
+      max-width: 60ch;
+    }
+
+    /* ---------- EXPERIENCE ---------- */
+    .entry {
+      margin-bottom: 36px;
+    }
+
+    .entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      margin-bottom: 8px;
+    }
+
+    .entry-role {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .entry-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .entry ul {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .entry li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 8px;
+      color: #3a3a35;
+      font-size: 0.96rem;
+    }
+
+    .entry li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    .phase-tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin-right: 8px;
+    }
+
+    /* ---------- PROJECTS ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width:560px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color .15s ease, transform .15s ease;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+    }
+
+    .card-stack {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .card-desc {
+      font-size: 0.92rem;
+      color: #4a4a44;
+    }
+
+    /* ---------- BEYOND ---------- */
+    .beyond-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .beyond-item {
+      display: flex;
+      gap: 16px;
+    }
+
+    .beyond-mark {
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--accent);
+      font-size: 13px;
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .beyond-text b {
+      font-weight: 600;
+    }
+
+    .beyond-text {
+      font-size: 0.96rem;
+      color: #3a3a35;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      max-width: 46ch;
+      margin-bottom: 28px;
+      color: var(--ink);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      margin-left: 16px;
+    }
+
+    .footer-links a:hover {
+      color: var(--ink);
+    }
+
+    /* ---------- REVEAL ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .cursor {
+        animation: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <nav class="wrap">
-    <div class="brand">satva shah</div>
-    <div class="navlinks">
-      <a href="#experience">Experience</a>
-      <a href="#work">Work</a>
-      <a href="#beyond">Beyond</a>
-    </div>
-  </nav>
-</header>
-
-<main class="wrap">
-
-  <section class="hero">
-    <div class="eyebrow">SOFTWARE ENGINEER — BACKEND & SYSTEMS</div>
-    <h1>Satva Shah</h1>
-    <p class="lede">Backend-leaning CS student who likes taking systems apart to see why they hold together — async messaging, multi-agent pipelines, and the CI/CD scaffolding that keeps it all shipping.</p>
-
-    <div class="terminal">
-      <span class="prompt">satva@systems:~$</span>
-      <span class="cmd">&nbsp;align curiosity ↔ deliverability</span>
-      <span class="cursor"></span>
-    </div>
-
-    <div class="links">
-      <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub ↗</a>
-      <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn ↗</a>
-    </div>
-  </section>
-
-  <section id="about" class="reveal">
-    <div class="label">01 — About</div>
-    <p class="body-text">I'm a third-year CS student who ends up on the backend by instinct — I'd rather understand how a system fails before I decide how to build it. Most of my work sits somewhere between distributed systems and applied AI: producer-consumer queues, multi-agent orchestration, RAG pipelines, and the pipelines that deploy them. I tend to say yes to things I haven't done before and figure out the rest on the way.</p>
-  </section>
-
-  <section id="experience" class="reveal">
-    <div class="label">02 — Experience</div>
-
-    <div class="entry">
-      <div class="entry-head">
-        <div class="entry-role">Software Engineering Intern</div>
-        <div class="entry-meta">Security Services Company · Pune</div>
+  <header>
+    <nav class="wrap">
+      <div class="brand">satva shah</div>
+      <div class="navlinks">
+        <a href="#experience">Experience</a>
+        <a href="#work">Work</a>
+        <a href="#beyond">Beyond</a>
       </div>
-      <ul>
-        <li><span class="phase-tag">Phase 1</span>Built an asynchronous producer-consumer workflow in Go with RabbitMQ for real-time messaging between services.</li>
-        <li><span class="phase-tag">Phase 2</span>Built an async multi-agent orchestration layer in FastAPI connected to RAG pipelines, including a multilingual AI agent that translated ingredients across regional Indian languages for a food platform.</li>
-        <li><span class="phase-tag">CI/CD</span>Took on CI/CD for an 8-module microservices repo with no prior experience — GitHub Actions, Docker, a matrix build strategy, and dual image tagging (latest + commit SHA) that wasn't asked for.</li>
-      </ul>
-    </div>
+    </nav>
+  </header>
 
-    <div class="entry">
-      <div class="entry-head">
-        <div class="entry-role">India AI Impact Summit</div>
-        <div class="entry-meta">Top 200 of 38,000 teams</div>
+  <main class="wrap">
+
+    <section class="hero">
+      <div class="eyebrow">SOFTWARE ENGINEER — BACKEND & SYSTEMS</div>
+      <h1>Satva Shah</h1>
+      <p class="lede">Backend-leaning CS student who likes taking systems apart to see why they hold together — async
+        messaging, multi-agent pipelines, and the CI/CD scaffolding that keeps it all shipping.</p>
+
+      <div class="terminal">
+        <span class="prompt">satva@systems:~$</span>
+        <span class="cmd">&nbsp;align curiosity ↔ deliverability</span>
+        <span class="cursor"></span>
       </div>
-      <ul>
-        <li>Built a multi-agent system to detect and intercept digital scams targeting senior citizens with low digital literacy.</li>
-        <li>Independent research surfaced service-based phishing — fake repair calls, fraudulent agents — a pattern underreported in mainstream data but confirmed by NGOs as the most common real-world case.</li>
-        <li>Presented live to a non-technical panel, reframing the pitch around human outcomes rather than architecture.</li>
-      </ul>
-    </div>
-  </section>
 
-  <section id="work" class="reveal">
-    <div class="label">03 — Selected Work</div>
-    <div class="grid">
-
-      <a class="card" href="https://github.com/stva01/Khao-The-App" target="_blank" rel="noopener">
-        <span class="card-stack">FLUTTER · DART</span>
-        <div class="card-name">Khao</div>
-        <div class="card-desc">A food-focused mobile app, built alongside my work on multilingual ingredient translation.</div>
-      </a>
-
-      <a class="card" href="https://github.com/stva01/claude-token-counter" target="_blank" rel="noopener">
-        <span class="card-stack">JAVASCRIPT</span>
-        <div class="card-name">claude-token-counter</div>
-        <div class="card-desc">A small utility for estimating token usage in Claude prompts and conversations.</div>
-      </a>
-
-      <a class="card" href="https://github.com/stva01/ETL_F1" target="_blank" rel="noopener">
-        <span class="card-stack">DATA / ETL</span>
-        <div class="card-name">ETL_F1</div>
-        <div class="card-desc">An ETL pipeline built around Formula 1 race data — extraction, transformation, and reporting.</div>
-      </a>
-
-      <a class="card" href="https://github.com/stva01/DBT_AirBnb" target="_blank" rel="noopener">
-        <span class="card-stack">DBT · POWERSHELL</span>
-        <div class="card-name">DBT_AirBnb</div>
-        <div class="card-desc">A data modeling project applying dbt to Airbnb listings data.</div>
-      </a>
-
-    </div>
-  </section>
-
-  <section id="beyond" class="reveal">
-    <div class="label">04 — Beyond Code</div>
-    <div class="beyond-grid">
-      <div class="beyond-item">
-        <div class="beyond-mark">→</div>
-        <div class="beyond-text"><b>Synapse, ML Committee</b> — Mentored juniors in machine learning, moving from being mentored to mentoring within the same semester. Learned that the job is usually to diagnose confusion, not add more explanation.</div>
+      <div class="links">
+        <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
-      <div class="beyond-item">
-        <div class="beyond-mark">→</div>
-        <div class="beyond-text"><b>SBMC, Social Work Committee</b> — Regular visits to Atam Memorial Hospital, spending time with children being treated for cancer. Not a line item — just something I show up for.</div>
+    </section>
+
+    <section id="about" class="reveal">
+      <div class="label">01 — About</div>
+      <p class="body-text">I'm a third-year CS student who ends up on the backend by instinct — I'd rather understand
+        how a system fails before I decide how to build it. Most of my work sits somewhere between distributed systems
+        and applied AI: producer-consumer queues, multi-agent orchestration, RAG pipelines, and the pipelines that
+        deploy them. I tend to say yes to things I haven't done before and figure out the rest on the way.</p>
+    </section>
+
+    <section id="experience" class="reveal">
+      <div class="label">02 — Experience</div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <div class="entry-role">Software Engineering Intern</div>
+          <div class="entry-meta">Security Services Company · Pune</div>
+        </div>
+        <ul>
+          <li><span class="phase-tag">Phase 1</span>Built an asynchronous producer-consumer workflow in Go with RabbitMQ
+            for real-time messaging between services.</li>
+          <li><span class="phase-tag">Phase 2</span>Built an async multi-agent orchestration layer in FastAPI connected
+            to RAG pipelines, including a multilingual AI agent that translated ingredients across regional Indian
+            languages for a food platform.</li>
+          <li><span class="phase-tag">CI/CD</span>Took on CI/CD for an 8-module microservices repo with no prior
+            experience — GitHub Actions, Docker, a matrix build strategy, and dual image tagging (latest + commit SHA)
+            that wasn't asked for.</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="entry-head">
+          <div class="entry-role">India AI Impact Summit</div>
+          <div class="entry-meta">Top 200 of 38,000 teams</div>
+        </div>
+        <ul>
+          <li>Built a multi-agent system to detect and intercept digital scams targeting senior citizens with low
+            digital literacy.</li>
+          <li>Independent research surfaced service-based phishing — fake repair calls, fraudulent agents — a pattern
+            underreported in mainstream data but confirmed by NGOs as the most common real-world case.</li>
+          <li>Presented live to a non-technical panel, reframing the pitch around human outcomes rather than
+            architecture.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="work" class="reveal">
+      <div class="label">03 — Selected Work</div>
+      <div class="grid">
+
+        <a class="card" href="https://github.com/stva01/Khao-The-App" target="_blank" rel="noopener">
+          <span class="card-stack">FLUTTER · DART</span>
+          <div class="card-name">Khao</div>
+          <div class="card-desc">A food-focused mobile app, built alongside my work on multilingual ingredient
+            translation.</div>
+        </a>
+
+        <a class="card" href="https://github.com/stva01/claude-token-counter" target="_blank" rel="noopener">
+          <span class="card-stack">JAVASCRIPT</span>
+          <div class="card-name">claude-token-counter</div>
+          <div class="card-desc">A small utility for estimating token usage in Claude prompts and conversations.</div>
+        </a>
+
+        <a class="card" href="https://github.com/stva01/ETL_F1" target="_blank" rel="noopener">
+          <span class="card-stack">DATA / ETL</span>
+          <div class="card-name">ETL_F1</div>
+          <div class="card-desc">An ETL pipeline built around Formula 1 race data — extraction, transformation, and
+            reporting.</div>
+        </a>
+
+        <a class="card" href="https://github.com/stva01/DBT_AirBnb" target="_blank" rel="noopener">
+          <span class="card-stack">DBT · POWERSHELL</span>
+          <div class="card-name">DBT_AirBnb</div>
+          <div class="card-desc">A data modeling project applying dbt to Airbnb listings data.</div>
+        </a>
+
+      </div>
+    </section>
+
+    <section id="beyond" class="reveal">
+      <div class="label">04 — Beyond Code</div>
+      <div class="beyond-grid">
+        <div class="beyond-item">
+          <div class="beyond-mark">→</div>
+          <div class="beyond-text"><b>Synapse, ML Committee</b> — Mentored juniors in machine learning, moving from
+            being mentored to mentoring within the same semester. Learned that the job is usually to diagnose confusion,
+            not add more explanation.</div>
+        </div>
+        <div class="beyond-item">
+          <div class="beyond-mark">→</div>
+          <div class="beyond-text"><b>SBMC, Social Work Committee</b> — Regular visits to Atam Memorial Hospital,
+            spending time with children being treated for cancer. Not a line item — just something I show up for.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-quote">"Am I aligning my curiosity with my deliverability?" — the question I ask before
+        committing to anything.</div>
+      <div class="footer-bottom">
+        <span>© 2026 Satva Shah</span>
+        <div class="footer-links">
+          <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
       </div>
     </div>
-  </section>
+  </footer>
 
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="footer-quote">"Am I aligning my curiosity with my deliverability?" — the question I ask before committing to anything.</div>
-    <div class="footer-bottom">
-      <span>© 2026 Satva Shah</span>
-      <div class="footer-links">
-        <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-</script>
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
 
 </body>
+
 </html>
