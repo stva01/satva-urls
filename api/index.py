@@ -9,6 +9,33 @@ _REDIRECTS_PATH = os.path.join(os.path.dirname(__file__), "..", "redirects.json"
 with open(_REDIRECTS_PATH, "r", encoding="utf-8") as f:
     _REDIRECTS: dict[str, str] = {k.lower(): v for k, v in json.load(f).items()}
 
+_CONTACT_FOOTER = """
+<style>
+  .site-contact-footer { margin-top: 3rem; padding: 1.5rem 0; border-top: 1px solid #d1d5db; color: #4b5563; font: 0.9rem/1.5 system-ui, sans-serif; }
+  .site-contact-footer__inner { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem 1.5rem; }
+  .site-contact-footer__links { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .site-contact-footer a { color: inherit; }
+</style>
+<footer class="site-contact-footer" data-contact-footer>
+  <div class="site-contact-footer__inner">
+    <span>© 2026 Satva Shah</span>
+    <nav class="site-contact-footer__links" aria-label="Contact links">
+      <a href="mailto:satvalite@gmail.com">Email</a>
+      <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://medium.com/@satvashah" target="_blank" rel="noopener">Medium</a>
+    </nav>
+  </div>
+</footer>
+"""
+
+
+def _with_contact_footer(html: str) -> str:
+    """Add the shared contact footer to locally served pages that do not define one."""
+    if "data-contact-footer" in html:
+        return html
+    return html.replace("</body>", f"{_CONTACT_FOOTER}</body>")
+
 # ── 404 page ───────────────────────────────────────────────────────────────────
 _404_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -117,7 +144,7 @@ class handler(BaseHTTPRequestHandler):
                     self.send_header("Content-Type", "text/html; charset=utf-8")
                     self.send_header("Cache-Control", "public, max-age=0, s-maxage=60")
                     self.end_headers()
-                    self.wfile.write(content.encode("utf-8"))
+                    self.wfile.write(_with_contact_footer(content).encode("utf-8"))
                 except FileNotFoundError:
                     # Fallback to 404 if the HTML file is missing
                     self._send_404(slug)
@@ -131,7 +158,7 @@ class handler(BaseHTTPRequestHandler):
             self._send_404(slug)
 
     def _send_404(self, slug):
-        body = _404_HTML.replace("{slug}", slug)
+        body = _with_contact_footer(_404_HTML.replace("{slug}", slug))
         self.send_response(404)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Cache-Control", "no-cache")
