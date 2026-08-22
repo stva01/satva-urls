@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Winter Trip Itinerary — 28 Dec to 5 Jan</title>
+<style>
+  :root {
+    --ink: #23262b;
+    --sub: #6b7178;
+    --line: #e4e2dd;
+    --bg: #faf9f6;
+    --card: #ffffff;
+    --accent: #8a5a3b;
+    --accent-soft: #f1e6dc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+  }
+
+  header.page-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header.page-header h1 {
+    font-size: 1.9rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+
+  header.page-header p {
+    margin: 0;
+    color: var(--sub);
+    font-size: 0.95rem;
+  }
+
+  .route {
+    margin-top: 14px;
+    font-size: 0.82rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  .day-group {
+    margin-bottom: 40px;
+  }
+
+  .day-heading {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 10px 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 18px;
+  }
+
+  .day-heading .dow {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .day-heading .date {
+    font-size: 0.85rem;
+    color: var(--sub);
+  }
+
+  .events {
+    position: relative;
+    padding-left: 22px;
+    border-left: 2px solid var(--line);
+  }
+
+  .event {
+    position: relative;
+    padding: 0 0 22px 20px;
+  }
+
+  .event::before {
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--accent);
+  }
+
+  .event.transit::before {
+    background: var(--accent);
+  }
+
+  .event:last-child {
+    padding-bottom: 0;
+  }
+
+  .time {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .title {
+    font-size: 1.02rem;
+    font-weight: 600;
+    margin: 2px 0 4px;
+  }
+
+  .place {
+    font-size: 0.85rem;
+    color: var(--sub);
+  }
+
+  .note {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--accent-soft);
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 0.78rem;
+    color: var(--sub);
+  }
+
+  footer a {
+    color: var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 32px 14px 60px; }
+    header.page-header h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-header">
+    <h1>Winter Trip Itinerary</h1>
+    <p>28 December – 5 January</p>
+    <div class="route">Borivali → Haridwar → Joshimath → Auli → Amritsar → Mathura → Vrindavan → Agra → Delhi → Borivali</div>
+  </header>
+
+  <!-- Sat 28 Dec -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Saturday</span><span class="date">28 Dec</span></div>
+    <div class="events">
+      <div class="event transit">
+        <div class="time">12:45 AM</div>
+        <div class="title">Bdts Haridwar Exp 19019<span class="badge">Train</span></div>
+        <div class="place">Depart Borivali Railway Station → Haridwar Railway Station</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sun 29 Dec -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Sunday</span><span class="date">29 Dec</span></div>
+    <div class="events">
+      <div class="event transit">
+        <div class="time">7:45 AM</div>
+        <div class="title">Arrive Haridwar Railway Station</div>
+        <div class="place">Shikhu Pur, Devpura, Haridwar, Uttarakhand</div>
+      </div>
+      <div class="event">
+        <div class="time">7:45 AM – 12:00 PM</div>
+        <div class="title">Exploring Places Near Haridwar Station &amp; Breakfast</div>
+        <div class="note">Can visit Maya Devi temple — 1.3 km</div>
+      </div>
+      <div class="event">
+        <div class="time">12:00 PM</div>
+        <div class="title">Check In — Hotel Queen</div>
+        <div class="place">Shiv Murty, Jassa Ram Rd, near Railway Station, Devpura, Haridwar</div>
+      </div>
+      <div class="event">
+        <div class="time">1:00 PM – 3:00 PM</div>
+        <div class="title">Explore Bara Bazaar &amp; Lunch</div>
+        <div class="place">Har Ki Pauri, Haridwar</div>
+      </div>
+      <div class="event">
+        <div class="time">3:00 PM – 5:00 PM</div>
+        <div class="title">Ganga Dubki</div>
+        <div class="place">Har Ki Pauri, Haridwar</div>
+      </div>
+      <div class="event">
+        <div class="time">5:00 PM – 8:00 PM</div>
+        <div class="title">Ganga Aarti</div>
+        <div class="place">Har Ki Pauri, Haridwar</div>
+      </div>
+      <div class="event">
+        <div class="time">8:00 PM</div>
+        <div class="title">Hoshiyarpuri</div>
+        <div class="place">Upper Rd, Haridwar</div>
+      </div>
+      <div class="event">
+        <div class="time">10:00 PM – 1:30 AM</div>
+        <div class="title">Rest &amp; Freshen Up at Hotel</div>
+        <div class="place">Hotel Queen, Haridwar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mon 30 Dec -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Monday</span><span class="date">30 Dec</span></div>
+    <div class="events">
+      <div class="event">
+        <div class="time">1:30 AM</div>
+        <div class="title">Check Out — Hotel Queen</div>
+      </div>
+      <div class="event transit">
+        <div class="time">2:30 AM – 12:00 PM</div>
+        <div class="title">Joshimath Bus<span class="badge">Bus</span></div>
+        <div class="place">Haridwar Bus Stand → Joshimath Bus Stand</div>
+      </div>
+      <div class="event">
+        <div class="time">12:00 PM</div>
+        <div class="title">Check In — J.M.S Tourist Guest House</div>
+        <div class="place">Narsingh Mandir Marg, Joshimath</div>
+      </div>
+      <div class="event">
+        <div class="time">1:00 PM</div>
+        <div class="title">J.M.S Restaurant</div>
+        <div class="place">Narsingh Mandir Marg, near Indian Overseas Bank, Joshimath</div>
+      </div>
+      <div class="event">
+        <div class="time">2:30 PM – 5:00 PM</div>
+        <div class="title">Sightseeing &amp; Shopping</div>
+        <div class="place">Narsingh Mandir Marg, Joshimath</div>
+      </div>
+      <div class="event">
+        <div class="time">5:00 PM</div>
+        <div class="title">Food N More Cafe</div>
+        <div class="place">NH 7, Joshimath Army Area</div>
+      </div>
+      <div class="event">
+        <div class="time">7:00 PM – 10:00 PM</div>
+        <div class="title">Drinks &amp; Dinner at Room</div>
+        <div class="place">Narsingh Mandir Marg, Joshimath</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tue 31 Dec -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Tuesday</span><span class="date">31 Dec</span></div>
+    <div class="events">
+      <div class="event">
+        <div class="time">8:00 AM – 9:00 AM</div>
+        <div class="title">Breakfast &amp; Freshen Up</div>
+        <div class="place">Narsingh Mandir Marg, Joshimath</div>
+      </div>
+      <div class="event">
+        <div class="time">9:00 AM – 4:00 PM</div>
+        <div class="title">Exploring Auli</div>
+        <div class="note">Snowboarding, lake, view point</div>
+      </div>
+      <div class="event">
+        <div class="time">4:00 PM – 7:00 PM</div>
+        <div class="title">Freshen Up &amp; Snacks</div>
+        <div class="note">Buy cake for New Year</div>
+      </div>
+      <div class="event">
+        <div class="time">7:00 PM – 12:00 AM</div>
+        <div class="title">Party &amp; Dinner</div>
+        <div class="place">Narsingh Mandir Marg, Joshimath</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wed 1 Jan -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Wednesday</span><span class="date">1 Jan</span></div>
+    <div class="events">
+      <div class="event">
+        <div class="time">12:00 AM – 12:30 AM</div>
+        <div class="title">New Year! 🎉</div>
+      </div>
+      <div class="event">
+        <div class="time">5:00 AM</div>
+        <div class="title">Check Out — J.M.S Tourist Guest House</div>
+      </div>
+      <div class="event transit">
+        <div class="time">5:00 AM – 7:00 PM</div>
+        <div class="title">Bus / Car<span class="badge">Road</span></div>
+        <div class="place">Joshimath → Haridwar Railway Station</div>
+      </div>
+      <div class="event transit">
+        <div class="time">9:55 PM</div>
+        <div class="title">DDN ASR Express 14631<span class="badge">Train</span></div>
+        <div class="place">Haridwar Railway Station → Amritsar Railway Station</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thu 2 Jan -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Thursday</span><span class="date">2 Jan</span></div>
+    <div class="events">
+      <div class="event transit">
+        <div class="time">8:20 AM</div>
+        <div class="title">Arrive Amritsar Railway Station</div>
+        <div class="place">Guru Arjun Nagar, INA Colony, Amritsar</div>
+      </div>
+      <div class="event">
+        <div class="time">9:00 AM – 12:00 PM</div>
+        <div class="title">Visit Golden Temple</div>
+        <div class="place">Golden Temple Rd, Amritsar Cantt.</div>
+      </div>
+      <div class="event">
+        <div class="time">12:00 PM – 3:30 PM</div>
+        <div class="title">Visit Deepa Bua / Nearby Restaurant / Shopping</div>
+      </div>
+      <div class="event transit">
+        <div class="time">4:10 PM</div>
+        <div class="title">Chhatisgarh Exp 18238<span class="badge">Train</span></div>
+        <div class="place">Amritsar Railway Station → Mathura Junction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fri 3 Jan -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Friday</span><span class="date">3 Jan</span></div>
+    <div class="events">
+      <div class="event transit">
+        <div class="time">7:20 AM</div>
+        <div class="title">Arrive Mathura Junction Railway Station</div>
+        <div class="place">Mayur Vihar, Mathura</div>
+      </div>
+      <div class="event">
+        <div class="time">8:00 AM – 12:00 PM</div>
+        <div class="title">Explore Mathura Temples &amp; Breakfast</div>
+      </div>
+      <div class="event">
+        <div class="time">10:00 AM – 12:00 PM</div>
+        <div class="title">Visit Shri Krishna Janam Bhumi</div>
+        <div class="place">Janam Bhumi, Mathura</div>
+      </div>
+      <div class="event">
+        <div class="time">12:00 PM</div>
+        <div class="title">Check In — Vaishnavi Home Stay</div>
+        <div class="place">Natwar Nagar, Hanuman Nagar, Mathura</div>
+      </div>
+      <div class="event">
+        <div class="time">1:00 PM – 3:00 PM</div>
+        <div class="title">Visit Vishram Ghat (Boating)</div>
+        <div class="place">Chhonka Pada, Choubey Para, Mathura</div>
+      </div>
+      <div class="event">
+        <div class="time">6:00 PM – 7:00 PM</div>
+        <div class="title">Visit Nidhivan Mandir</div>
+        <div class="place">Nidhivan Rd, Gotam Nagar, Vrindavan</div>
+      </div>
+      <div class="event">
+        <div class="time">7:00 PM – 8:00 PM</div>
+        <div class="title">Visit Iskcon Temple</div>
+        <div class="place">Bhaktivedanta Swami Marg, Raman Reiti, Vrindavan</div>
+      </div>
+      <div class="event">
+        <div class="time">8:00 PM – 9:00 PM</div>
+        <div class="title">Visit Banke Bihari Mandir &amp; Shri Radha Vallabh Mandir</div>
+        <div class="place">Goda Vihar, Vrindavan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sat 4 Jan -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Saturday</span><span class="date">4 Jan</span></div>
+    <div class="events">
+      <div class="event">
+        <div class="time">4:00 AM</div>
+        <div class="title">Check Out — Vaishnavi Home Stay</div>
+      </div>
+      <div class="event transit">
+        <div class="time">4:00 AM – 6:00 AM</div>
+        <div class="title">Taxi<span class="badge">Road</span></div>
+        <div class="place">Vaishnavi Home Stay → Taj Mahal, Agra</div>
+      </div>
+      <div class="event transit">
+        <div class="time">11:05 AM – 2:30 PM</div>
+        <div class="title">Hirakud Express 20807<span class="badge">Train</span></div>
+        <div class="place">Agra Cantt Railway Station → New Delhi Railway Station</div>
+      </div>
+      <div class="event">
+        <div class="time">4:00 PM – 6:00 PM</div>
+        <div class="title">Visit Majnu Ka Tilla</div>
+        <div class="place">New Aruna Nagar, Delhi</div>
+      </div>
+      <div class="event">
+        <div class="time">6:00 PM – 7:00 PM</div>
+        <div class="title">Go to Siddharth House</div>
+        <div class="place">Safdarjung Enclave, New Delhi</div>
+      </div>
+      <div class="event">
+        <div class="time">7:00 PM – 9:00 PM</div>
+        <div class="title">Visit India Gate</div>
+        <div class="place">Sarojini Nagar, New Delhi</div>
+      </div>
+      <div class="event">
+        <div class="time">9:00 PM – 12:00 AM</div>
+        <div class="title">Drinks &amp; Chill</div>
+        <div class="place">Safdarjung Enclave, New Delhi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sun 5 Jan -->
+  <div class="day-group">
+    <div class="day-heading"><span class="dow">Sunday</span><span class="date">5 Jan</span></div>
+    <div class="events">
+      <div class="event">
+        <div class="time">12:00 AM – 2:00 AM</div>
+        <div class="title">Tanishq's Birthday 🎂</div>
+        <div class="place">Safdarjung Enclave, New Delhi</div>
+      </div>
+      <div class="event">
+        <div class="time">2:00 AM – 4:00 AM</div>
+        <div class="title">Leave for Station</div>
+        <div class="place">Safdarjung Enclave, New Delhi</div>
+      </div>
+      <div class="event transit">
+        <div class="time">4:00 AM – 10:46 PM</div>
+        <div class="title">Golden Temple Mail 12904<span class="badge">Train</span></div>
+        <div class="place">Nizamuddin Railway Station → Borivali Railway Station</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Itinerary compiled from TripIt
+  </footer>
+
+</div>
+</body>
+</html>
