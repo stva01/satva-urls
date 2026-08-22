@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SATVA(1)</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="satva shah(1) — backend software engineer">
+    <meta property="og:description"
+        content="man page for a backend engineer: async systems, multi-agent pipelines, CI/CD.">
+    <meta name="theme-color" content="#0A0904">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0A0904;
+            --amber: #FFB000;
+            --amber-dim: #C98A2E;
+            --amber-body: #D9A24B;
+            --amber-faint: #7A5A22;
+            --line: #2A2013;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--amber-body);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14.5px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--amber);
+            color: #0A0904;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        /* CRT overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            background: repeating-linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0) 0px,
+                    rgba(0, 0, 0, 0.16) 1px,
+                    rgba(0, 0, 0, 0) 2px);
+            mix-blend-mode: multiply;
+            animation: flicker 6s infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 49;
+            box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.75), inset 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes flicker {
+
+            0%,
+            96%,
+            100% {
+                opacity: 1;
+            }
+
+            97% {
+                opacity: 0.92;
+            }
+
+            98% {
+                opacity: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body::before {
+                animation: none;
+            }
+        }
+
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glow {
+            text-shadow: 0 0 1px rgba(255, 176, 0, .6), 0 0 12px rgba(255, 176, 0, .18);
+        }
+
+        .manrule {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--amber-faint);
+            padding: 14px 0;
+            letter-spacing: 0.02em;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 9, 4, 0.9);
+            backdrop-filter: blur(4px);
+            z-index: 20;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .flagnav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+            padding: 14px 0;
+            font-size: 13px;
+        }
+
+        .flagnav .prompt {
+            color: var(--amber-dim);
+        }
+
+        .flagnav a {
+            text-decoration: none;
+            color: var(--amber-faint);
+            border-bottom: 1px solid transparent;
+            transition: color .15s ease, border-color .15s ease;
+        }
+
+        .flagnav a:hover,
+        .flagnav a.active {
+            color: var(--amber);
+            border-color: var(--amber);
+        }
+
+        .flagnav a:focus-visible {
+            outline: 1px dashed var(--amber);
+            outline-offset: 3px;
+        }
+
+        .hero {
+            padding: 56px 0 28px;
+        }
+
+        .typeline {
+            font-size: 15px;
+            color: var(--amber);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .typeline .prompt {
+            color: var(--amber-dim);
+        }
+
+        .caret {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--amber);
+            margin-left: 2px;
+            animation: blink 1s steps(1) infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .caret {
+                animation: none;
+            }
+        }
+
+        .reveal-block {
+            opacity: 0;
+        }
+
+        .reveal-block.shown {
+            opacity: 1;
+        }
+
+        h1.title {
+            font-size: clamp(1.5rem, 4.4vw, 2.1rem);
+            color: var(--amber);
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            margin: 26px 0 6px;
+        }
+
+        .subtitle {
+            color: var(--amber-dim);
+            font-size: 13.5px;
+            margin-bottom: 22px;
+        }
+
+        .neofetch {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0 26px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            padding: 18px 20px;
+            margin: 20px 0 8px;
+            font-size: 12.5px;
+            background: rgba(255, 176, 0, 0.02);
+        }
+
+        .ascii {
+            color: var(--amber-dim);
+            white-space: pre;
+            line-height: 1.15;
+            font-size: 11px;
+        }
+
+        .facts div {
+            margin-bottom: 5px;
+        }
+
+        .facts .k {
+            color: var(--amber);
+            display: inline-block;
+            width: 118px;
+        }
+
+        .facts .v {
+            color: var(--amber-body);
+        }
+
+        @media (max-width:520px) {
+            .neofetch {
+                grid-template-columns: 1fr;
+            }
+
+            .ascii {
+                display: none;
+            }
+        }
+
+        section {
+            padding: 34px 0;
+            border-top: 1px dashed var(--line);
+        }
+
+        section:first-of-type {
+            border-top: none;
+        }
+
+        h2.section-title {
+            color: var(--amber);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .indent {
+            padding-left: 28px;
+        }
+
+        @media (max-width:480px) {
+            .indent {
+                padding-left: 14px;
+            }
+        }
+
+        p.body-text {
+            color: var(--amber-body);
+            max-width: 66ch;
+            margin-bottom: 14px;
+        }
+
+        p.body-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .entry-block {
+            margin-bottom: 26px;
+        }
+
+        .entry-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .entry-meta {
+            color: var(--amber-dim);
+            font-size: 12.5px;
+            margin-bottom: 12px;
+        }
+
+        .opt {
+            margin-bottom: 16px;
+        }
+
+        .opt-flag {
+            color: var(--amber);
+            font-weight: 600;
+        }
+
+        .opt-flag .comma {
+            color: var(--amber-faint);
+        }
+
+        .opt-desc {
+            padding-left: 28px;
+            color: var(--amber-body);
+            font-size: 13.5px;
+            margin-top: 3px;
+            max-width: 62ch;
+        }
+
+        @media (max-width:480px) {
+            .opt-desc {
+                padding-left: 14px;
+            }
+        }
+
+        .refs {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .refs a {
+            text-decoration: none;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 16px;
+            padding: 9px 0;
+            border-bottom: 1px dotted var(--line);
+            transition: color .15s ease;
+        }
+
+        .refs a:last-child {
+            border-bottom: none;
+        }
+
+        .refs a:hover {
+            color: var(--amber);
+        }
+
+        .refs a:hover .ref-name {
+            color: var(--amber);
+        }
+
+        .ref-name {
+            color: var(--amber-dim);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .ref-desc {
+            color: var(--amber-body);
+            font-size: 13px;
+        }
+
+        @media (max-width:560px) {
+            .refs a {
+                grid-template-columns: 1fr;
+                gap: 2px;
+            }
+        }
+
+        footer {
+            padding: 30px 0 0;
+        }
+
+        .footer-block {
+            padding-bottom: 26px;
+        }
+
+        .footer-block .k {
+            color: var(--amber);
+            font-weight: 600;
+        }
+
+        .footer-links {
+            margin-top: 8px;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 13px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--amber-dim);
+            border-bottom: 1px solid transparent;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+            border-color: var(--amber);
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 1px dashed var(--amber);
+            outline-offset: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="wrap">
+            <div class="flagnav">
+                <span class="prompt">satva --</span>
+                <a href="#description" data-nav>about</a>
+                <a href="#experience" data-nav>experience</a>
+                <a href="#projects" data-nav>projects</a>
+                <a href="#skills" data-nav>skills</a>
+                <a href="#contact" data-nav>contact</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="wrap">
+
+        <div class="manrule"><span>SATVA(1)</span><span>User Commands</span><span>SATVA(1)</span></div>
+
+        <div class="hero">
+            <div class="typeline"><span class="prompt">satva@backend:~$</span>&nbsp;man satva<span class="caret"
+                    id="caret"></span></div>
+
+            <div id="revealAfterType" class="reveal-block">
+                <h1 class="title glow">NAME</h1>
+                <p class="subtitle indent">satva shah — backend software engineer, distributed systems</p>
+
+                <h1 class="title glow" style="margin-top:30px;">SYNOPSIS</h1>
+                <p class="subtitle indent">satva [--async] [--multi-agent] [--ship-it]</p>
+
+                <div class="neofetch">
+                    <pre class="ascii">  ▄▄▄▄▄▄▄▄
+ █ S  S  █
+ █▄▄▄▄▄▄▄█
+ █       █
+ █  v3.0 █
+ ▀▀▀▀▀▀▀▀</pre>
+                    <div class="facts">
+                        <div><span class="k">os</span><span class="v">third-year-cs (stable)</span></div>
+                        <div><span class="k">shell</span><span class="v">whatever ships fastest</span></div>
+                        <div><span class="k">uptime</span><span class="v">2 phases, 1 internship</span></div>
+                        <div><span class="k">packages</span><span class="v">go, python, fastapi, rabbitmq</span></div>
+                        <div><span class="k">ci</span><span class="v">github-actions, docker, matrix-build</span></div>
+                        <div><span class="k">load avg</span><span class="v">curiosity 9.8, sleep 2.1</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section id="description">
+            <h2 class="section-title">Description</h2>
+            <div class="indent">
+                <p class="body-text">satva ends up on the backend by instinct — inclined to take a system apart to see
+                    why it
+                    holds together before deciding how to build the next one. Work spans distributed systems and applied
+                    AI:
+                    producer-consumer queues, multi-agent orchestration, RAG pipelines, and the CI/CD that ships them.
+                </p>
+                <p class="body-text">Exit status is usually 0. Occasionally says yes to things not yet understood, and
+                    figures out the rest on the way.</p>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2 class="section-title">Experience</h2>
+            <div class="indent">
+
+                <div class="entry-block">
+                    <div class="entry-meta">software engineering intern — security services company, pune</div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-q, <span class="comma">--queue-workflow</span></div>
+                        <div class="opt-desc">Built an asynchronous producer-consumer workflow in Go with RabbitMQ for
+                            real-time messaging between services. <span style="color:var(--amber-faint)">[phase
+                                1]</span></div>
+                    </div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-a, <span class="comma">--agent-orchestration</span></div>
+                        <div class="opt-desc">Built an async multi-agent orchestration layer in FastAPI, wired to RAG
+                            pipelines —
+                            including a multilingual agent translating ingredients across regional Indian languages for
+                            a food
+                            platform. <span style="color:var(--amber-faint)">[phase 2]</span></div>
+                    </div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-c, <span class="comma">--ci-cd</span></div>
+                        <div class="opt-desc">Took on CI/CD for an 8-module microservices repo with zero prior
+                            experience —
+                            GitHub Actions, Docker, a matrix build strategy, dual image tagging (latest + commit SHA),
+                            none of it
+                            requested.</div>
+                    </div>
+                </div>
+
+                <div class="entry-block">
+                    <div class="entry-meta">india ai impact summit — top 200 of 38,000 teams</div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-s, <span class="comma">--scam-detection</span></div>
+                        <div class="opt-desc">Built a multi-agent system to detect and intercept digital scams targeting
+                            senior
+                            citizens with low digital literacy.</div>
+                    </div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-v, <span class="comma">--verbose-research</span></div>
+                        <div class="opt-desc">Independent research surfaced service-based phishing — fake repair calls,
+                            fraudulent agents — underreported in mainstream data, confirmed by NGOs as the most common
+                            real-world
+                            case.</div>
+                    </div>
+
+                    <div class="opt">
+                        <div class="opt-flag">-p, <span class="comma">--present</span></div>
+                        <div class="opt-desc">Presented live to a non-technical panel, reframing the pitch around human
+                            outcomes
+                            rather than architecture.</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 class="section-title">Projects <span style="color:var(--amber-faint);font-weight:400;">— see also</span>
+            </h2>
+            <div class="indent">
+                <div class="refs">
+                    <a href="https://github.com/stva01/Khao-The-App" target="_blank" rel="noopener">
+                        <span class="ref-name">khao(1)</span>
+                        <span class="ref-desc">flutter/dart mobile app for food & ingredient discovery</span>
+                    </a>
+                    <a href="https://github.com/stva01/claude-token-counter" target="_blank" rel="noopener">
+                        <span class="ref-name">claude-token-counter(1)</span>
+                        <span class="ref-desc">js utility estimating token usage in claude prompts</span>
+                    </a>
+                    <a href="https://github.com/stva01/ETL_F1" target="_blank" rel="noopener">
+                        <span class="ref-name">etl_f1(1)</span>
+                        <span class="ref-desc">etl pipeline over formula 1 race data</span>
+                    </a>
+                    <a href="https://github.com/stva01/DBT_AirBnb" target="_blank" rel="noopener">
+                        <span class="ref-name">dbt_airbnb(1)</span>
+                        <span class="ref-desc">dbt data model applied to airbnb listings</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">Beyond Code</h2>
+            <div class="indent">
+                <div class="opt">
+                    <div class="opt-flag">-m, <span class="comma">--mentor</span> <span
+                            style="color:var(--amber-faint)">(synapse, ml committee)</span></div>
+                    <div class="opt-desc">Mentored juniors in machine learning, moving from being mentored to mentoring
+                        within
+                        the same semester. The job is usually diagnosing confusion, not adding more explanation.</div>
+                </div>
+                <div class="opt">
+                    <div class="opt-flag">-w, <span class="comma">--show-up</span> <span
+                            style="color:var(--amber-faint)">(sbmc, social work committee)</span></div>
+                    <div class="opt-desc">Regular visits to Atam Memorial Hospital, spending time with children being
+                        treated
+                        for cancer. Not a line item — just something to show up for.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2 class="section-title">Bugs</h2>
+            <div class="indent">
+                <p class="body-text">Report bugs, feature requests, and job offers to
+                    <a href="mailto:satvalite@gmail.com"
+                        style="color:var(--amber);border-bottom:1px dotted var(--amber-dim);">satvalite@gmail.com</a>.
+                    Patches welcome.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="indent footer-block">
+                <div><span class="k">AUTHOR</span></div>
+                <p class="body-text" style="margin-top:6px;">Written by Satva Shah. "Am I aligning my curiosity with my
+                    deliverability?" — the question asked before committing to anything.</p>
+
+                <div style="margin-top:22px;"><span class="k">SEE ALSO</span></div>
+                <div class="footer-links">
+                    <a href="https://github.com/stva01" target="_blank" rel="noopener">github(1)</a>
+                    <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">linkedin(1)</a>
+                    <a href="https://medium.com/@satvashah" target="_blank" rel="noopener">medium(1)</a>
+                </div>
+            </div>
+
+            <div class="manrule"><span>SATVA(1)</span><span>© 2026</span><span>SATVA(1)</span></div>
+        </footer>
+
+    </main>
+
+    <script>
+        (function () {
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const reveal = document.getElementById('revealAfterType');
+            if (reduced) { reveal.classList.add('shown'); return; }
+            reveal.style.transition = 'opacity .6s ease';
+            setTimeout(() => { reveal.classList.add('shown'); }, 550);
+        })();
+
+        const navLinks = document.querySelectorAll('[data-nav]');
+        const targets = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href')));
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                const link = document.querySelector('[data-nav][href="#' + e.target.id + '"]');
+                if (!link) return;
+                if (e.isIntersecting) { navLinks.forEach(l => l.classList.remove('active')); link.classList.add('active'); }
+            });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        targets.forEach(t => { if (t) io.observe(t); });
+    </script>
+
+</body>
+
+</html>
