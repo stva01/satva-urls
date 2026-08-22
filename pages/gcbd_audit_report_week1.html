@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GCBD Dataset Audit — Week 1</title>
+<style>
+  :root{
+    --ink:#0B2B33;
+    --deep:#0E4C56;
+    --teal:#1C7A85;
+    --coral:#E4633F;
+    --sand:#FBFAF7;
+    --line:#DDE4E3;
+    --mut:#5B6E70;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:56px 28px 80px;}
+
+  header{margin-bottom:44px;}
+  .eyebrow{
+    font-family:'Courier New', monospace;
+    font-size:12.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:32px;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+    color:var(--deep);
+  }
+  .sub{color:var(--mut);font-size:15px;max-width:60ch;}
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin:32px 0 48px;
+  }
+  .stat{background:var(--sand);padding:18px 16px;}
+  .stat .n{font-size:26px;font-weight:700;color:var(--deep);font-family:'Courier New',monospace;}
+  .stat .l{font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;}
+
+  .finding{
+    border-top:1px solid var(--line);
+    padding:28px 0;
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:20px;
+  }
+  .finding:last-of-type{border-bottom:1px solid var(--line);}
+  .fnum{
+    font-family:'Courier New',monospace;
+    font-size:13px;
+    color:var(--teal);
+    font-weight:700;
+    padding-top:3px;
+  }
+  .ftitle{
+    font-size:17px;
+    font-weight:700;
+    margin:0 0 8px;
+    color:var(--deep);
+  }
+  .ftitle .tag{
+    display:inline-block;
+    font-family:'Courier New',monospace;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#fff;
+    background:var(--coral);
+    padding:2px 7px;
+    border-radius:3px;
+    margin-left:10px;
+    vertical-align:middle;
+  }
+  .fbody p{margin:0 0 10px;font-size:14.5px;color:#33474A;}
+  .fbody p:last-child{margin-bottom:0;}
+  .fbody strong{color:var(--ink);}
+
+  table{
+    border-collapse:collapse;
+    width:100%;
+    font-size:13px;
+    margin:12px 0;
+  }
+  th{
+    text-align:left;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--mut);
+    border-bottom:1px solid var(--line);
+    padding:6px 10px 6px 0;
+  }
+  td{
+    padding:6px 10px 6px 0;
+    border-bottom:1px solid #EEF2F1;
+    color:#33474A;
+  }
+  tr:last-child td{border-bottom:none;}
+  .num{font-family:'Courier New',monospace;}
+
+  .callout{
+    background:#FDEEE9;
+    border-left:3px solid var(--coral);
+    padding:10px 14px;
+    font-size:13.5px;
+    color:#7A3722;
+    margin-top:10px;
+  }
+
+  .actions{
+    margin-top:20px;
+    background:#EEF6F5;
+    border:1px solid var(--line);
+    padding:22px 24px;
+  }
+  .actions h2{
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--deep);
+    margin:0 0 12px;
+  }
+  .actions ol{margin:0;padding-left:20px;}
+  .actions li{font-size:14px;margin-bottom:7px;color:#33474A;}
+  .actions li:last-child{margin-bottom:0;}
+
+  footer{
+    margin-top:40px;
+    font-size:12px;
+    color:var(--mut);
+    font-family:'Courier New',monospace;
+  }
+
+  @media (max-width:600px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .finding{grid-template-columns:1fr;gap:6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">GCBD · Week 1 · Dataset Audit</div>
+    <h1>Coral Bleaching Dataset — Data Quality Audit</h1>
+    <div class="sub">41,361 rows · 62 columns · 9 source studies merged into one file. Six findings that shape how this data can be split, modeled, and trusted.</div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="n">41,361</div><div class="l">Total rows</div></div>
+    <div class="stat"><div class="n">9</div><div class="l">Sources (7 documented)</div></div>
+    <div class="stat"><div class="n">30%</div><div class="l">Rows missing Reef_ID</div></div>
+    <div class="stat"><div class="n">~2×</div><div class="l">Reef_Check row duplication</div></div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">01</div>
+    <div>
+      <div class="ftitle">Reef_ID only works for one source<span class="tag">blocks splits</span></div>
+      <div class="fbody">
+        <p><strong>Reef_ID is 100% missing for every source except Reef_Check</strong>, where it's 100% present. It cannot be used as the reef-level grouping key for the full dataset.</p>
+        <div class="callout">Fix: use <strong>Site_ID</strong> instead — populated for all 9 sources (12,702 unique values) — but verify it matches the granularity you need before relying on it.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">02</div>
+    <div>
+      <div class="ftitle">One source dominates everything<span class="tag">imbalance</span></div>
+      <div class="fbody">
+        <table>
+          <tr><th>Source</th><th>Rows</th><th>% total</th><th>Years</th><th>Reef_ID</th></tr>
+          <tr><td>Reef_Check</td><td class="num">28,821</td><td class="num">69.7%</td><td class="num">1997–2020</td><td>present</td></tr>
+          <tr><td>Donner</td><td class="num">6,307</td><td class="num">15.3%</td><td class="num">1980–2011</td><td>missing</td></tr>
+          <tr><td>AGRRA</td><td class="num">2,848</td><td class="num">6.9%</td><td class="num">1998–2016</td><td>missing</td></tr>
+          <tr><td>FRRP</td><td class="num">2,394</td><td class="num">5.8%</td><td class="num">2005–2016</td><td>missing</td></tr>
+          <tr><td>Kumagai</td><td class="num">667</td><td class="num">1.6%</td><td class="num">2004–2016</td><td>missing</td></tr>
+          <tr><td>McClanahan</td><td class="num">234</td><td class="num">0.6%</td><td class="num">2016 only</td><td>missing</td></tr>
+          <tr><td>Safaie</td><td class="num">81</td><td class="num">0.2%</td><td class="num">1997–2011</td><td>missing</td></tr>
+          <tr><td>Nuryana + Setiawan*</td><td class="num">9</td><td class="num">&lt;0.1%</td><td class="num">2015–2016</td><td>missing</td></tr>
+        </table>
+        <p style="font-size:12.5px;color:var(--mut)">*Not in the original 7-source brief or the Notion data dictionary — provenance needs confirming before citing in the paper.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">03</div>
+    <div>
+      <div class="ftitle">Rows are duplicated — mostly in Reef_Check<span class="tag">critical</span></div>
+      <div class="fbody">
+        <p>The original schema is relational; this flat file joined survey + substrate-cover tables together. That join <strong>exploded one real survey into several rows</strong> — one per substrate type.</p>
+        <p>28,821 Reef_Check rows are really only <strong>14,475 actual survey events</strong> (99.6% share a Sample_ID with another row). Percent_Bleaching is copy-pasted identically across the duplicates.</p>
+        <div class="callout">Any row-level count or average right now roughly <strong>double-counts Reef_Check bleaching values</strong>. Deduplicate to one row per Sample_ID before any bleaching-level analysis.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">04</div>
+    <div>
+      <div class="ftitle">Percent_Bleaching isn't one consistent measurement<span class="tag">comparability</span></div>
+      <div class="fbody">
+        <p><strong>Bleaching_Level is only ever recorded as "Population" for Reef_Check</strong> — every other source leaves it blank (nd), even when their Percent_Bleaching values are present.</p>
+        <p>Per the source documentation, Percent_Bleaching itself is computed two different ways: Reef Check averages 4 transect segments; other sources average a "bleaching code." Same column name, different method.</p>
+        <div class="callout">Treat Percent_Bleaching as source-conditional, not a single homogeneous target — always model with Data_Source as a covariate.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">05</div>
+    <div>
+      <div class="ftitle">Missingness is by design, not random<span class="tag">structural</span></div>
+      <div class="fbody">
+        <table>
+          <tr><th>Column</th><th>% missing</th><th>Why</th></tr>
+          <tr><td>Site/Bleaching/Sample Comments</td><td class="num">92–95%</td><td>free text, rarely filled — expected</td></tr>
+          <tr><td>Bleaching_Level</td><td class="num">45.5%</td><td>only Reef_Check records it</td></tr>
+          <tr><td>Substrate_Name</td><td class="num">30.6%</td><td>only Reef_Check records it</td></tr>
+          <tr><td>Percent_Cover</td><td class="num">30.1%</td><td>only Reef_Check records it</td></tr>
+          <tr><td>Percent_Bleaching</td><td class="num">16.6%</td><td>mild regional pattern (Red Sea, Fiji highest)</td></tr>
+          <tr><td>SSTA / TSA environmental fields</td><td class="num">~0.3–0.4%</td><td>near-random, satellite record gaps</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <div class="fnum">06</div>
+    <div>
+      <div class="ftitle">Missing values are encoded as the string "nd"<span class="tag">gotcha</span></div>
+      <div class="fbody">
+        <p>Even numeric columns (Percent_Bleaching, Depth_m, all SSTA/TSA fields) use the literal text <strong>"nd"</strong> for missing — not blank, not NaN.</p>
+        <div class="callout">Standard <code>.isnull()</code> checks will silently miss this. Every script must explicitly match the string "nd" before doing numeric work.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <h2>Before Week 2</h2>
+    <ol>
+      <li>Deduplicate to one row per real survey (Sample_ID) before any bleaching statistics</li>
+      <li>Use Site_ID, not Reef_ID, as the reef-level split key — validate it first</li>
+      <li>Confirm provenance of Nuryana and Setiawan before citing "7 sources"</li>
+      <li>Always include Data_Source as a covariate when using Percent_Bleaching</li>
+      <li>Handle missingness per-source/per-field, not with one global rule</li>
+    </ol>
+  </div>
+
+  <footer>Full memo + rerunnable audit script (audit_gcbd.py) available on request · GCBD, 41,361 rows, 62 attributes</footer>
+
+</div>
+</body>
+</html>
