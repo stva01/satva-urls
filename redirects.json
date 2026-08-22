@@ -1,10 +1,10 @@
 {
   "/": "satva-portfolio.html",
-  "/docs/idfy-experience": "IDfy_exp.html",
+  "idfy-experience": "IDfy_exp.html",
   "railvision": "https://github.com/stva01/railvision-ai",
   "f1-etl": "https://github.com/stva01/ETL_F1",
   "experience": "IDfy_exp.html",
   "cicd-medium": "https://medium.com/@satvalite/your-ci-cd-rebuilds-too-much-heres-how-we-fixed-it-84c16882f220",
-  "timepass/tejani_itenary": "itinerary.html",
+  "tejani_itenary": "itinerary.html",
   "satva-week1-dataset-audit": "gcbd_audit_report_week1.html"
 }
