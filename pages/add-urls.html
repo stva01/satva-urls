@@ -198,7 +198,7 @@
       showStatus('Fetching redirects & committing to GitHub...', 'loading');
 
       try {
-        const response = await fetch('/api/add-url', {
+        const response = await fetch(window.location.pathname, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -206,7 +206,13 @@
           body: JSON.stringify({ slug, url, secret, commit_msg })
         });
 
-        const data = await response.json();
+        const rawText = await response.text();
+        let data = {};
+        try {
+          data = JSON.parse(rawText);
+        } catch (e) {
+          data = { error: `Server returned unexpected response (${response.status}): ` + rawText.substring(0, 150) };
+        }
 
         if (response.ok && data.success) {
           showStatus(`
