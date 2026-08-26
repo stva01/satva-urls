@@ -41,21 +41,28 @@ class handler(BaseHTTPRequestHandler):
         if not target_url:
             return self._send_json(400, {"error": "Target URL is required."})
 
-        # Validate Admin Secret
-        admin_secret = os.environ.get("ADMIN_SECRET")
-        if admin_secret and user_secret != admin_secret:
-            return self._send_json(403, {"error": "Invalid admin passcode."})
+        # Validate Admin PIN / Secret (Default: "0110")
+        admin_secret = os.environ.get("ADMIN_SECRET", "0110")
+        if user_secret != admin_secret:
+            return self._send_json(403, {"error": "Invalid PIN passcode. Please enter the correct PIN."})
 
-        github_token = os.environ.get("GITHUB_TOKEN")
+        github_token = (
+            os.environ.get("GITHUB_TOKEN")
+            or os.environ.get("GH_TOKEN")
+            or os.environ.get("GITHUB_PAT")
+            or os.environ.get("GITHUB_SECRET")
+            or os.environ.get("SECRET")
+        )
         github_repo = os.environ.get("GITHUB_REPO", "stva01/satva-urls")
+        github_branch = os.environ.get("GITHUB_BRANCH", "master")
 
         if not github_token:
             return self._send_json(500, {
-                "error": "GITHUB_TOKEN environment variable is not configured in Vercel settings."
+                "error": "GitHub token environment variable is not configured in Vercel settings (e.g. GITHUB_TOKEN)."
             })
 
         # 1. Fetch current redirects.json from GitHub REST API
-        api_url = f"https://api.github.com/repos/{github_repo}/contents/redirects.json"
+        api_url = f"https://api.github.com/repos/{github_repo}/contents/redirects.json?ref={github_branch}"
         req_headers = {
             "Authorization": f"Bearer {github_token}",
             "Accept": "application/vnd.github.v3+json",
@@ -89,15 +96,17 @@ class handler(BaseHTTPRequestHandler):
         commit_message = custom_commit_msg if custom_commit_msg else f"Add redirect: {slug}"
 
         # 3. Commit and push back to GitHub
+        put_api_url = f"https://api.github.com/repos/{github_repo}/contents/redirects.json"
         update_payload = {
             "message": commit_message,
             "content": new_content_b64,
-            "sha": current_sha
+            "sha": current_sha,
+            "branch": github_branch
         }
 
         try:
             put_req = urllib.request.Request(
-                api_url,
+                put_api_url,
                 data=json.dumps(update_payload).encode("utf-8"),
                 headers={**req_headers, "Content-Type": "application/json"},
                 method="PUT"
