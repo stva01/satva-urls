@@ -33,10 +33,20 @@
 
     html {
       scroll-behavior: smooth;
+      height: 100%;
     }
 
     body {
-      min-height: 100vh;
+      /* Fixed full-viewport overlay: guarantees nothing behind this page
+         (an outer layout, a wrapping template, another route's markup)
+         can ever show through, no matter how this file gets embedded. */
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 2147483647;
       background: var(--bg);
       color: var(--ink);
       font-family: 'Inter', sans-serif;
@@ -47,6 +57,8 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+      padding-top: max(24px, env(safe-area-inset-top));
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
     }
 
     ::selection {
@@ -57,6 +69,7 @@
     .wrap {
       width: 100%;
       max-width: var(--max);
+      margin: auto;
     }
 
     .brand {
