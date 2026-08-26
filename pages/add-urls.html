@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Redirect — Satva URLs</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1.5rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #f1f5f9;
+    }
+    p.subtitle {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 0.4rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: #6366f1;
+    }
+    .slug-preview {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-family: monospace;
+    }
+    .slug-preview span {
+      color: #a855f7;
+    }
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background: #6366f1;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      margin-top: 0.5rem;
+    }
+    button:hover:not(:disabled) {
+      background: #4f46e5;
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .status-box {
+      margin-top: 1.25rem;
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .status-box.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+    .status-box.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid #22c55e;
+      color: #86efac;
+    }
+    .status-box.loading {
+      display: block;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid #6366f1;
+      color: #c7d2fe;
+    }
+    .status-box a {
+      color: #67e8f9;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Add New Redirect</h1>
+    <p class="subtitle">Directly commits to GitHub and triggers Vercel auto-deployment.</p>
+
+    <form id="redirect-form">
+      <div class="form-group">
+        <label for="slug">Short Slug</label>
+        <input type="text" id="slug" name="slug" placeholder="e.g. fyp-sem7" required autocomplete="off">
+        <div class="slug-preview">Preview: <span id="preview-text">satva.dev/</span></div>
+      </div>
+
+      <div class="form-group">
+        <label for="url">Destination URL / HTML Page</label>
+        <input type="text" id="url" name="url" placeholder="e.g. https://notion.so/... or page.html" required>
+      </div>
+
+      <div class="form-group">
+        <label for="secret">Admin Passcode</label>
+        <input type="password" id="secret" name="secret" placeholder="Enter ADMIN_SECRET" autocomplete="current-password">
+      </div>
+
+      <div class="form-group">
+        <label for="commit_msg">Custom Commit Message (Optional)</label>
+        <input type="text" id="commit_msg" name="commit_msg" placeholder="Default: Add redirect: <slug>">
+      </div>
+
+      <button type="submit" id="submit-btn">Submit & Commit to GitHub</button>
+    </form>
+
+    <div id="status" class="status-box"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('redirect-form');
+    const slugInput = document.getElementById('slug');
+    const urlInput = document.getElementById('url');
+    const secretInput = document.getElementById('secret');
+    const commitMsgInput = document.getElementById('commit_msg');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusBox = document.getElementById('status');
+    const previewText = document.getElementById('preview-text');
+
+    // Load cached admin passcode from localStorage
+    const savedSecret = localStorage.getItem('satva_admin_secret');
+    if (savedSecret) {
+      secretInput.value = savedSecret;
+    }
+
+    // Live slug preview
+    slugInput.addEventListener('input', () => {
+      const cleanSlug = slugInput.value.trim().replace(/^\/+|\/+$/g, '').toLowerCase();
+      previewText.textContent = cleanSlug ? `satva.dev/${cleanSlug}` : 'satva.dev/';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const slug = slugInput.value.trim().replace(/^\/+|\/+$/g, '').toLowerCase();
+      const url = urlInput.value.trim();
+      const secret = secretInput.value.trim();
+      const commit_msg = commitMsgInput.value.trim();
+
+      if (!slug || !url) {
+        showStatus('Slug and destination URL are required.', 'error');
+        return;
+      }
+
+      // Save secret for convenience
+      if (secret) {
+        localStorage.setItem('satva_admin_secret', secret);
+      }
+
+      setLoading(true);
+      showStatus('Fetching redirects & committing to GitHub...', 'loading');
+
+      try {
+        const response = await fetch('/api/add-url', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ slug, url, secret, commit_msg })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showStatus(`
+            ✓ <strong>Success!</strong> Committed <code>${data.commit_sha || ''}</code>.<br>
+            Vercel is now deploying. In ~30s, test your link:<br>
+            <a href="/${slug}" target="_blank">/${slug} &rarr;</a>
+          `, 'success');
+          slugInput.value = '';
+          urlInput.value = '';
+          commitMsgInput.value = '';
+          previewText.textContent = 'satva.dev/';
+        } else {
+          showStatus(`Error: ${data.error || 'Failed to add redirect.'} ${data.details ? '<br><small>' + data.details + '</small>' : ''}`, 'error');
+        }
+      } catch (err) {
+        showStatus(`Network Error: ${err.message}`, 'error');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      submitBtn.textContent = isLoading ? 'Committing...' : 'Submit & Commit to GitHub';
+    }
+
+    function showStatus(html, type) {
+      statusBox.className = `status-box ${type}`;
+      statusBox.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
