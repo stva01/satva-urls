@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAPT Cheatsheet — Units 1-3</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --bg-alt: #f6f7f9;
+    --text: #1c2128;
+    --text-muted: #57606a;
+    --border: #d9dce1;
+    --accent: #205081;
+    --accent-bg: #eaf1fa;
+    --code-bg: #282c34;
+    --code-text: #e6e6e6;
+    --critical: #b42318;
+    --high: #b7580e;
+    --medium: #8a6d00;
+    --low: #1f7a3d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.55;
+    font-size:15.5px;
+  }
+  .layout{
+    display:flex;
+    max-width:1400px;
+    margin:0 auto;
+  }
+  nav.toc{
+    width:250px;
+    flex-shrink:0;
+    position:sticky;
+    top:0;
+    align-self:flex-start;
+    height:100vh;
+    overflow-y:auto;
+    background:var(--bg-alt);
+    border-right:1px solid var(--border);
+    padding:20px 16px 40px;
+  }
+  nav.toc h2{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--text-muted);
+    margin:18px 0 6px;
+  }
+  nav.toc h2:first-child{margin-top:0;}
+  nav.toc a{
+    display:block;
+    color:var(--text);
+    text-decoration:none;
+    font-size:13.5px;
+    padding:4px 6px;
+    border-radius:4px;
+  }
+  nav.toc a:hover{background:var(--accent-bg);}
+  main{
+    flex:1;
+    min-width:0;
+    padding:32px 48px 100px;
+  }
+  header.top{
+    border-bottom:3px solid var(--accent);
+    padding-bottom:18px;
+    margin-bottom:36px;
+  }
+  header.top h1{
+    margin:0 0 6px;
+    font-size:32px;
+    color:var(--accent);
+  }
+  header.top p{
+    margin:0;
+    color:var(--text-muted);
+    font-size:14.5px;
+  }
+  section.unit{
+    margin-bottom:56px;
+    padding-top:8px;
+  }
+  section.unit > h1{
+    font-size:26px;
+    background:var(--accent);
+    color:#fff;
+    padding:10px 16px;
+    border-radius:6px;
+    margin-bottom:24px;
+  }
+  h2.topic{
+    font-size:20px;
+    color:var(--accent);
+    border-bottom:2px solid var(--border);
+    padding-bottom:6px;
+    margin-top:40px;
+    margin-bottom:14px;
+  }
+  h3{
+    font-size:16px;
+    margin:18px 0 8px;
+    color:var(--text);
+  }
+  p{margin:8px 0;}
+  ul, ol{margin:8px 0; padding-left:22px;}
+  li{margin:4px 0;}
+  .callout{
+    background:var(--accent-bg);
+    border-left:4px solid var(--accent);
+    padding:10px 14px;
+    border-radius:0 6px 6px 0;
+    margin:14px 0;
+    font-size:14.5px;
+  }
+  .callout strong{color:var(--accent);}
+  .examtip{
+    background:#fff6e5;
+    border-left:4px solid var(--medium);
+    padding:10px 14px;
+    border-radius:0 6px 6px 0;
+    margin:14px 0;
+    font-size:14.5px;
+  }
+  .examtip::before{
+    content:"EXAM TIP  ";
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:var(--medium);
+  }
+  code{
+    background:#eef0f3;
+    border:1px solid var(--border);
+    padding:1px 6px;
+    border-radius:4px;
+    font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+    font-size:13.5px;
+  }
+  pre{
+    background:var(--code-bg);
+    color:var(--code-text);
+    padding:14px 16px;
+    border-radius:8px;
+    overflow-x:auto;
+    font-size:13px;
+    line-height:1.6;
+    margin:12px 0;
+  }
+  pre code{
+    background:none;
+    border:none;
+    padding:0;
+    color:inherit;
+  }
+  table{
+    border-collapse:collapse;
+    width:100%;
+    margin:14px 0;
+    font-size:14px;
+  }
+  th, td{
+    border:1px solid var(--border);
+    padding:8px 10px;
+    text-align:left;
+    vertical-align:top;
+  }
+  th{
+    background:var(--bg-alt);
+    font-weight:600;
+  }
+  tr:nth-child(even) td{background:#fbfbfc;}
+  .badge{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:10px;
+    font-size:11.5px;
+    font-weight:700;
+    color:#fff;
+  }
+  .badge.critical{background:var(--critical);}
+  .badge.high{background:var(--high);}
+  .badge.medium{background:var(--medium);}
+  .badge.low{background:var(--low);}
+  .grid2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin:14px 0;
+  }
+  .card{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+    background:var(--bg-alt);
+  }
+  .card h4{
+    margin:0 0 6px;
+    font-size:14.5px;
+    color:var(--accent);
+  }
+  .flow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    margin:14px 0;
+    font-size:13.5px;
+  }
+  .flow .step{
+    background:var(--accent);
+    color:#fff;
+    padding:6px 12px;
+    border-radius:6px;
+    font-weight:600;
+  }
+  .flow .arrow{color:var(--text-muted); font-weight:700;}
+  hr.section-break{
+    border:none;
+    border-top:1px dashed var(--border);
+    margin:36px 0;
+  }
+  @media print{
+    nav.toc{display:none;}
+    main{padding:0 10px;}
+    .layout{display:block;}
+    section.unit > h1{background:none; color:var(--accent); border:2px solid var(--accent);}
+  }
+  @media (max-width: 900px){
+    .layout{flex-direction:column;}
+    nav.toc{
+      width:100%;
+      height:auto;
+      position:relative;
+      border-right:none;
+      border-bottom:1px solid var(--border);
+    }
+    .grid2{grid-template-columns:1fr;}
+    main{padding:24px 18px 80px;}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <h2>Unit 1 — Intro to PT</h2>
+  <a href="#u1-cia">CIA Triad &amp; InfoSec</a>
+  <a href="#u1-ethical">Ethical Hacking &amp; 5 Phases</a>
+  <a href="#u1-hackers">Types of Hackers</a>
+  <a href="#u1-vapt">VA vs PT</a>
+  <a href="#u1-types">Black/White/Grey Box</a>
+  <a href="#u1-methodologies">OWASP / PTES / NIST</a>
+  <a href="#u1-legal">Legal &amp; Ethical</a>
+  <a href="#u1-lab">Lab Setup</a>
+  <a href="#u1-kali">Kali Linux</a>
+
+  <h2>Unit 2 — Recon</h2>
+  <a href="#u2-passive-active">Passive vs Active Recon</a>
+  <a href="#u2-osint">OSINT Techniques</a>
+  <a href="#u2-tools">5 OSINT Tools</a>
+  <a href="#u2-dns">DNS Enumeration</a>
+  <a href="#u2-zone">DNS Zone Transfer</a>
+  <a href="#u2-whois">WHOIS Lookups</a>
+  <a href="#u2-nmap">Nmap Deep Dive</a>
+  <a href="#u2-ports">Port States</a>
+  <a href="#u2-banner">Banner Grabbing &amp; OS FP</a>
+  <a href="#u2-enum">Enumeration (SMB/SNMP/LDAP)</a>
+
+  <h2>Unit 3 — Vuln Assessment</h2>
+  <a href="#u3-vuln">What is a Vulnerability</a>
+  <a href="#u3-cvss">CVSS Scoring</a>
+  <a href="#u3-db">Vuln Databases (CVE/NVD/Exploit-DB)</a>
+  <a href="#u3-autoscan">Automated Scanning</a>
+  <a href="#u3-nessus">Nessus</a>
+  <a href="#u3-openvas">OpenVAS</a>
+  <a href="#u3-webscan">Nikto / ZAP / Burp</a>
+  <a href="#u3-manual">Manual Assessment</a>
+  <a href="#u3-fp">False Positive / Negative</a>
+  <a href="#u3-analysis">Analysing Scan Results</a>
+  <a href="#u3-priority">Prioritisation &amp; Risk</a>
+  <a href="#u3-cases">CVE Case Studies</a>
+</nav>
+
+<main>
+
+<header class="top">
+  <h1>VAPT Cheatsheet</h1>
+  <p>Vulnerability Assessment and Penetration Testing — Units 1, 2 &amp; 3 quick reference for exam prep</p>
+</header>
+
+<!-- ======================= UNIT 1 ======================= -->
+<section class="unit" id="unit1">
+<h1>Unit 1 — Introduction to Penetration Testing</h1>
+
+<h2 class="topic" id="u1-cia">Information Security &amp; the CIA Triad</h2>
+<p><strong>InfoSec</strong> is the practice of protecting information and systems from unauthorised access, disclosure, disruption, modification, or destruction. Every security control traces back to one of three pillars:</p>
+<div class="grid2">
+  <div class="card"><h4>Confidentiality</h4>Only authorised parties can view data. Enforced via encryption, ACLs, MFA. Violation example: data exfiltration, credential theft.</div>
+  <div class="card"><h4>Integrity</h4>Data stays accurate and unaltered. Enforced via hashing (SHA-256), digital signatures, checksums. Violation: SQL injection, file tampering.</div>
+  <div class="card"><h4>Availability</h4>Systems accessible when needed. Enforced via redundancy, failover, rate limiting. Violation: DoS/DDoS attacks.</div>
+  <div class="card"><h4>Extra Pillars</h4>Beyond CIA: <strong>Non-repudiation</strong> (actions traceable to source) and <strong>Authentication</strong>.</div>
+</div>
+
+<h2 class="topic" id="u1-ethical">Ethical Hacking &amp; the Five Phases</h2>
+<p>Ethical hacking is the <strong>authorised, legal</strong> practice of probing systems to find vulnerabilities before malicious attackers do. The distinguishing factor from black-hat hacking is <strong>permission and intent</strong> — not tools or techniques. All work must stay inside the <strong>Rules of Engagement (RoE)</strong>; testing outside scope is illegal even with good intentions (violates laws like the CFAA).</p>
+
+<div class="flow">
+  <div class="step">1. Reconnaissance</div><span class="arrow">→</span>
+  <div class="step">2. Scanning &amp; Enumeration</div><span class="arrow">→</span>
+  <div class="step">3. Gaining Access</div><span class="arrow">→</span>
+  <div class="step">4. Maintaining Access</div><span class="arrow">→</span>
+  <div class="step">5. Covering Tracks</div>
+</div>
+
+<table>
+<tr><th>Phase</th><th>What Happens</th><th>Tools / Techniques</th></tr>
+<tr><td>1. Reconnaissance</td><td>Passive/active info gathering about the target</td><td>OSINT, WHOIS, DNS lookups, social media</td></tr>
+<tr><td>2. Scanning &amp; Enumeration</td><td>Discover open ports, services, OS, accounts</td><td>Nmap, Nessus, Netcat, enum4linux</td></tr>
+<tr><td>3. Gaining Access</td><td>Exploit vulnerabilities for unauthorised access</td><td>Metasploit, credential attacks, social engineering</td></tr>
+<tr><td>4. Maintaining Access</td><td>Install persistence mechanisms</td><td>Backdoors, rootkits, RATs</td></tr>
+<tr><td>5. Covering Tracks</td><td>Clear logs, hide evidence of compromise</td><td>Log deletion, timestamp modification</td></tr>
+</table>
+<div class="examtip">This lifecycle is <strong>cyclical, not linear</strong>. A successful exploit in Phase 3 can reveal a new subnet, forcing a return to Phase 1/2 for that segment.</div>
+
+<h2 class="topic" id="u1-hackers">Types of Hackers — The Hat Spectrum</h2>
+<table>
+<tr><th>Type</th><th>Description</th></tr>
+<tr><td>White Hat</td><td>Authorised ethical hackers working with organisations; follow legal agreements, disclose responsibly.</td></tr>
+<tr><td>Black Hat</td><td>Malicious hackers who break in without authorisation for personal gain, fraud, or sabotage.</td></tr>
+<tr><td>Grey Hat</td><td>Legal gray zone — probe without permission but typically disclose rather than exploit.</td></tr>
+<tr><td>Script Kiddie</td><td>Inexperienced users of pre-built tools/scripts without understanding underlying concepts.</td></tr>
+<tr><td>Nation-State</td><td>State-sponsored attackers doing cyber espionage, sabotage, or warfare.</td></tr>
+<tr><td>Hacktivist</td><td>Politically/socially motivated — defaces sites, leaks data to promote ideology.</td></tr>
+</table>
+
+<h2 class="topic" id="u1-vapt">VA vs PT — Key Differences</h2>
+<p><strong>VA answers:</strong> "What vulnerabilities exist?" &nbsp;|&nbsp; <strong>PT answers:</strong> "Can they actually be exploited, and what damage results?"</p>
+<table>
+<tr><th>Dimension</th><th>Vulnerability Assessment</th><th>Penetration Testing</th></tr>
+<tr><td>Objective</td><td>Identify &amp; catalog vulnerabilities</td><td>Exploit vulnerabilities to measure real impact</td></tr>
+<tr><td>Methodology</td><td>Primarily automated scanning</td><td>Manual techniques + tools</td></tr>
+<tr><td>Depth</td><td>Broad and shallow</td><td>Narrow and deep</td></tr>
+<tr><td>Exploitation</td><td>No</td><td>Yes</td></tr>
+<tr><td>Output</td><td>Vulnerability list with CVSS scores</td><td>Proof-of-concept exploits, attack paths</td></tr>
+<tr><td>Risk Level</td><td>Low</td><td>Medium/High</td></tr>
+<tr><td>Frequency</td><td>Weekly / monthly</td><td>Quarterly / annually</td></tr>
+<tr><td>Skill Required</td><td>Entry to intermediate</td><td>Intermediate to advanced</td></tr>
+</table>
+<div class="callout"><strong>Why both matter:</strong> VA is a broad, low-cost, high-frequency check for known issues. PT is deep, expensive, and periodic — proving whether vulnerabilities (even chained low-severity ones) are actually exploitable. A mature program uses both.</div>
+
+<h2 class="topic" id="u1-types">Types of Penetration Testing</h2>
+<table>
+<tr><th></th><th>Black Box</th><th>White Box</th><th>Grey Box</th></tr>
+<tr><td>Knowledge</td><td>None</td><td>Complete (code, creds, architecture)</td><td>Partial (some creds/docs)</td></tr>
+<tr><td>Simulates</td><td>Unknown external attacker</td><td>Malicious insider / developer</td><td>Compromised low-priv user</td></tr>
+<tr><td>Realism</td><td>Highest (external)</td><td>Lowest (external)</td><td>High</td></tr>
+<tr><td>Efficiency</td><td>Lowest (discovery-heavy)</td><td>Highest</td><td>Moderate</td></tr>
+<tr><td>Best For</td><td>Perimeter / pre-launch testing</td><td>Code review, internal audits</td><td>Internal networks, AD reviews</td></tr>
+</table>
+<p><strong>Grey box is the most common real-world approach</strong> — balances efficiency and realism by simulating a stolen low-privilege credential scenario without the full discovery overhead of black box.</p>
+
+<h2 class="topic" id="u1-methodologies">Methodologies — OWASP, PTES, NIST</h2>
+<div class="grid2">
+  <div class="card"><h4>OWASP</h4>Web-app focused. OWASP Top 10, Testing Guide (OTG/WSTG), ASVS. 10+ testing phases: Info Gathering → Config Testing → Identity Mgmt → Authentication → Session Mgmt.</div>
+  <div class="card"><h4>PTES</h4>Full-lifecycle, 7 phases: Pre-Engagement → Intelligence Gathering → Threat Modeling → Vulnerability Analysis → Exploitation → Post-Exploitation → Reporting. Strong on business/reporting.</div>
+  <div class="card"><h4>NIST SP 800-115</h4>4 high-level phases: Planning → Discovery → Attack → Reporting. Used in government/regulated sectors. References NIST CSF (Identify, Protect, Detect, Respond, Recover).</div>
+</div>
+<table>
+<tr><th>Feature</th><th>OWASP</th><th>PTES</th><th>NIST SP 800-115</th></tr>
+<tr><td>Primary Focus</td><td>Web app security</td><td>Full-lifecycle PT</td><td>Federal/enterprise security</td></tr>
+<tr><td>Phases</td><td>10+ categories</td><td>7 phases</td><td>4 phases</td></tr>
+<tr><td>Best For</td><td>Web app assessments</td><td>Enterprise pen tests</td><td>Government/regulated sectors</td></tr>
+</table>
+
+<h2 class="topic" id="u1-legal">Legal &amp; Ethical Considerations</h2>
+<p>Testing without written authorisation is a criminal offense virtually everywhere. Verbal agreements are insufficient.</p>
+<table>
+<tr><th>Document</th><th>Purpose</th></tr>
+<tr><td>Letter of Authorization (LoA)</td><td>Single most critical document — grants legal permission to test</td></tr>
+<tr><td>NDA</td><td>Confidentiality agreement protecting both parties</td></tr>
+<tr><td>Rules of Engagement (RoE)</td><td>Defines scope, techniques, testing windows, escalation, stop conditions</td></tr>
+<tr><td>Statement of Work (SoW)</td><td>Commercial contract — deliverables, timeline, payment</td></tr>
+</table>
+<p><strong>Key laws:</strong> CFAA (USA, 1986), CMA (UK, 1990), IT Act 2000 (India — Sections 43 &amp; 66), GDPR (EU, 2018), CCPA (USA, 2020).</p>
+<div class="examtip">"A client asks you to test X. You find a critical vuln on an out-of-scope server." → Never test out-of-scope systems. Notify the client's emergency contact per RoE, document the discovery, do not attempt exploitation.</div>
+
+<h2 class="topic" id="u1-lab">Lab Setup</h2>
+<p><strong>Attacker VM:</strong> Kali Linux. <strong>Targets:</strong> Metasploitable 2, DVWA, Windows 7/Server 2012, Ubuntu Server.</p>
+<p><strong>Min hardware:</strong> 8GB RAM (16GB recommended), 100GB SSD, CPU with VT-x/AMD-V.</p>
+<table>
+<tr><th>Network Type</th><th>Behaviour</th><th>Use Case</th></tr>
+<tr><td>Host-Only</td><td>VM ↔ VM ↔ host only, no internet/LAN</td><td>Recommended default — full isolation</td></tr>
+<tr><td>NAT</td><td>VMs share host IP for outbound internet</td><td>Updates needed, but must stay isolated from LAN</td></tr>
+<tr><td>Bridged</td><td>VM appears as independent device on LAN</td><td>Use with extreme caution — never with vulnerable VMs</td></tr>
+<tr><td>Internal Network</td><td>VMs talk only to each other, not host/internet</td><td>Isolated multi-VM attack scenarios</td></tr>
+</table>
+<div class="callout"><strong>Critical rule:</strong> Never run Metasploitable on a Bridged adapter connected to a real network — it has severe, easily exploitable vulnerabilities by design.</div>
+
+<h2 class="topic" id="u1-kali">Kali Linux</h2>
+<p>Debian-based distro by <strong>Offensive Security</strong>, 600+ pre-installed tools, rolling release model. First released 2013 (derived from BackTrack). Default DE: XFCE (since 2019). FHS-compliant — tools in <code>/usr/share/</code>, <code>/usr/bin/</code>; wordlists in <code>/usr/share/wordlists/</code>.</p>
+<p>Deployment: ISO, live boot, Docker, WSL2, ARM (Raspberry Pi), cloud AMIs (AWS/Azure).</p>
+
+</section>
+
+<hr class="section-break">
+
+<!-- ======================= UNIT 2 ======================= -->
+<section class="unit" id="unit2">
+<h1>Unit 2 — Information Gathering &amp; Reconnaissance</h1>
+
+<h2 class="topic" id="u2-passive-active">Passive vs Active Reconnaissance</h2>
+<p>Recon splits into two categories based on whether the tester <strong>directly interacts</strong> with the target's systems.</p>
+<table>
+<tr><th>Aspect</th><th>Passive Recon</th><th>Active Recon</th></tr>
+<tr><td>Interaction</td><td>None — "observe, don't touch"</td><td>Direct interaction (packets sent to target)</td></tr>
+<tr><td>Detectability</td><td>Undetectable</td><td>May be logged / trigger alerts</td></tr>
+<tr><td>Authorisation</td><td>Generally not required</td><td>Mandatory written authorisation</td></tr>
+<tr><td>Examples</td><td>Google dorking, WHOIS, LinkedIn profiling, DNS record reading</td><td>Port scanning, banner grabbing, OS fingerprinting</td></tr>
+</table>
+<div class="examtip">Active recon without written authorisation is illegal under IT Act 2000 (India) Sections 43 &amp; 66, and the CFAA (USA).</div>
+
+<h2 class="topic" id="u2-osint">OSINT — Core Techniques</h2>
+<div class="grid2">
+  <div class="card"><h4>Search Engine Dorking</h4><code>site:target.com filetype:pdf</code>, <code>intitle:"index of"</code>, <code>inurl:admin</code>. Google Hacking Database (GHDB) maintains thousands of dorks.</div>
+  <div class="card"><h4>Social Media Intel</h4>LinkedIn/Twitter/GitHub mining for employee names, job titles, tech stack, org structure.</div>
+  <div class="card"><h4>Web Archive Analysis</h4>Wayback Machine reveals deprecated endpoints, old login portals, removed sensitive files.</div>
+  <div class="card"><h4>Email Harvesting</h4>Collecting addresses to infer naming conventions (firstname.lastname@company.com) via theHarvester.</div>
+  <div class="card"><h4>Certificate Transparency</h4>crt.sh reveals all subdomains with issued SSL certs — reliable passive subdomain enum method.</div>
+  <div class="card"><h4>Metadata Analysis</h4>FOCA / ExifTool extract author names, software versions, internal file paths, GPS data from public documents.</div>
+</div>
+
+<h2 class="topic" id="u2-tools">The 5 Primary OSINT Tools</h2>
+<table>
+<tr><th>Tool</th><th>What It Does</th><th>Key Detail</th></tr>
+<tr><td><strong>Maltego</strong></td><td>Graphical link analysis — visualises relationships between people, domains, IPs, emails</td><td>Uses "Transforms" from a seed entity; CE (free) vs Classic/XL (commercial)</td></tr>
+<tr><td><strong>theHarvester</strong></td><td>CLI tool for emails, subdomains, hosts, employee names</td><td><code>theHarvester -d target.com -b google -l 500</code></td></tr>
+<tr><td><strong>Shodan</strong></td><td>"Search engine for hackers" — indexes device banners on open ports (servers, IoT, ICS/SCADA)</td><td>Filters: <code>hostname:target.com</code>, <code>port:22 country:IN</code>, <code>vuln:CVE-2021-44228</code></td></tr>
+<tr><td><strong>Censys</strong></td><td>Internet-wide scanner, stronger on certificate/TLS data, structured JSON output</td><td>Best for programmatic/automated recon pipelines</td></tr>
+<tr><td><strong>Recon-ng</strong></td><td>Modular Python recon framework (Metasploit-like)</td><td>100+ modules, built-in DB, API key mgmt for Shodan/VirusTotal</td></tr>
+</table>
+<div class="callout">No single tool provides complete intelligence — professionals combine all five for full passive recon coverage.</div>
+
+<h2 class="topic" id="u2-dns">DNS Enumeration</h2>
+<table>
+<tr><th>Record</th><th>Reveals</th></tr>
+<tr><td>A / AAAA</td><td>IPv4/IPv6 addresses of web/app servers</td></tr>
+<tr><td>MX</td><td>Mail servers — reveals email infra (Google Workspace, M365, on-prem)</td></tr>
+<tr><td>TXT</td><td>SPF/DKIM/DMARC configs — email security posture</td></tr>
+<tr><td>NS / CNAME</td><td>Authoritative DNS servers; aliases can expose cloud providers, CDN usage, subdomain takeover risk</td></tr>
+</table>
+<p><strong>Subdomain enumeration methods:</strong> Brute force (Gobuster, Sublist3r, Amass with wordlists), Certificate Transparency (crt.sh), DNS aggregators (DNSdumpster, SecurityTrails, VirusTotal).</p>
+
+<h2 class="topic" id="u2-zone">DNS Zone Transfer</h2>
+<p>A <strong>Zone Transfer (AXFR query)</strong> is a legitimate mechanism to replicate DNS zone databases from primary to secondary DNS servers. When <strong>misconfigured</strong>, a DNS server responds to AXFR requests from any client — letting an attacker download the entire zone file in one request.</p>
+<p><strong>Impact:</strong> reveals every hostname/IP in the domain — internal hosts, staging servers, VPN gateways — equivalent to a full infrastructure map.</p>
+<pre><code># dig
+dig axfr @ns1.target.com target.com
+
+# nslookup
+nslookup -type=any target.com
+
+# host
+host -t axfr target.com ns1.target.com</code></pre>
+<div class="callout"><strong>Mitigation:</strong> Restrict AXFR to authorised secondary DNS server IPs only (ACL-based, supported in BIND/Windows DNS). Regularly audit configuration. Also: DNS split-horizon, DNSSEC to prevent spoofing/cache poisoning.</div>
+
+<h2 class="topic" id="u2-whois">WHOIS Lookups</h2>
+<p>Query protocol for registered domain/IP resource owners. Reveals: registrant details (org, contact — may be privacy-protected), registration/expiry dates, name servers, registrar info, admin/technical contacts.</p>
+<p>IP WHOIS via Regional Internet Registries: <strong>ARIN</strong> (N. America), <strong>RIPE NCC</strong> (Europe), <strong>APNIC</strong> (Asia-Pacific), <strong>AFRINIC</strong> (Africa), <strong>LACNIC</strong> (Latin America).</p>
+
+<h2 class="topic" id="u2-nmap">Nmap — Deep Dive</h2>
+<p>Industry-standard scanner by <strong>Gordon "Fyodor" Lyon</strong>. Uses raw IP packets to find live hosts, open ports, services, OS.</p>
+<table>
+<tr><th>Function</th><th>Command</th></tr>
+<tr><td>Host discovery (ping sweep)</td><td><code>nmap -sn 192.168.1.0/24</code></td></tr>
+<tr><td>Scan all ports</td><td><code>nmap -p- 192.168.1.1</code></td></tr>
+<tr><td>Service/version detection</td><td><code>nmap -sV 192.168.1.1</code></td></tr>
+<tr><td>OS detection</td><td><code>nmap -O 192.168.1.1</code> (needs root)</td></tr>
+<tr><td>Aggressive scan</td><td><code>nmap -A 192.168.1.1</code> (OS+version+scripts+traceroute)</td></tr>
+<tr><td>TCP SYN (stealth)</td><td><code>nmap -sS 192.168.1.1</code></td></tr>
+<tr><td>UDP scan</td><td><code>nmap -sU 192.168.1.1</code></td></tr>
+<tr><td>Timing template</td><td><code>nmap -T0</code> (paranoid) to <code>-T5</code> (insane)</td></tr>
+<tr><td>Vulnerability scripts</td><td><code>nmap --script vuln 192.168.1.1</code></td></tr>
+<tr><td>Decoy scan</td><td><code>nmap -D RND:10 192.168.1.1</code></td></tr>
+<tr><td>Save output</td><td><code>nmap -oN out.txt</code> / <code>-oX out.xml</code></td></tr>
+</table>
+
+<h3>Scan Types — Mechanism</h3>
+<table>
+<tr><th>Scan</th><th>Flag</th><th>Mechanism</th><th>Notes</th></tr>
+<tr><td>TCP Full Connect</td><td><code>-sT</code></td><td>Completes full 3-way handshake</td><td>Reliable but easily logged; no root needed</td></tr>
+<tr><td>TCP SYN (half-open)</td><td><code>-sS</code></td><td>SYN → if SYN-ACK, mark open, send RST</td><td>Faster, stealthier; requires root</td></tr>
+<tr><td>UDP</td><td><code>-sU</code></td><td>Empty UDP packet; ICMP unreachable = closed</td><td>Slow; needed for DNS(53)/SNMP(161)</td></tr>
+<tr><td>NULL/FIN/XMAS</td><td><code>-sN/-sF/-sX</code></td><td>Unusual flag combos some IDS miss</td><td>Effective on BSD; Windows always responds RST</td></tr>
+</table>
+
+<h3>Nmap Scripting Engine (NSE)</h3>
+<p>Written in <strong>Lua</strong>. Categories: <strong>auth</strong> (default creds, bypass tests), <strong>vuln</strong> (known CVE checks), <strong>discovery</strong> (query registries/SNMP), <strong>brute</strong> (password auditing on SSH/FTP/HTTP/SMB).</p>
+
+<h2 class="topic" id="u2-ports">The Six Nmap Port States</h2>
+<table>
+<tr><th>State</th><th>Meaning</th></tr>
+<tr><td><span class="badge critical">Open</span></td><td>Application actively accepting connections — primary finding of interest</td></tr>
+<tr><td><span class="badge low">Closed</span></td><td>Port accessible, nothing listening — useful for OS detection</td></tr>
+<tr><td><span class="badge medium">Filtered</span></td><td>Firewall blocking probes; can't determine open/closed</td></tr>
+<tr><td>Unfiltered</td><td>Accessible but undetermined (only from ACK scan)</td></tr>
+<tr><td>Open&#124;Filtered</td><td>Can't determine (typical of UDP/NULL/FIN/XMAS scans)</td></tr>
+<tr><td>Closed&#124;Filtered</td><td>Can't determine (only from IP ID idle scan)</td></tr>
+</table>
+<p><strong>Common ports:</strong> 21 FTP · 22 SSH · 23 Telnet · 25 SMTP · 53 DNS · 80/443 HTTP/S · 139/445 SMB · 3306 MySQL · 3389 RDP · 8080/8443 Alt HTTP/S.</p>
+
+<h2 class="topic" id="u2-banner">Banner Grabbing &amp; OS Fingerprinting</h2>
+<pre><code># Netcat
+nc -v 192.168.1.1 80
+HEAD / HTTP/1.0  [press Enter twice]
+
+# Telnet (SMTP banner)
+telnet 192.168.1.1 25
+
+# curl (HTTP headers)
+curl -I http://192.168.1.1</code></pre>
+<table>
+<tr><th>Type</th><th>Method</th><th>Detectability</th></tr>
+<tr><td>Active OS Fingerprinting</td><td>Nmap <code>-O</code> analyses TTL, TCP window size, IP ID sequence, TCP options via crafted packets (5000+ signatures)</td><td>Detectable — generates traffic</td></tr>
+<tr><td>Passive OS Fingerprinting</td><td>Tools like <code>p0f</code> analyse captured traffic without sending packets</td><td>Completely undetectable</td></tr>
+</table>
+<p><strong>Key TCP/IP parameters:</strong> TTL (Windows≈128, Linux≈64, Cisco≈255), TCP Window Size (Windows 10: 65535, Linux 4.x: 29200), IP ID sequence (Windows sequential, Linux random).</p>
+
+<h2 class="topic" id="u2-enum">Enumeration — Going Deeper</h2>
+<table>
+<tr><th>Type</th><th>Purpose</th><th>Tools</th></tr>
+<tr><td>NetBIOS/SMB</td><td>Windows shares, user accounts, groups, domain info</td><td>enum4linux, smbclient, rpcclient</td></tr>
+<tr><td>SNMP</td><td>Network device configs, routing tables, installed software (via default community strings "public"/"private")</td><td>snmpwalk, onesixtyone</td></tr>
+<tr><td>LDAP</td><td>Active Directory accounts, groups, OUs, password policies</td><td>Anonymous binds on misconfigured servers</td></tr>
+</table>
+
+<div class="examtip">Full recon workflow to remember: <strong>Passive OSINT → DNS Enumeration → Active Footprinting → Port &amp; Service Scan</strong>. Each stage narrows focus toward promising attack vectors before moving to Unit 3 (Vulnerability Assessment).</div>
+
+</section>
+
+<hr class="section-break">
+
+<!-- ======================= UNIT 3 ======================= -->
+<section class="unit" id="unit3">
+<h1>Unit 3 — Vulnerability Assessment &amp; Analysis</h1>
+
+<h2 class="topic" id="u3-vuln">What Is a Vulnerability?</h2>
+<p>A weakness or flaw in a system/app/network/process exploitable by a threat actor to gain unauthorised access, cause damage, or disrupt services. Arises from design flaws, coding errors, misconfigurations, or inadequate controls.</p>
+<table>
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>Vulnerability</td><td>The weakness itself (e.g., unpatched software)</td></tr>
+<tr><td>Threat</td><td>The potential cause of harm (e.g., a malicious attacker)</td></tr>
+<tr><td>Risk</td><td>Likelihood × Impact of a threat exploiting a vulnerability</td></tr>
+<tr><td>Exploit</td><td>The actual technique/code used to take advantage of it</td></tr>
+</table>
+<p><strong>Types of vulnerabilities:</strong> Software (buffer overflows, injection, use-after-free), Configuration (insecure defaults, open ports, weak permissions), Network (unencrypted comms, poor segmentation), Human/Process (social engineering, weak password policy, poor patch management).</p>
+
+<h2 class="topic" id="u3-cvss">CVSS — Common Vulnerability Scoring System</h2>
+<p>Open industry standard scoring severity 0.0–10.0. Current: <strong>CVSS v3.1</strong>, with v4.0 emerging.</p>
+<div class="grid2">
+  <div class="card"><h4>Base Score</h4>Intrinsic, constant characteristics: Attack Vector (N/A/L/Physical), Attack Complexity, Privileges Required, User Interaction, Scope, CIA Impact.</div>
+  <div class="card"><h4>Temporal Score</h4>Adjusts for time-based factors: exploit code availability, remediation level, report confidence.</div>
+  <div class="card"><h4>Environmental Score</h4>Customises for the org's specific context: asset importance, existing controls.</div>
+</div>
+<table>
+<tr><th>Score Range</th><th>Rating</th><th>Action</th></tr>
+<tr><td>0.0</td><td><span class="badge low">None</span></td><td>Informational only</td></tr>
+<tr><td>0.1–3.9</td><td><span class="badge low">Low</span></td><td>Low priority remediation</td></tr>
+<tr><td>4.0–6.9</td><td><span class="badge medium">Medium</span></td><td>Address in scheduled maintenance</td></tr>
+<tr><td>7.0–8.9</td><td><span class="badge high">High</span></td><td>Prioritise urgently</td></tr>
+<tr><td>9.0–10.0</td><td><span class="badge critical">Critical</span></td><td>Immediate action required</td></tr>
+</table>
+
+<h2 class="topic" id="u3-db">Vulnerability Databases — CVE, NVD, Exploit-DB</h2>
+<table>
+<tr><th>Feature</th><th>CVE (MITRE)</th><th>NVD (NIST)</th><th>Exploit-DB (OffSec)</th></tr>
+<tr><td>Primary Purpose</td><td>Unique ID assignment</td><td>Enriched vulnerability data</td><td>Exploit code archive</td></tr>
+<tr><td>CVSS Scores</td><td>No</td><td>Yes</td><td>No</td></tr>
+<tr><td>Exploit Code</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>API Available</td><td>Yes</td><td>Yes</td><td>Searchsploit (CLI)</td></tr>
+<tr><td>Maintained By</td><td>MITRE / DHS</td><td>NIST</td><td>Offensive Security</td></tr>
+</table>
+<p><strong>Format:</strong> <code>CVE-YEAR-NUMBER</code> (e.g. CVE-2021-44228 = Log4Shell). New CVEs assigned by <strong>CNAs</strong> (CVE Numbering Authorities). NVD adds CVSS + CWE + CPE metadata on top of raw CVE entries. Exploit-DB categorises exploits by type: remote, local, DoS, webapps, shellcode; searchable offline via <code>searchsploit</code>.</p>
+<div class="callout"><strong>The pipeline:</strong> CVE assigns an ID → NVD scores it (CVSS) → Exploit-DB provides the weaponised PoC used in the exploitation phase.</div>
+
+<h2 class="topic" id="u3-autoscan">Automated Vulnerability Scanning</h2>
+<p>Systematically probes systems against known-vulnerability databases (CVE/NVD) to generate a findings list.</p>
+<div class="grid2">
+  <div class="card"><h4>Strengths</h4>Speed (hundreds of hosts in minutes), Coverage (thousands of CVEs checked simultaneously), Consistency (repeatable results), Reporting (structured output).</div>
+  <div class="card"><h4>Limitations</h4>False positives (version string ≠ patch status), False negatives (logic flaws, zero-days missed), Noise (huge data volume), Credentialed vs uncredentialed trade-offs, potential network disruption.</div>
+</div>
+<div class="examtip">Automated scanning is a <strong>starting point, not a complete assessment</strong> — always supplement with manual testing.</div>
+
+<h2 class="topic" id="u3-nessus">Nessus (Tenable)</h2>
+<ul>
+<li><strong>170,000+ plugins</strong>, regularly updated for new CVEs.</li>
+<li><strong>Credentialed scanning</strong> (SSH for Linux, WMI/SMB for Windows) — checks patch levels, registry settings invisible to unauthenticated scans.</li>
+<li><strong>Compliance auditing:</strong> PCI-DSS, CIS Benchmarks, HIPAA, DISA STIG, ISO 27001.</li>
+<li><strong>Scan types:</strong> Basic Network Scan, Advanced Scan, Web Application Tests, Credentialed Patch Audit.</li>
+<li>Reports in PDF, HTML, CSV, Nessus XML.</li>
+</ul>
+
+<h2 class="topic" id="u3-openvas">OpenVAS / GVM (Greenbone)</h2>
+<ul>
+<li>Fully <strong>open-source and free</strong>. Leading alternative to Nessus.</li>
+<li><strong>50,000+ NVTs</strong> updated daily from Greenbone Community Feed.</li>
+<li>Web interface: <strong>Greenbone Security Assistant (GSA)</strong>.</li>
+<li>Supports authenticated + unauthenticated scanning; XML/PDF reports; GMP API for SIEM integration.</li>
+<li>Pre-installed in Kali Linux.</li>
+</ul>
+<table>
+<tr><th>Criterion</th><th>Nessus</th><th>OpenVAS/GVM</th></tr>
+<tr><td>Cost</td><td>Commercial (free Essentials tier)</td><td>Fully free</td></tr>
+<tr><td>Plugin/NVT Count</td><td>170,000+</td><td>50,000+</td></tr>
+<tr><td>Ease of Use</td><td>Polished, beginner-friendly</td><td>Steeper learning curve</td></tr>
+<tr><td>Compliance Checks</td><td>Extensive (PCI, CIS, STIG)</td><td>Limited</td></tr>
+<tr><td>Best For</td><td>Enterprise engagements</td><td>Academic / budget labs</td></tr>
+</table>
+
+<h2 class="topic" id="u3-webscan">Web App Scanning — Nikto, OWASP ZAP, Burp Suite</h2>
+<div class="grid2">
+  <div class="card"><h4>Nikto</h4>Tests 6,700+ dangerous files/programs, outdated software, header misconfig (HSTS/CSP), SSL weaknesses, dangerous HTTP methods. Intentionally <strong>noisy</strong> — no IDS evasion. Best as quick first-pass tool.
+  <pre><code>nikto -h http://target.com
+nikto -h https://target.com -ssl
+nikto -h http://target.com -Tuning 9</code></pre></div>
+  <div class="card"><h4>OWASP ZAP</h4>Free intercepting proxy. <strong>Spider/AJAX Spider</strong> crawls pages. <strong>Passive scan</strong> analyses traffic automatically. <strong>Active scan</strong> sends attack payloads (SQLi, XSS, CSRF) — authorised targets only. REST API for CI/CD.</div>
+  <div class="card"><h4>Burp Suite</h4>Industry-leading (PortSwigger). <strong>Proxy</strong> (intercept/modify), <strong>Repeater</strong> (manual replay), <strong>Intruder</strong> (fuzzing/brute force), <strong>Scanner</strong> (Pro-only auto detection), <strong>Decoder</strong>, <strong>Comparer</strong>.</div>
+  <div class="card"><h4>ZAP Workflow</h4>Configure browser proxy (127.0.0.1:8080) → Spider target → Passive scan (automatic) → Active scan → Review alerts → Generate report.</div>
+</div>
+
+<h2 class="topic" id="u3-manual">Manual Vulnerability Assessment Techniques</h2>
+<table>
+<tr><th>Technique</th><th>What It Finds</th></tr>
+<tr><td>Manual Code Review</td><td>Hardcoded credentials, improper input validation, insecure crypto, dangerous function calls</td></tr>
+<tr><td>Configuration Review</td><td>Deviations from hardening benchmarks (CIS Controls), firewall rule issues</td></tr>
+<tr><td>Business Logic Testing</td><td>Payment step bypass, negative quantity manipulation, unauthorised admin access — requires understanding intended behaviour</td></tr>
+<tr><td>Manual HTTP Manipulation</td><td>Injection, IDOR, auth flaws via Burp Repeater — beyond what automated scanners attempt</td></tr>
+</table>
+<table>
+<tr><th></th><th>Manual</th><th>Automated</th></tr>
+<tr><td>Speed</td><td>Slow</td><td>Fast</td></tr>
+<tr><td>Coverage</td><td>Deep and targeted</td><td>Broad but shallow</td></tr>
+<tr><td>Logic Flaws</td><td>Excellent</td><td>Poor</td></tr>
+<tr><td>False Positives</td><td>Low</td><td>High</td></tr>
+<tr><td>Cost</td><td>High</td><td>Low</td></tr>
+<tr><td>Zero-Day Detection</td><td>Possible</td><td>Not possible</td></tr>
+</table>
+<div class="callout">Professional engagements <strong>always</strong> include a significant manual component — automated tools alone are insufficient.</div>
+
+<h2 class="topic" id="u3-fp">False Positive vs False Negative</h2>
+<table>
+<tr><th>Aspect</th><th>False Positive</th><th>False Negative</th></tr>
+<tr><td>What happens</td><td>Scanner reports a vuln that isn't real</td><td>Scanner misses a vuln that is real</td></tr>
+<tr><td>Common cause</td><td>Version string mismatch — patch applied without version bump</td><td>Outdated plugins, unauthenticated scans, custom software, logic flaws, zero-days</td></tr>
+<tr><td>Risk</td><td>Wastes remediation effort</td><td><strong>More dangerous</strong> — creates false sense of security</td></tr>
+<tr><td>Mitigation</td><td>Manual verification, version/patch-level check, cross-reference multiple scanners</td><td>Keep plugins updated, use credentialed scans, supplement with manual testing, regular reassessment</td></tr>
+</table>
+<div class="examtip">Never include an unverified finding in a report. All Critical/High findings must be <strong>manually verified</strong> — this is a professional obligation, not optional.</div>
+
+<h2 class="topic" id="u3-analysis">Analysing Scan Results</h2>
+<div class="flow">
+  <div class="step">1. Review Raw Output</div><span class="arrow">→</span>
+  <div class="step">2. Verify Findings</div><span class="arrow">→</span>
+  <div class="step">3. Classify by Severity</div><span class="arrow">→</span>
+  <div class="step">4. Document Confirmed</div>
+</div>
+<p>Raw scans can contain hundreds/thousands of findings. Step 2 (manually confirming Critical/High items) is mandatory before anything reaches a client report.</p>
+<h3>Sample Finding Write-Up Format</h3>
+<table>
+<tr><th>Field</th><th>Example</th></tr>
+<tr><td>Vulnerability Title</td><td>Apache Log4j Remote Code Execution (Log4Shell)</td></tr>
+<tr><td>CVE ID</td><td>CVE-2021-44228</td></tr>
+<tr><td>CVSS Score</td><td><span class="badge critical">10.0 Critical</span></td></tr>
+<tr><td>Affected Host</td><td>192.168.1.50 (prod-app-01)</td></tr>
+<tr><td>Description</td><td>Log4j 2.14.1 vulnerable to RCE via JNDI injection in logged strings</td></tr>
+<tr><td>Evidence</td><td>Nessus Plugin #155998 + manual JNDI callback via Burp Collaborator</td></tr>
+<tr><td>Remediation</td><td>Upgrade to Log4j 2.17.1+; interim WAF rule blocking JNDI strings</td></tr>
+</table>
+
+<h2 class="topic" id="u3-priority">Vulnerability Prioritisation &amp; Risk Assessment</h2>
+<p><strong>Risk = Likelihood × Impact</strong></p>
+<div class="grid2">
+  <div class="card"><h4>Likelihood Factors</h4>Attack Vector (Network vs Local), Attack Complexity, Privileges Required, exploit availability, active exploitation in the wild.</div>
+  <div class="card"><h4>Impact Factors</h4>Confidentiality/Integrity/Availability impact, business criticality of asset, regulatory implications (GDPR, PCI-DSS).</div>
+</div>
+<table>
+<tr><th>Likelihood \ Impact</th><th>Very Low</th><th>Low</th><th>High</th><th>Very High</th></tr>
+<tr><td>Very High</td><td>Medium</td><td>High</td><td><span class="badge critical">Critical</span></td><td><span class="badge critical">Critical</span></td></tr>
+<tr><td>High</td><td>Low</td><td>Medium</td><td><span class="badge high">High</span></td><td><span class="badge critical">Critical</span></td></tr>
+<tr><td>Medium</td><td>Low</td><td>Medium</td><td>Medium</td><td><span class="badge high">High</span></td></tr>
+<tr><td>Low</td><td>Info</td><td>Low</td><td>Low</td><td>Medium</td></tr>
+</table>
+<p><strong>Beyond CVSS alone, consider:</strong> Exploit Availability (public Metasploit/Exploit-DB module = much higher urgency), Asset Criticality (medium vuln on payment server &gt; critical vuln on isolated dev box), Network Exposure (internet-facing &gt;&gt; internal/air-gapped).</p>
+
+<h2 class="topic" id="u3-cases">CVE Case Studies</h2>
+<div class="grid2">
+  <div class="card"><h4>Log4Shell — CVE-2021-44228 <span class="badge critical">10.0</span></h4>
+  RCE in Apache Log4j 2 (Java logging library). Unauthenticated attacker executes arbitrary code via a crafted string in any logged field (HTTP headers, usernames). Attack Vector: Network. Affected millions of systems globally — a supply-chain catastrophe. Scanners released plugins within 24 hours.</div>
+  <div class="card"><h4>EternalBlue — CVE-2017-0144 <span class="badge high">8.1</span></h4>
+  SMBv1 RCE vulnerability, NSA-developed, leaked by Shadow Brokers (2017). Weaponised in WannaCry ransomware &amp; NotPetya. Nessus plugin MS17-010 detects it. <strong>Key lesson:</strong> CVSS score (8.1, "High") did not capture the catastrophic real-world business impact — CVSS is a starting point, not the full risk picture.</div>
+</div>
+
+<h2 class="topic" id="u3-lifecycle">Vulnerability Assessment Lifecycle</h2>
+<div class="flow">
+  <div class="step">Asset Discovery</div><span class="arrow">→</span>
+  <div class="step">Vulnerability Scanning</div><span class="arrow">→</span>
+  <div class="step">Manual Assessment</div><span class="arrow">→</span>
+  <div class="step">Result Analysis</div><span class="arrow">→</span>
+  <div class="step">Risk Prioritisation</div><span class="arrow">→</span>
+  <div class="step">Reporting</div>
+</div>
+<p>This is continuous and iterative — after remediation, the cycle restarts with a new scan to verify fixes (<strong>remediation verification / retesting</strong>).</p>
+
+<h2 class="topic" id="u3-report">Vulnerability Assessment Report Structure</h2>
+<ol>
+<li><strong>Executive Summary</strong> — non-technical overview for senior management</li>
+<li><strong>Scope and Methodology</strong> — systems assessed, tools used, scan types, timeline, limitations</li>
+<li><strong>Findings Summary</strong> — table of confirmed vulnerabilities by severity with counts</li>
+<li><strong>Detailed Findings</strong> — CVE ID, CVSS, affected hosts, description, evidence, remediation per finding</li>
+<li><strong>Remediation Recommendations</strong> — prioritised roadmap: short-term (patch now), medium-term (30 days), long-term (strategic)</li>
+</ol>
+
+</section>
+
+</main>
+</div>
+</body>
+</html>
