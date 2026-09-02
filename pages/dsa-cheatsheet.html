@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pattern Recognition — A DSA Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12151c;
+    --panel:#181c25;
+    --panel-2:#1e2330;
+    --border:#2a3040;
+    --text:#e8e6df;
+    --text-dim:#9aa1b2;
+    --text-faint:#636b7d;
+    --amber:#e8a33d;
+    --amber-dim:#8a6a34;
+    --teal:#5fd6c4;
+    --teal-dim:#3a7d72;
+    --violet:#b39ce8;
+    --violet-dim:#6e5f8f;
+    --rose:#e88a9e;
+    --good:#7dc98f;
+    --bad:#e0836f;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:'Source Serif 4', Georgia, serif;
+    font-size:17px;
+    line-height:1.65;
+  }
+  h1,h2,h3,h4,.mono,code,pre,.badge,.tag,nav,.toc-label{
+    font-family:'Space Grotesk', sans-serif;
+  }
+  code, pre, .code{
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* ---------- layout ---------- */
+  .shell{display:flex; max-width:1320px; margin:0 auto;}
+  nav.side{
+    width:250px; flex-shrink:0;
+    position:sticky; top:0; height:100vh;
+    overflow-y:auto;
+    padding:36px 22px 36px 32px;
+    border-right:1px solid var(--border);
+  }
+  nav.side::-webkit-scrollbar{width:6px;}
+  nav.side::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
+  .brand{
+    font-weight:700; font-size:15px; letter-spacing:0.02em;
+    color:var(--text); margin-bottom:2px;
+  }
+  .brand span{color:var(--amber);}
+  .brand-sub{color:var(--text-faint); font-size:12.5px; margin-bottom:28px;}
+  .toc-group{margin-bottom:22px;}
+  .toc-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--text-faint); margin-bottom:8px; font-weight:600;
+  }
+  nav.side a{
+    display:block; color:var(--text-dim); text-decoration:none;
+    font-size:14px; padding:5px 0; border-left:2px solid transparent;
+    padding-left:10px; margin-left:-11px; transition:color .15s, border-color .15s;
+  }
+  nav.side a:hover{color:var(--text); border-left-color:var(--border);}
+  nav.side a.hm:hover{border-left-color:var(--amber); color:var(--amber);}
+  nav.side a.tp:hover{border-left-color:var(--teal); color:var(--teal);}
+  nav.side a.sw:hover{border-left-color:var(--violet); color:var(--violet);}
+
+  main{flex:1; min-width:0; padding:56px 56px 120px 56px; max-width:900px;}
+
+  /* ---------- hero ---------- */
+  .hero h1{
+    font-size:38px; line-height:1.15; font-weight:700; margin:0 0 14px 0;
+    max-width:11ch;
+  }
+  .hero .lede{
+    font-size:18px; color:var(--text-dim); max-width:62ch; margin-bottom:0;
+  }
+  .hero-meta{
+    display:flex; gap:22px; margin-top:26px; flex-wrap:wrap;
+  }
+  .hero-meta div{
+    border-left:2px solid var(--amber);
+    padding-left:12px;
+  }
+  .hero-meta .n{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; display:block;}
+  .hero-meta .l{font-size:12.5px; color:var(--text-faint);}
+
+  hr.rule{border:none; border-top:1px solid var(--border); margin:52px 0;}
+
+  h2.section-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:26px; font-weight:700; margin:0 0 6px 0; scroll-margin-top:24px;
+  }
+  .section-kicker{
+    font-size:13px; color:var(--text-faint); margin-bottom:22px;
+  }
+  h3{
+    font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:600;
+    margin:34px 0 10px 0; scroll-margin-top:24px;
+  }
+  p{margin:0 0 14px 0;}
+  ul, ol{margin:0 0 16px 0; padding-left:22px;}
+  li{margin-bottom:6px;}
+  strong{color:var(--text); font-weight:600;}
+  a{color:var(--amber);}
+
+  /* ---------- accent variants per pattern ---------- */
+  .pattern-hm h2.section-title{color:var(--amber);}
+  .pattern-tp h2.section-title{color:var(--teal);}
+  .pattern-sw h2.section-title{color:var(--violet);}
+
+  /* ---------- callout / intuition boxes ---------- */
+  .box{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:3px; padding:18px 20px; margin:18px 0;
+  }
+  .box.intuition{border-left:3px solid var(--amber);}
+  .pattern-tp .box.intuition{border-left-color:var(--teal);}
+  .pattern-sw .box.intuition{border-left-color:var(--violet);}
+  .box .box-label{
+    font-family:'Space Grotesk',sans-serif; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--text-faint); margin-bottom:8px; font-weight:600;
+  }
+
+  /* ---------- code blocks ---------- */
+  pre{
+    background:#0d0f14; border:1px solid var(--border); border-radius:3px;
+    padding:16px 18px; overflow-x:auto; font-size:13.5px; line-height:1.6;
+    margin:14px 0 20px 0;
+  }
+  code.inline{
+    background:var(--panel-2); border:1px solid var(--border); border-radius:3px;
+    padding:1px 6px; font-size:0.85em; color:var(--teal);
+  }
+  pre .c{color:var(--text-faint); font-style:italic;} /* comments handled via span in text */
+
+  /* ---------- brute/better/optimal ladder ---------- */
+  .ladder{display:flex; flex-direction:column; gap:10px; margin:18px 0 22px 0;}
+  .rung{
+    display:grid; grid-template-columns:96px 1fr; gap:16px;
+    border:1px solid var(--border); border-radius:3px; padding:12px 16px;
+    background:var(--panel);
+  }
+  .rung .tag{
+    font-size:11px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;
+    align-self:start; padding-top:2px;
+  }
+  .rung.brute .tag{color:var(--bad);}
+  .rung.better .tag{color:var(--amber);}
+  .rung.optimal .tag{color:var(--good);}
+  .rung .complexity{
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--text-dim);
+    display:block; margin-top:4px;
+  }
+  .rung p{margin:0; font-size:15px; color:var(--text-dim);}
+
+  /* ---------- problem cards ---------- */
+  details.problem{
+    border:1px solid var(--border); border-radius:3px; margin:14px 0;
+    background:var(--panel);
+  }
+  details.problem[open]{background:var(--panel-2);}
+  details.problem summary{
+    cursor:pointer; padding:14px 18px; list-style:none;
+    display:flex; align-items:center; gap:12px; justify-content:space-between;
+  }
+  details.problem summary::-webkit-details-marker{display:none;}
+  .problem-title{
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15.5px; color:var(--text);
+  }
+  .problem-src{color:var(--text-faint); font-size:12.5px; font-weight:400;}
+  .diff{
+    font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:20px; white-space:nowrap;
+  }
+  .diff.easy{background:rgba(125,201,143,0.12); color:var(--good);}
+  .diff.medium{background:rgba(232,163,61,0.14); color:var(--amber);}
+  .diff.hard{background:rgba(224,131,111,0.14); color:var(--bad);}
+  .problem-body{padding:0 18px 18px 18px; border-top:1px solid var(--border);}
+  .problem-body h4{
+    font-family:'Space Grotesk',sans-serif; font-size:12px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--text-faint); margin:16px 0 6px 0; font-weight:600;
+  }
+  .problem-body h4:first-child{margin-top:16px;}
+  .problem-body p{font-size:15px; color:var(--text-dim);}
+
+  /* ---------- decision table ---------- */
+  table{width:100%; border-collapse:collapse; margin:16px 0 24px 0; font-size:14.5px;}
+  th{
+    text-align:left; font-family:'Space Grotesk',sans-serif; font-size:11px;
+    text-transform:uppercase; letter-spacing:0.06em; color:var(--text-faint);
+    padding:8px 14px; border-bottom:1px solid var(--border); font-weight:600;
+  }
+  td{padding:11px 14px; border-bottom:1px solid var(--border); color:var(--text-dim); vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td.strong-col{color:var(--text); font-weight:600; font-family:'Space Grotesk',sans-serif; font-size:13.5px;}
+
+  /* ---------- checklist ---------- */
+  .checklist{list-style:none; padding:0; margin:16px 0;}
+  .checklist li{
+    display:flex; gap:12px; align-items:flex-start; padding:8px 0;
+    border-bottom:1px solid var(--border); font-size:15px; color:var(--text-dim);
+  }
+  .checklist li:last-child{border-bottom:none;}
+  .checklist .box-mark{
+    flex-shrink:0; width:16px; height:16px; border:1.5px solid var(--text-faint);
+    border-radius:3px; margin-top:3px;
+  }
+
+  /* ---------- misc ---------- */
+  .quiet-list{columns:2; column-gap:32px;}
+  .quiet-list li{font-size:14.5px; break-inside:avoid;}
+  footer.closer{
+    margin-top:60px; padding-top:32px; border-top:1px solid var(--border);
+  }
+  footer.closer p{color:var(--text-dim); font-size:16px;}
+
+  @media (max-width:880px){
+    .shell{flex-direction:column;}
+    nav.side{position:relative; width:100%; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:36px 22px 100px 22px;}
+    .quiet-list{columns:1;}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="side">
+  <div class="brand">field<span>manual</span>.dsa</div>
+  <div class="brand-sub">hashmaps · two pointers · sliding window</div>
+
+  <div class="toc-group">
+    <div class="toc-label">Foundations</div>
+    <a href="#framework">The meta-framework</a>
+    <a href="#complexity">Complexity quick-ref</a>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-label">Pattern 01</div>
+    <a class="hm" href="#hashmaps">Hashmaps</a>
+    <a class="hm" href="#hm-problems">↳ Problem set</a>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-label">Pattern 02</div>
+    <a class="tp" href="#two-pointers">Two Pointers</a>
+    <a class="tp" href="#tp-problems">↳ Problem set</a>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-label">Pattern 03</div>
+    <a class="sw" href="#sliding-window">Sliding Window</a>
+    <a class="sw" href="#sw-problems">↳ Problem set</a>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-label">Wrap-up</div>
+    <a href="#decision-tree">Decision tree</a>
+    <a href="#pitfalls">Pitfalls checklist</a>
+    <a href="#closer">Before you walk in</a>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero">
+    <h1>Pattern Recognition:<br>A DSA Field Manual</h1>
+    <p class="lede">You already know how to code. What you've lost touch with is <strong>pattern recall under pressure</strong> — the half-second where a problem statement should trigger "oh, this is a sliding window." This manual rebuilds that reflex for the three families you'll almost certainly see tomorrow: hashmaps, two pointers, sliding window.</p>
+    <div class="hero-meta">
+      <div><span class="n">3</span><span class="l">core patterns</span></div>
+      <div><span class="n">16</span><span class="l">problems, brute → optimal</span></div>
+      <div><span class="n">1</span><span class="l">meta-framework for anything unfamiliar</span></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="framework">
+    <h2 class="section-title">The meta-framework</h2>
+    <p class="section-kicker">Use this on every single question, even ones this manual doesn't cover.</p>
+
+    <p>Interviewers grade the <em>process</em> more than the final code. Narrate these five steps out loud, in order, every time:</p>
+
+    <div class="ladder">
+      <div class="rung">
+        <div class="tag">1 · Clarify</div>
+        <p>Restate the problem in your own words. Ask about input size, duplicates, negative numbers, sorted-ness, empty input, and what to return on no valid answer. This alone signals seniority.</p>
+      </div>
+      <div class="rung">
+        <div class="tag">2 · Brute force</div>
+        <p>Say the obvious O(n²) or O(n³) approach out loud, even if you won't code it. It proves you understand the problem and gives you a baseline to optimize from and a way to sanity-check your final answer.</p>
+      </div>
+      <div class="rung">
+        <div class="tag">3 · Find the bottleneck</div>
+        <p>Ask: "what is my brute force redoing that it doesn't need to?" Usually it's redundant lookups (→ hashmap), redundant nested scanning over a sorted/orderable structure (→ two pointers), or redundant recomputation over a contiguous range (→ sliding window).</p>
+      </div>
+      <div class="rung">
+        <div class="tag">4 · Code the optimal</div>
+        <p>Write it incrementally. Talk while you type. Name variables meaningfully (<code class="inline">left</code>/<code class="inline">right</code>, not <code class="inline">i</code>/<code class="inline">j</code>, once roles matter).</p>
+      </div>
+      <div class="rung">
+        <div class="tag">5 · Dry run + edge cases</div>
+        <p>Trace one small example by hand. Then state complexity and check empty input, single element, all-duplicates, and the smallest/largest constraint value.</p>
+      </div>
+    </div>
+
+    <div class="box intuition">
+      <div class="box-label">Why this matters more than the code</div>
+      <p style="margin:0;">Silence is the worst thing you can do in a DSA round. An interviewer who hears your reasoning can nudge you toward the right pattern even if you're stuck. An interviewer watching you stare at the screen has nothing to work with.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section id="complexity">
+    <h2 class="section-title">Complexity quick-reference</h2>
+    <p class="section-kicker">The rough conversion table interviewers expect you to have internalized.</p>
+    <table>
+      <tr><th>Input size (n)</th><th>Expected complexity</th><th>What it rules in</th></tr>
+      <tr><td class="strong-col">n ≤ ~12</td><td>O(2ⁿ), O(n!)</td><td>backtracking, permutations</td></tr>
+      <tr><td class="strong-col">n ≤ ~500</td><td>O(n³)</td><td>brute-force triple loops (rare as final answer)</td></tr>
+      <tr><td class="strong-col">n ≤ ~5,000</td><td>O(n²)</td><td>brute-force pairs — your starting point, not your ending point</td></tr>
+      <tr><td class="strong-col">n ≤ ~10⁶</td><td>O(n log n)</td><td>sorting-based approaches, heaps</td></tr>
+      <tr><td class="strong-col">n ≤ ~10⁷–10⁸</td><td>O(n)</td><td><strong>hashmap, two pointers, sliding window land here</strong></td></tr>
+      <tr><td class="strong-col">any n</td><td>O(log n) / O(1)</td><td>binary search, math, direct lookup</td></tr>
+    </table>
+    <p>If the constraint says <code class="inline">n ≤ 10^5</code> or higher and you're reaching for a nested loop, that's your own signal to stop and ask "what am I redoing?"</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= HASHMAPS ================= -->
+  <section id="hashmaps" class="pattern-hm">
+    <h2 class="section-title">Pattern 01 · Hashmaps</h2>
+    <p class="section-kicker">Trade space for time by turning "search" into "lookup."</p>
+
+    <div class="box intuition">
+      <div class="box-label">The core intuition</div>
+      <p style="margin:0;">Any time your brute force re-scans the array to answer "have I seen X before?", "how many times has X appeared?", or "what's paired with X?" — a hashmap turns that O(n) re-scan into an O(1) lookup. The trade is always <strong>O(n) extra space for O(n) time saved</strong>. If you hear yourself say "for each element, check the rest of the array," a hashmap is almost always the fix.</p>
+    </div>
+
+    <h3>Reach for it when you see...</h3>
+    <ul>
+      <li>"Find a pair / triplet that sums to X" (unsorted array)</li>
+      <li>"Count frequency," "find duplicates," "group by some key"</li>
+      <li>"Have I seen this before" — existence or first-occurrence questions</li>
+      <li>Anagram / permutation comparisons (character or word frequency signatures)</li>
+      <li>Prefix-sum problems ("subarray sums to K") — store prefix sums, not raw values</li>
+    </ul>
+
+    <h3>Python toolkit</h3>
+    <pre><code>from collections import defaultdict, Counter
+
+# Plain dict — get() avoids KeyError, gives you a default inline
+d = {}
+d[key] = d.get(key, 0) + 1
+
+# defaultdict — auto-creates missing keys with a default factory
+# CAUTION: reading a missing key with defaultdict CREATES it (see pitfalls)
+groups = defaultdict(list)
+groups[key].append(value)
+
+counts = defaultdict(int)
+counts[key] += 1
+
+# Counter — purpose-built frequency map, has extra powers
+c = Counter(nums)          # {value: count}
+c.most_common(k)           # top-k by frequency, O(n log k)
+c1 - c2                    # subtract counts (drops zero/negative results)
+c1 & c2                    # min of counts per key — great for anagram checks
+
+# set — when you only care about membership, not count
+seen = set()
+if x in seen: ...          # O(1) average
+seen.add(x)</code></pre>
+
+    <h3>Generic template</h3>
+    <pre><code>def solve(nums):
+    seen = {}                      # value/key -> index, count, or bool
+    for i, num in enumerate(nums):
+        complement = target - num  # or whatever "partner" you need
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i              # record AFTER checking — avoids self-match
+    return []</code></pre>
+
+    <div class="box">
+      <div class="box-label">Note the ordering trick</div>
+      <p style="margin:0;">Check for the complement <em>before</em> inserting the current element. This single line is what prevents a value from pairing with itself and is the #1 off-by-logic bug in hashmap two-sum variants.</p>
+    </div>
+
+    <h3 id="hm-problems">Problem set</h3>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Two Sum <span class="problem-src">— NeetCode #1 · Striver Sheet</span></span>
+        <span class="diff easy">Easy</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Return indices of the two numbers that add up to a target.</p>
+        <h4>Brute → Better → Optimal</h4>
+        <p><strong>Brute O(n²):</strong> check every pair. <strong>Optimal O(n):</strong> one-pass hashmap storing value → index; look up <code class="inline">target - num</code> as you go (see template above). No "better" tier needed — hashmap gets you straight to optimal in one pass.</p>
+        <h4>Why it matters</h4>
+        <p>It's the canonical "one seen-before check replaces a nested loop" problem. Every interviewer expects the one-pass version, not two passes.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Group Anagrams <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Group strings that are anagrams of each other.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²·k)</span></div><p>Compare every string against every other string for anagram equality.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n·k log k)</span></div><p>Sort each string's characters to build a canonical key; hashmap key → list of original strings.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n·k)</span></div><p>Skip sorting — build a 26-length character-count tuple as the key instead. Same grouping, no log k factor.</p></div>
+        </div>
+        <h4>Key idea</h4>
+        <p>The "key" you hash on doesn't have to be the raw data — it just has to be <em>canonical</em>: two anagrams must always produce the identical key.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Top K Frequent Elements <span class="problem-src">— NeetCode Blind 75</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Return the k most frequent elements in the array.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n log n)</span></div><p>Count frequencies with a hashmap, then sort the (value, count) pairs by count.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n log k)</span></div><p>Count, then maintain a min-heap of size k over the counts — never sort the whole thing.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Bucket sort: index <code class="inline">i</code> of a buckets array holds all values with frequency <code class="inline">i</code> (frequency is bounded by n, so buckets has n+1 slots). Walk buckets from the back.</p></div>
+        </div>
+        <h4>Pattern to remember</h4>
+        <p>"Count first, then rank by count" is a two-stage pattern: hashmap for counting is almost never the part that needs optimizing — the ranking step is. Bucket sort applies whenever the ranking key (frequency) is bounded by n.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Longest Consecutive Sequence <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find the length of the longest run of consecutive integers, unsorted input, required O(n).</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²)</span></div><p>For each number, keep checking num+1, num+2... by scanning the array each time.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n log n)</span></div><p>Sort first, then walk once counting consecutive runs.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Put everything in a hashset. For each number, only start counting a sequence if <code class="inline">num - 1</code> is NOT in the set (i.e., you're at a true sequence start). Then walk forward with a while loop.</p></div>
+        </div>
+        <h4>The trick that makes it O(n)</h4>
+        <p>Every number is only ever "walked" once across the whole algorithm, because you only start a walk from sequence starts. That single <code class="inline">if num - 1 not in set</code> guard is what turns a naive O(n²) hashset walk into O(n) amortized.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Subarray Sum Equals K <span class="problem-src">— NeetCode · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Count the number of contiguous subarrays that sum exactly to k. (Note: array can contain negatives, which is exactly why sliding window doesn't work here — see the decision tree below.)</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²)</span></div><p>Try every subarray, sum it, compare to k.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Running prefix sum + hashmap of {prefix_sum: count_of_times_seen}. At index i, if <code class="inline">prefix_sum - k</code> has been seen before, every one of those earlier positions marks a valid subarray ending at i.</p></div>
+        </div>
+        <pre><code>def subarraySum(nums, k):
+    count, prefix_sum = 0, 0
+    seen = {0: 1}  # empty prefix sums to 0 — seeds subarrays starting at index 0
+    for num in nums:
+        prefix_sum += num
+        count += seen.get(prefix_sum - k, 0)
+        seen[prefix_sum] = seen.get(prefix_sum, 0) + 1
+    return count</code></pre>
+        <h4>Why <code class="inline">{0: 1}</code> seed</h4>
+        <p>It accounts for the case where the subarray from index 0 itself sums to k — without it you'd silently undercount.</p>
+      </div>
+    </details>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= TWO POINTERS ================= -->
+  <section id="two-pointers" class="pattern-tp">
+    <h2 class="section-title">Pattern 02 · Two Pointers</h2>
+    <p class="section-kicker">Exploit order (sorted arrays, linked lists) to eliminate a nested loop entirely.</p>
+
+    <div class="box intuition">
+      <div class="box-label">The core intuition</div>
+      <p style="margin:0;">Two pointers works when moving one pointer inward gives you <strong>provable, monotonic information</strong> about the rest of the search space — so you never need to re-check what you've already ruled out. It has three distinct shapes, and knowing which shape you're in is half the battle:</p>
+    </div>
+
+    <table>
+      <tr><th>Shape</th><th>Movement</th><th>Used for</th></tr>
+      <tr><td class="strong-col">Converging</td><td>left starts at 0, right at n-1, move inward</td><td>sorted-array pair sums, palindrome checks, container/area problems</td></tr>
+      <tr><td class="strong-col">Same-direction</td><td>both start at 0, move forward at different rates</td><td>in-place dedup/partition, merging two arrays</td></tr>
+      <tr><td class="strong-col">Fast &amp; slow</td><td>fast moves 2 steps, slow moves 1</td><td>cycle detection, finding the middle of a linked list</td></tr>
+    </table>
+
+    <h3>Reach for it when you see...</h3>
+    <ul>
+      <li>The array is already sorted (or you're free to sort it — check if order matters for the answer)</li>
+      <li>"Pair/triplet sums to X" <em>and</em> the array is sorted → two pointers beats hashmap on space (O(1) vs O(n))</li>
+      <li>Palindrome checks, reversing in place</li>
+      <li>Linked-list cycle, middle-of-list, "nth from the end"</li>
+      <li>In-place array modification (remove duplicates, partition around a pivot)</li>
+    </ul>
+
+    <h3>Converging-pointer template</h3>
+    <pre><code>def two_pointer(arr):
+    left, right = 0, len(arr) - 1
+    while left < right:
+        current = arr[left] + arr[right]     # or whatever your condition needs
+        if current == target:
+            # record answer
+            left += 1
+            right -= 1
+        elif current < target:
+            left += 1     # need a bigger sum -> only moving left can increase it
+        else:
+            right -= 1    # need a smaller sum -> only moving right can decrease it
+    return result</code></pre>
+
+    <h3>Fast &amp; slow template (Floyd's)</h3>
+    <pre><code>def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:
+            return True
+    return False</code></pre>
+
+    <h3 id="tp-problems">Problem set</h3>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Two Sum II — Input Array Is Sorted <span class="problem-src">— NeetCode · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Same as Two Sum, but the array is sorted and you must use O(1) extra space.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²)</span></div><p>Nested loop over all pairs.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n) time, O(n) space</span></div><p>Hashmap approach from Two Sum still works — but wastes the fact that the array is sorted.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n) time, O(1) space</span></div><p>Converging two pointers using the template above — sum too small → move left up, sum too big → move right down.</p></div>
+        </div>
+        <h4>Interview signal</h4>
+        <p>This is the single best problem to say out loud: "I could use a hashmap like classic Two Sum, but since it's sorted, two pointers gets me the same time complexity with no extra space." That sentence alone demonstrates real pattern fluency.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Valid Palindrome <span class="problem-src">— NeetCode · Striver Sheet</span></span>
+        <span class="diff easy">Easy</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Check if a string is a palindrome, ignoring non-alphanumeric characters and case.</p>
+        <h4>Approach</h4>
+        <p>Converging pointers from both ends; skip non-alphanumeric characters with an inner while loop on each side before comparing. O(n) time, O(1) space — no need to build a cleaned copy of the string first.</p>
+        <h4>Pitfall</h4>
+        <p>Forgetting to lowercase both characters before comparing, and forgetting the bounds check (<code class="inline">left &lt; right</code>) inside the inner skip-loops so you don't walk pointers past each other.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Container With Most Water <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Given heights, find two lines that with the x-axis form the container holding the most water.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²)</span></div><p>Try every pair of lines, compute area = min(height) × width.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Converging pointers. Always move the pointer at the <strong>shorter</strong> line inward.</p></div>
+        </div>
+        <h4>The intuition that unlocks it</h4>
+        <p>Width only ever shrinks as pointers converge, so area can only grow if height grows. The shorter line is capping your current area — moving the taller line inward can only hurt you (width drops, height cap unchanged or worse), while moving the shorter line inward is the only move that has a chance of finding a taller line and raising the cap.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">3Sum <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find all unique triplets that sum to zero.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n³)</span></div><p>Three nested loops, dedupe with a set of sorted tuples.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n²)</span></div><p>Sort the array. Fix one element with an outer loop, then run converging two pointers on the remainder for the other two.</p></div>
+        </div>
+        <pre><code>def threeSum(nums):
+    nums.sort()
+    res = []
+    for i in range(len(nums)):
+        if i > 0 and nums[i] == nums[i-1]:
+            continue                       # skip duplicate anchors
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total < 0:
+                left += 1
+            elif total > 0:
+                right -= 1
+            else:
+                res.append([nums[i], nums[left], nums[right]])
+                left += 1
+                right -= 1
+                while left < right and nums[left] == nums[left-1]:
+                    left += 1               # skip duplicate second element
+    return res</code></pre>
+        <h4>The escalation to remember</h4>
+        <p>3Sum = "fix one, two-pointer the rest." This same escalation trick generalizes to 4Sum (fix two, two-pointer the rest, O(n³)) — mention that generalization if asked as a follow-up.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Trapping Rain Water <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff hard">Hard</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Given elevation heights, compute total trapped rainwater.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²)</span></div><p>For each bar, scan left and right to find the max on each side.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n) time, O(n) space</span></div><p>Precompute <code class="inline">left_max[]</code> and <code class="inline">right_max[]</code> arrays in two passes, then a third pass computes trapped water per index.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n) time, O(1) space</span></div><p>Converging pointers with two running maxes (<code class="inline">left_max</code>, <code class="inline">right_max</code>) instead of arrays. Move whichever pointer has the smaller running max — water at that position is bounded by that smaller max.</p></div>
+        </div>
+        <h4>Why this one feels hard</h4>
+        <p>It's genuinely a step up from Container With Most Water because you're accumulating an answer at <em>every</em> position, not just picking one final pair. If you get this in the interview, explicitly say you're doing the O(n)/O(n) two-array version first, then optimizing space — that staged narration is worth real credit even if you don't finish the O(1)-space version.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Remove Duplicates from Sorted Array <span class="problem-src">— NeetCode · Striver Sheet</span></span>
+        <span class="diff easy">Easy</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Remove duplicates in-place from a sorted array, return the new length.</p>
+        <h4>Approach — same-direction pointers</h4>
+        <p><code class="inline">slow</code> marks the last confirmed-unique position; <code class="inline">fast</code> scans ahead. When <code class="inline">nums[fast] != nums[slow]</code>, advance slow and copy the value in. This is the template for a whole family of "partition/compact array in place" problems (move zeroes, remove element, etc).</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Linked List Cycle <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff easy">Easy</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Detect if a linked list has a cycle.</p>
+        <h4>Approach — Floyd's fast &amp; slow (see template above)</h4>
+        <p>If there's a cycle, fast eventually laps slow inside it — they're guaranteed to meet within one full loop of the cycle. If there's no cycle, fast simply hits <code class="inline">None</code>.</p>
+        <h4>Common follow-up</h4>
+        <p>"Find the start of the cycle" — after slow and fast meet, reset one pointer to head and move both one step at a time; they meet again exactly at the cycle's start. Worth memorizing the fact even if not the full proof.</p>
+      </div>
+    </details>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= SLIDING WINDOW ================= -->
+  <section id="sliding-window" class="pattern-sw">
+    <h2 class="section-title">Pattern 03 · Sliding Window</h2>
+    <p class="section-kicker">Two pointers' cousin, specialized for contiguous subarrays/substrings.</p>
+
+    <div class="box intuition">
+      <div class="box-label">The core intuition</div>
+      <p style="margin:0;">When your brute force recomputes something over every contiguous subarray from scratch, a sliding window lets you <strong>incrementally update</strong> that computation as the window's edges move — instead of a nested loop recomputing the whole range each time, you add one element on the right and (sometimes) remove one on the left. It only works when growing/shrinking the window lets you cheaply update your running answer — sums, counts, and frequency maps are cheap to update; "max of window" is not (that needs a monotonic deque, see below).</p>
+    </div>
+
+    <h3>Reach for it when you see...</h3>
+    <ul>
+      <li>"Longest / shortest / max / min <strong>contiguous</strong> subarray or substring" satisfying some condition</li>
+      <li>A constraint that only gets violated by growing the window and only gets fixed by shrinking it (monotonic validity) — <strong>this is the litmus test</strong></li>
+      <li>Explicit fixed window size k ("max sum of any subarray of size k")</li>
+      <li><strong>Watch out:</strong> if the array has negative numbers and you need a sum, sliding window's "shrink when too big" logic breaks — that's a prefix-sum + hashmap problem instead (see Subarray Sum Equals K above)</li>
+    </ul>
+
+    <h3>Fixed-size window template</h3>
+    <pre><code>def fixed_window(nums, k):
+    window_sum = sum(nums[:k])
+    best = window_sum
+    for right in range(k, len(nums)):
+        window_sum += nums[right] - nums[right - k]  # add new, drop the one that fell off
+        best = max(best, window_sum)
+    return best</code></pre>
+
+    <h3>Variable-size window template (the one to memorize)</h3>
+    <pre><code>def variable_window(s):
+    left = 0
+    window_state = {}          # or a running count/sum — whatever tracks validity
+    best = 0
+    for right in range(len(s)):
+        # 1. expand: fold s[right] into window_state
+        window_state[s[right]] = window_state.get(s[right], 0) + 1
+
+        # 2. shrink while the window is invalid
+        while not is_valid(window_state):
+            window_state[s[left]] -= 1
+            if window_state[s[left]] == 0:
+                del window_state[s[left]]
+            left += 1
+
+        # 3. window [left, right] is now valid — update answer
+        best = max(best, right - left + 1)
+    return best</code></pre>
+
+    <div class="box">
+      <div class="box-label">Say this out loud in the interview</div>
+      <p style="margin:0;">"Right pointer expands the window every iteration; left pointer only advances when the window becomes invalid — so overall each pointer moves at most n times, giving O(n) total even though it looks like a nested loop." That sentence pre-empts the interviewer's most common follow-up question about this pattern's complexity.</p>
+    </div>
+
+    <h3 id="sw-problems">Problem set</h3>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Maximum Sum Subarray of Size K <span class="problem-src">— classic warm-up / Striver Sheet</span></span>
+        <span class="diff easy">Easy</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find the maximum sum of any contiguous subarray of exactly size k.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n·k)</span></div><p>For each starting index, sum the next k elements from scratch.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Fixed-size window template above — each slide adds one element and removes one.</p></div>
+        </div>
+        <p>This is the "hello world" of sliding window — if the mechanics here aren't automatic, drill this one first before anything else in this section.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Longest Substring Without Repeating Characters <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find the length of the longest substring with no repeated characters.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n³)</span></div><p>Check every substring for uniqueness with an inner set-building loop.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n²)</span></div><p>Fix left, extend right until a duplicate appears — but restart the whole inner scan from a fresh set each time left moves.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Variable window with a hashmap of <code class="inline">char → last seen index</code>. On a repeat, jump <code class="inline">left</code> directly to <code class="inline">last_seen[char] + 1</code> instead of shrinking one step at a time.</p></div>
+        </div>
+        <h4>The upgrade worth knowing</h4>
+        <p>Most people first learn this with a <code class="inline">while</code>-shrink loop (removing from a set one at a time). The last-seen-index version is strictly better — it jumps left in one step instead of looping — and interviewers notice when you offer it as a follow-up optimization.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Longest Repeating Character Replacement <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Given a string and an integer k, find the longest substring achievable by replacing at most k characters with any other character, such that the substring becomes all-same-character.</p>
+        <h4>Approach — variable window with a validity formula</h4>
+        <p>Track a frequency count of characters in the window and the count of the single most frequent character (<code class="inline">max_freq</code>). The window is valid exactly when <code class="inline">(window_length - max_freq) &lt;= k</code> — i.e., the number of characters you'd need to replace doesn't exceed the budget.</p>
+        <div class="box">
+          <div class="box-label">Subtle but important</div>
+          <p style="margin:0;"><code class="inline">max_freq</code> is allowed to go stale (not decrease when you shrink the window) — the window can never shrink below its best-ever size anyway, so a stale max_freq never produces a wrong <em>answer</em>, only a temporarily non-shrinking window. This is the detail that trips people up when re-deriving this on the spot.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Minimum Window Substring <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff hard">Hard</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find the smallest substring of s that contains every character of t (with multiplicity).</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n²·m)</span></div><p>Check every substring against t's requirements from scratch.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n + m)</span></div><p>Variable window: expand right until the window satisfies all of t's character requirements, then shrink left as far as possible while it's still valid, recording the best (smallest) window each time it's valid.</p></div>
+        </div>
+        <h4>Why this is the "boss level" sliding window problem</h4>
+        <p>It combines <em>both</em> shrink-while-valid (like Longest Repeating Character Replacement) and grow-until-valid (unlike most other window problems, which only shrink-while-invalid). Track a <code class="inline">need</code> counter (from t) and a <code class="inline">have</code> counter matched-so-far; shrink only while every requirement in <code class="inline">need</code> is still met.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Longest Substring with At Most K Distinct Characters <span class="problem-src">— NeetCode · a.k.a. "Fruit Into Baskets" (K=2)</span></span>
+        <span class="diff medium">Medium</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Find the longest substring containing at most k distinct characters.</p>
+        <h4>Approach</h4>
+        <p>Variable window with a frequency hashmap. Expand right, incrementing counts; while <code class="inline">len(freq_map) &gt; k</code>, shrink left, decrementing counts and deleting keys that hit zero. This is the most "textbook" application of the variable-window template — if you're rusty, dry-run this one by hand before tomorrow.</p>
+      </div>
+    </details>
+
+    <details class="problem">
+      <summary>
+        <span class="problem-title">Sliding Window Maximum <span class="problem-src">— NeetCode Blind 75 · Striver Sheet</span></span>
+        <span class="diff hard">Hard</span>
+      </summary>
+      <div class="problem-body">
+        <h4>Ask</h4>
+        <p>Return the maximum of every fixed-size window of size k as it slides across the array.</p>
+        <div class="ladder">
+          <div class="rung brute"><div class="tag">Brute<span class="complexity">O(n·k)</span></div><p>Scan all k elements for the max at every window position.</p></div>
+          <div class="rung better"><div class="tag">Better<span class="complexity">O(n log k)</span></div><p>Max-heap of (value, index) pairs, lazily discarding indices that have fallen out of the window.</p></div>
+          <div class="rung optimal"><div class="tag">Optimal<span class="complexity">O(n)</span></div><p>Monotonic decreasing deque storing <em>indices</em>. Before pushing a new index, pop from the back while its value is smaller than the incoming value (they can never be the max while a bigger, newer element is in range). Pop from the front when the front index falls outside the window.</p></div>
+        </div>
+        <h4>Why plain sliding window state doesn't work here</h4>
+        <p>Unlike sum/count, "max" isn't cheaply un-doable when an element leaves the window on the left — you'd have to rescan. The monotonic deque sidesteps this by only ever keeping candidates that could still become the max later, which is why this problem is the standard bridge from "sliding window" to "monotonic deque" as its own pattern.</p>
+      </div>
+    </details>
+  </section>
+
+  <hr class="rule">
+
+  <section id="decision-tree">
+    <h2 class="section-title">The 30-second decision tree</h2>
+    <p class="section-kicker">Read the problem statement once. Match it against this before you start coding.</p>
+    <table>
+      <tr><th>Signal in the problem</th><th>Pattern</th></tr>
+      <tr><td>"Pair/triplet sums to X," array is <strong>unsorted</strong></td><td class="strong-col">Hashmap</td></tr>
+      <tr><td>"Pair sums to X," array is <strong>sorted</strong> (or sorting doesn't break the answer)</td><td class="strong-col">Two Pointers</td></tr>
+      <tr><td>"Count / frequency / group / duplicate / has-seen-before"</td><td class="strong-col">Hashmap</td></tr>
+      <tr><td>"Longest / shortest / max / min <strong>contiguous</strong> subarray or substring" with a condition</td><td class="strong-col">Sliding Window</td></tr>
+      <tr><td>Contiguous subarray sum with <strong>negative numbers</strong> allowed</td><td class="strong-col">Hashmap (prefix sum) — not sliding window</td></tr>
+      <tr><td>Fixed window size k explicitly given</td><td class="strong-col">Sliding Window (fixed)</td></tr>
+      <tr><td>Sorted array, in-place O(1) space required</td><td class="strong-col">Two Pointers</td></tr>
+      <tr><td>Linked list: cycle, middle, "kth from end"</td><td class="strong-col">Two Pointers (fast/slow)</td></tr>
+      <tr><td>Palindrome check / reverse in place</td><td class="strong-col">Two Pointers (converging)</td></tr>
+      <tr><td>Need max/min <em>of the window itself</em> as it slides</td><td class="strong-col">Sliding Window + Monotonic Deque</td></tr>
+      <tr><td>None of the above fit — think trees, graphs, DP, heaps, backtracking</td><td class="strong-col">Not this manual's territory — but say so out loud rather than forcing a pattern that doesn't fit</td></tr>
+    </table>
+  </section>
+
+  <hr class="rule">
+
+  <section id="pitfalls">
+    <h2 class="section-title">Pitfalls checklist</h2>
+    <p class="section-kicker">The specific bugs that actually happen under interview pressure — skim this right before you go in.</p>
+    <ul class="checklist">
+      <li><span class="box-mark"></span><span><strong>Hashmap:</strong> checking <code class="inline">complement in seen</code> AFTER inserting the current element lets a value pair with itself — always check before inserting.</span></li>
+      <li><span class="box-mark"></span><span><strong>defaultdict:</strong> merely reading a missing key (e.g. inside an <code class="inline">if</code> check) silently creates it. Use plain <code class="inline">dict</code> + <code class="inline">.get()</code> if you need to test existence without side effects.</span></li>
+      <li><span class="box-mark"></span><span><strong>Two pointers:</strong> in 3Sum-style problems, forgetting to skip duplicate values at both the outer anchor and the inner left/right pointers produces duplicate triplets.</span></li>
+      <li><span class="box-mark"></span><span><strong>Two pointers:</strong> off-by-one on the stopping condition — decide up front whether it's <code class="inline">left &lt; right</code> or <code class="inline">left &lt;= right</code> and justify it against whether a single element can be a valid answer on its own.</span></li>
+      <li><span class="box-mark"></span><span><strong>Sliding window:</strong> using <code class="inline">if</code> instead of <code class="inline">while</code> to shrink — a window can need to shrink by more than one element per step.</span></li>
+      <li><span class="box-mark"></span><span><strong>Sliding window:</strong> negative numbers break "shrink when sum too big" logic — confirm constraints before assuming sliding window applies to a sum problem.</span></li>
+      <li><span class="box-mark"></span><span><strong>General:</strong> always test the empty input and single-element input cases out loud, even if you don't code them — interviewers listen for this.</span></li>
+      <li><span class="box-mark"></span><span><strong>General:</strong> state time <em>and</em> space complexity unprompted at the end — don't wait to be asked.</span></li>
+    </ul>
+  </section>
+
+  <hr class="rule">
+
+  <footer class="closer" id="closer">
+    <h2 class="section-title" style="color:var(--text);">Before you walk in</h2>
+    <p>You don't need to have every problem above memorized verbatim. You need the <strong>reflex</strong>: read the problem, hear yourself ask "what is my brute force redoing?", and land on hashmap / two pointers / sliding window within the first thirty seconds. That reflex is the entire point of this manual — everything else is repetition until it's automatic.</p>
+    <p>Talk through the meta-framework on every problem, even the ones that feel unfamiliar. Confidence tomorrow isn't going to come from having seen the exact question before — it's going to come from having a process that works regardless of which one they pick.</p>
+    <p style="color:var(--text-faint); font-size:14px; margin-top:24px;">Good luck tomorrow.</p>
+  </footer>
+
+</main>
+</div>
+</body>
+</html>
