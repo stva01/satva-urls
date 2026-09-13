@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lean & Athletic — 12 Week Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #101a14;
+    --panel: #17251d;
+    --panel-line: #263a2c;
+    --ink: #ecefe8;
+    --ink-dim: #9fb0a1;
+    --gold: #e8b94a;
+    --grass: #6fcf8f;
+    --grass-dim: #3f5d49;
+    --red-flag: #d9756a;
+    --radius: 10px;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+  .shell{ max-width: 980px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* Header / scoreboard */
+  header.scoreboard{
+    position: relative;
+    padding: 48px 0 28px;
+    border-bottom: 1px solid var(--panel-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  .track-line{
+    position: absolute;
+    top: -40px; right: -60px;
+    width: 420px; height: 420px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .scoreboard__label{
+    display:block;
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .scoreboard h1{
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--ink);
+    max-width: 520px;
+  }
+  .scoreboard__clock{
+    text-align: right;
+    z-index: 1;
+  }
+  .scoreboard__num{
+    display:block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .scoreboard__unit{
+    display:block;
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+  }
+
+  /* Tabs */
+  nav.tabs{
+    display:flex;
+    gap: 4px;
+    margin-top: 24px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .tab{
+    background: none;
+    border: none;
+    color: var(--ink-dim);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .tab:hover{ color: var(--ink); }
+  .tab.active{ color: var(--gold); border-bottom-color: var(--gold); }
+  .tab:focus-visible{ outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  main{ padding-top: 36px; }
+  .page{ display:none; }
+  .page.active{ display:block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px);} to{ opacity:1; transform:none;} }
+
+  .section-label{
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-bottom: 4px;
+  }
+  .section-title{
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  p.note{
+    color: var(--ink-dim);
+    max-width: 62ch;
+    font-size: 15px;
+  }
+
+  /* Stat grid */
+  .stat-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 24px 0 32px;
+  }
+  .stat-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-card .val{
+    font-family: 'Oswald', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  .stat-card .lbl{
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+  .stat-card .flag{
+    display:inline-block;
+    font-size: 11px;
+    margin-top: 8px;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+  .flag.over{ background: rgba(217,117,106,0.18); color: var(--red-flag); }
+  .flag.ok{ background: rgba(111,207,143,0.15); color: var(--grass); }
+
+  /* Before/after target cards */
+  .target-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin: 20px 0 36px;
+  }
+  .target-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .target-card .metric{ font-size: 14px; color: var(--ink-dim); }
+  .target-card .from{ font-family:'Oswald',sans-serif; font-size: 20px; color: var(--ink-dim); }
+  .target-card .arrow{ color: var(--gold); font-size: 18px; }
+  .target-card .to{ font-family:'Oswald',sans-serif; font-size: 22px; font-weight: 600; color: var(--gold); }
+
+  /* Weekly plan table */
+  table.plan{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 36px;
+    font-size: 14.5px;
+  }
+  table.plan th, table.plan td{
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--panel-line);
+    vertical-align: top;
+  }
+  table.plan th{
+    color: var(--ink-dim);
+    font-weight: 500;
+    font-size: 13px;
+  }
+  table.plan td.day{ font-family:'Oswald',sans-serif; font-weight: 600; white-space: nowrap; }
+  table.plan td.dur{ color: var(--ink-dim); white-space: nowrap; }
+  tr.rest td{ color: var(--ink-dim); font-style: italic; }
+
+  .rule-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .rule-card{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .rule-card .val{ font-family:'Oswald',sans-serif; font-size: 19px; color: var(--gold); }
+  .rule-card .desc{ font-size: 13.5px; color: var(--ink-dim); margin-top: 4px; }
+
+  /* Journey timeline */
+  .progress-line{
+    font-size: 14px;
+    color: var(--ink-dim);
+    margin-bottom: 24px;
+  }
+  .progress-line span{ color: var(--grass); font-weight: 600; }
+  .timeline{
+    position: relative;
+    padding-left: 40px;
+  }
+  .timeline::before{
+    content:"";
+    position: absolute;
+    left: 14px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--panel-line);
+  }
+  .milestone{
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .milestone:last-child{ padding-bottom: 0; }
+  .milestone .num{
+    position: absolute;
+    left: -40px; top: 0;
+    width: 29px; height: 29px;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Oswald',sans-serif;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .milestone.done .num{ background: var(--grass-dim); border-color: var(--grass); color: var(--grass); }
+  .milestone .card{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .milestone .date{ font-size: 12.5px; color: var(--gold); margin-bottom: 4px; }
+  .milestone .title{ font-family:'Oswald',sans-serif; font-size: 17px; margin-bottom: 6px; }
+  .milestone .desc{ font-size: 14px; color: var(--ink-dim); }
+  .milestone label{
+    display:flex; align-items:flex-start; gap: 10px; cursor: pointer;
+  }
+  .milestone input[type="checkbox"]{
+    margin-top: 4px;
+    width: 16px; height: 16px;
+    accent-color: var(--grass);
+    cursor: pointer;
+  }
+  .milestone.done .title{ color: var(--grass); }
+
+  @media (max-width: 700px){
+    .stat-grid{ grid-template-columns: repeat(2, 1fr); }
+    .target-grid{ grid-template-columns: 1fr; }
+    .rule-grid{ grid-template-columns: 1fr; }
+    table.plan{ font-size: 13px; }
+    header.scoreboard{ align-items: flex-start; }
+    .scoreboard__clock{ text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="scoreboard">
+    <svg class="track-line" viewBox="0 0 200 200" fill="none">
+      <path d="M20 180 A 90 90 0 0 1 180 100" stroke="#e8b94a" stroke-width="2" stroke-dasharray="6 6"/>
+      <path d="M40 190 A 110 110 0 0 1 190 90" stroke="#3f5d49" stroke-width="2" stroke-dasharray="6 6"/>
+    </svg>
+    <div class="scoreboard__title">
+      <span class="scoreboard__label">12-week training program</span>
+      <h1>Lean, stronger, faster 5k</h1>
+    </div>
+    <div class="scoreboard__clock">
+      <span class="scoreboard__num" id="daysLeft">--</span>
+      <span class="scoreboard__unit">days to Dec 14, 2026</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="status">Status</button>
+    <button class="tab" data-tab="plan">Goals &amp; Plan</button>
+    <button class="tab" data-tab="journey">Journey</button>
+  </nav>
+
+  <main>
+
+    <!-- PAGE 1: STATUS -->
+    <section id="status" class="page active">
+      <div class="section-label">Baseline — InBody scan, 20 May 2026</div>
+      <h2 class="section-title">Where things stand</h2>
+      <p class="note">Normal BMI with an elevated body fat percentage — a "skinny-fat" pattern rather than straightforward overweight. Muscle mass is already reasonable for your frame. The 5k pace and weak core are connected: fatigue in the trunk is likely limiting running form before your lungs are the bottleneck.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="val">73.4 kg</div>
+          <div class="lbl">Weight</div>
+        </div>
+        <div class="stat-card">
+          <div class="val">24.8</div>
+          <div class="lbl">BMI</div>
+          <span class="flag ok">Normal</span>
+        </div>
+        <div class="stat-card">
+          <div class="val">27.7%</div>
+          <div class="lbl">Body fat %</div>
+          <span class="flag over">Over</span>
+        </div>
+        <div class="stat-card">
+          <div class="val">29.6 kg</div>
+          <div class="lbl">Skeletal muscle mass</div>
+          <span class="flag ok">Normal</span>
+        </div>
+        <div class="stat-card">
+          <div class="val">Level 9</div>
+          <div class="lbl">Visceral fat</div>
+          <span class="flag over">Elevated</span>
+        </div>
+        <div class="stat-card">
+          <div class="val">1516 kcal</div>
+          <div class="lbl">Basal metabolic rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="val">50:00</div>
+          <div class="lbl">5k time</div>
+        </div>
+        <div class="stat-card">
+          <div class="val">Weak</div>
+          <div class="lbl">Core strength</div>
+          <span class="flag over">Priority</span>
+        </div>
+      </div>
+
+      <p class="note">Training history: currently on a 5-day gym/run split, but core and HIIT sessions consistently get skipped. That gap is the main thing this program changes.</p>
+    </section>
+
+    <!-- PAGE 2: GOALS & PLAN -->
+    <section id="plan" class="page">
+      <div class="section-label">Due December 14, 2026</div>
+      <h2 class="section-title">Targets</h2>
+      <div class="target-grid">
+        <div class="target-card">
+          <div>
+            <div class="metric">Weight</div>
+            <div class="from">73.4 kg</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">70 kg</div>
+        </div>
+        <div class="target-card">
+          <div>
+            <div class="metric">Body fat %</div>
+            <div class="from">27.7%</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">21–22%</div>
+        </div>
+        <div class="target-card">
+          <div>
+            <div class="metric">Skeletal muscle mass</div>
+            <div class="from">29.6 kg</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">30.5 kg</div>
+        </div>
+        <div class="target-card">
+          <div>
+            <div class="metric">Visceral fat level</div>
+            <div class="from">9</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">6–7</div>
+        </div>
+        <div class="target-card">
+          <div>
+            <div class="metric">5k time</div>
+            <div class="from">50:00</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">under 42:00</div>
+        </div>
+        <div class="target-card">
+          <div>
+            <div class="metric">Core &amp; HIIT sessions</div>
+            <div class="from">Skipped</div>
+          </div>
+          <div class="arrow">&#8594;</div>
+          <div class="to">Built into split</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Weekly training structure</h2>
+      <table class="plan">
+        <thead>
+          <tr><th>Day</th><th>Focus</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="day">Mon</td>
+            <td>Push — chest, shoulders, triceps + core finisher (planks, dead bugs, anti-rotation)</td>
+            <td class="dur">45–60 min + 10–12 min</td>
+          </tr>
+          <tr>
+            <td class="day">Tue</td>
+            <td>Easy run — zone 2, conversational pace</td>
+            <td class="dur">25–30 min</td>
+          </tr>
+          <tr>
+            <td class="day">Wed</td>
+            <td>Pull — back, biceps, rear delts + core finisher (pallof press, hanging leg raises, side planks)</td>
+            <td class="dur">45–60 min + 10–12 min</td>
+          </tr>
+          <tr>
+            <td class="day">Thu</td>
+            <td>HIIT / conditioning — 8–10 rounds of 30s hard / 90s easy</td>
+            <td class="dur">15–20 min</td>
+          </tr>
+          <tr>
+            <td class="day">Fri</td>
+            <td>Legs — quads, hamstrings, glutes</td>
+            <td class="dur">45–60 min</td>
+          </tr>
+          <tr>
+            <td class="day">Sat</td>
+            <td>Long run — zone 2 + hip/ankle mobility</td>
+            <td class="dur">35–45 min + 20 min</td>
+          </tr>
+          <tr class="rest">
+            <td class="day">Sun</td>
+            <td>Rest / active recovery — walk, stretch, light yoga only</td>
+            <td class="dur">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="section-title">Daily non-negotiables</h2>
+      <div class="rule-grid">
+        <div class="rule-card">
+          <div class="val">8,000–10,000</div>
+          <div class="desc">Steps per day, every day including rest day</div>
+        </div>
+        <div class="rule-card">
+          <div class="val">7–8 hrs</div>
+          <div class="desc">Sleep per night — protects muscle while in a deficit</div>
+        </div>
+        <div class="rule-card">
+          <div class="val">Top of range → add weight</div>
+          <div class="desc">Hit 12 reps for all sets with good form, load goes up next session</div>
+        </div>
+        <div class="rule-card">
+          <div class="val">Deload every 5–6 weeks</div>
+          <div class="desc">One week at ~60% volume/weight; keep runs light</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 3: JOURNEY -->
+    <section id="journey" class="page">
+      <div class="section-label">Sep 14 → Dec 14, 2026 · 13 weeks</div>
+      <h2 class="section-title">The journey</h2>
+      <p class="progress-line"><span id="doneCount">0</span> of 7 checkpoints complete</p>
+
+      <div class="timeline" id="timeline">
+        <div class="milestone" data-idx="1">
+          <div class="num">1</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 2 · by Sep 28</div>
+                <div class="title">Habit built</div>
+                <div class="desc">6 of 7 training days hit, core sessions no longer skipped, steps averaging 8k+.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="2">
+          <div class="num">2</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 4 · by Oct 12</div>
+                <div class="title">Checkpoint 1</div>
+                <div class="desc">Weight ~72 kg, 5k around 48 min, first deload week completed.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="3">
+          <div class="num">3</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 6 · by Oct 26</div>
+                <div class="title">Core holding up</div>
+                <div class="desc">Running form stays intact past 20 minutes — the core work is starting to pay off on the run.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="4">
+          <div class="num">4</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 8 · by Nov 9</div>
+                <div class="title">Checkpoint 2</div>
+                <div class="desc">Weight ~71 kg, body fat trending toward ~24%, 5k around 45 min.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="5">
+          <div class="num">5</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 10 · by Nov 23</div>
+                <div class="title">Second deload + reassess</div>
+                <div class="desc">Deload week done. If recovery is solid, add a third short run or extend the long run.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="6">
+          <div class="num">6</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 12 · by Dec 7</div>
+                <div class="title">Checkpoint 3</div>
+                <div class="desc">Weight ~70.3 kg, body fat ~22%, 5k around 42–43 min.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="milestone" data-idx="7">
+          <div class="num">7</div>
+          <div class="card">
+            <label>
+              <input type="checkbox">
+              <span>
+                <div class="date">Week 13 · Dec 14</div>
+                <div class="title">Final goal check</div>
+                <div class="desc">70 kg, 21–22% body fat, 30.5 kg SMM, visceral fat 6–7, 5k under 42 minutes.</div>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab');
+  const pages = document.querySelectorAll('.page');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      pages.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Countdown to Dec 14, 2026
+  const target = new Date('2026-12-14T00:00:00');
+  const now = new Date();
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const daysLeft = Math.max(0, Math.ceil((target - now) / msPerDay));
+  document.getElementById('daysLeft').textContent = daysLeft;
+
+  // Milestone checkboxes
+  const milestones = document.querySelectorAll('.milestone');
+  const doneCount = document.getElementById('doneCount');
+  function updateCount(){
+    const done = document.querySelectorAll('.milestone.done').length;
+    doneCount.textContent = done;
+  }
+  milestones.forEach(m => {
+    const cb = m.querySelector('input[type="checkbox"]');
+    cb.addEventListener('change', () => {
+      m.classList.toggle('done', cb.checked);
+      updateCount();
+    });
+  });
+</script>
+</body>
+</html>
