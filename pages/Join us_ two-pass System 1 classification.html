@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join us: two-pass System 1 classification</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f6f8f9;--ink:#13202b;--mute:#52636f;--rule:#d3dce2;--panel:#fff;
+  --p1:#0e7c7b;--p2:#3d3bb0;--hum:#b4375a;--p1t:#dff1f0;--p2t:#e6e5f8;--humt:#f7e2e8;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f171d;--ink:#e6edf1;--mute:#9fb0bb;--rule:#27353f;--panel:#16222a;
+    --p1:#46c2c0;--p2:#9b9af0;--hum:#ee7a9b;--p1t:#12343a;--p2t:#1f2046;--humt:#3a1a26;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f171d;--ink:#e6edf1;--mute:#9fb0bb;--rule:#27353f;--panel:#16222a;
+  --p1:#46c2c0;--p2:#9b9af0;--hum:#ee7a9b;--p1t:#12343a;--p2t:#1f2046;--humt:#3a1a26;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif}
+main{max-width:800px;margin:0 auto;padding:44px 20px 64px}
+h1,h2{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;line-height:1.2}
+h1{font-size:2.5rem;margin:0 0 12px}
+h2{font-size:1.45rem;margin:54px 0 8px}
+p{margin:8px 0}
+.lede{font-size:1.15rem;color:var(--mute);max-width:56ch}
+.cap{font-size:.9rem;color:var(--mute);margin:6px 0 0}
+.dg{overflow-x:auto;margin:14px 0 0}
+.dg svg{display:block;width:100%;min-width:640px;height:auto}
+svg text{fill:var(--ink);font:600 14px "Segoe UI",system-ui,sans-serif}
+svg .sm{font-weight:400;font-size:12px;fill:var(--mute)}
+svg .c{text-anchor:middle}
+.bx{fill:var(--panel);stroke:var(--rule);stroke-width:1.5}
+.ok{fill:var(--panel);stroke:var(--p1);stroke-width:1.5}
+.t1{fill:var(--p1t);stroke:var(--p1);stroke-width:1.5}
+.t2{fill:var(--p2t);stroke:var(--p2);stroke-width:1.5}
+.th{fill:var(--humt);stroke:var(--hum);stroke-width:1.5}
+.arr{stroke:var(--mute);stroke-width:1.8;fill:none;marker-end:url(#ah)}
+.ahf{fill:var(--mute)}
+.g1{fill:var(--p1)}.g2{fill:var(--p2)}
+svg .wt{fill:var(--bg);font-weight:700;text-anchor:middle}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0}
+.two div{padding:4px 0 4px 14px}
+.two .a{border-left:4px solid var(--p1)}
+.two .b{border-left:4px solid var(--p2)}
+.two b{display:block;margin-bottom:4px}
+.two p{margin:4px 0;font-size:.97rem}
+.road{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.road span{flex:1 1 150px;padding:12px 14px;background:var(--panel);border-top:4px solid var(--p1);font-size:.95rem}
+.road span:nth-child(2){border-top-color:var(--p2)}
+.road span:nth-child(3){border-top-color:var(--hum)}
+.road span:nth-child(4){border-top-color:var(--mute)}
+.road b{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chips span{padding:6px 12px;border:1.5px solid var(--rule);border-radius:99px;font-size:.93rem;background:var(--panel)}
+.leg{display:flex;gap:18px;flex-wrap:wrap;font-size:.88rem;color:var(--mute);margin-top:4px}
+.leg i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px;border:1.5px solid var(--p1);background:var(--p1t)}
+.leg i.x{border-color:var(--rule);background:var(--rule);opacity:.5}
+@media(max-width:560px){h1{font-size:1.9rem}.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+
+<h1>77 options is too many for one question. Ask a smaller one.</h1>
+<p class="lede">A cheap first pass narrows the labels. Laya decides among the few left. A calibrated rule says when the system can act alone and when a human steps in.</p>
+
+<h2>The problem</h2>
+<div class="dg">
+<svg viewBox="0 0 720 170" role="img" aria-label="Laya squeezes many option labels into one fixed text window, so labels get truncated and accuracy collapses">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ahf"/></marker></defs>
+<rect class="bx" x="10" y="16" width="310" height="138" rx="8"/>
+<text x="26" y="42">Laya's option window</text>
+<g class="sm">
+<rect class="t2" x="26" y="58" width="82" height="30" rx="5"/><text class="c sm" x="67" y="78">card_pa</text>
+<rect class="t2" x="118" y="58" width="82" height="30" rx="5"/><text class="c sm" x="159" y="78">card_ar</text>
+<rect class="t2" x="210" y="58" width="82" height="30" rx="5"/><text class="c sm" x="251" y="78">refund_</text>
+<rect class="t2" x="26" y="98" width="82" height="30" rx="5"/><text class="c sm" x="67" y="118">top_up_</text>
+<rect class="t2" x="118" y="98" width="82" height="30" rx="5"/><text class="c sm" x="159" y="118">exchan</text>
+<rect class="t2" x="210" y="98" width="82" height="30" rx="5"/><text class="c sm" x="251" y="118">+71 more</text>
+</g>
+<path class="arr" d="M326 85 H394"/>
+<rect class="th" x="400" y="16" width="310" height="138" rx="8"/>
+<text x="416" y="46">Labels get cut to a few letters</text>
+<text class="sm" x="416" y="74">They look alike, so the model guesses.</text>
+<text class="sm" x="416" y="98">Accuracy falls toward chance on</text>
+<text class="sm" x="416" y="116">large label sets (reported by the</text>
+<text class="sm" x="416" y="134">Rush author; we will verify).</text>
+</svg>
+</div>
+
+<h2>The architecture</h2>
+<div class="dg">
+<svg viewBox="0 0 760 520" role="img" aria-label="Architecture: labels are embedded once offline; each item is scored against label vectors, a conformal shortlist is made; if one label remains the system acts, otherwise Laya or Jev chooses among the shortlist and a confidence threshold decides between automatic action and human review">
+<text class="sm" x="20" y="22">Once, offline</text>
+<rect class="bx" x="20" y="32" width="190" height="56" rx="8"/>
+<text class="c" x="115" y="57">Label names</text><text class="c sm" x="115" y="75">+ short descriptions</text>
+<path class="arr" d="M210 60 H246"/>
+<rect class="bx" x="250" y="32" width="190" height="56" rx="8"/>
+<text class="c" x="345" y="57">Sentence encoder</text><text class="c sm" x="345" y="75">frozen, off-the-shelf</text>
+<path class="arr" d="M440 60 H476"/>
+<rect class="bx" x="480" y="32" width="260" height="56" rx="8"/>
+<text class="c" x="610" y="57">Label vector store</text><text class="c sm" x="610" y="75">built once, reused for every item</text>
+
+<text class="sm" x="20" y="122">For every incoming item</text>
+<rect class="bx" x="20" y="132" width="130" height="56" rx="8"/>
+<text class="c" x="85" y="165">Text item</text>
+<path class="arr" d="M150 160 H181"/>
+<rect class="bx" x="185" y="132" width="160" height="56" rx="8"/>
+<text class="c" x="265" y="157">Encode, then score</text><text class="c sm" x="265" y="175">similarity to every label</text>
+<path class="arr" d="M345 160 H371"/>
+<rect class="t1" x="375" y="132" width="185" height="56" rx="8"/>
+<text class="c" x="467" y="157">Pass 1</text><text class="c sm" x="467" y="175">conformal shortlist</text>
+<circle class="g1" cx="552" cy="136" r="11"/><text class="wt" x="552" y="141">α</text>
+<path class="arr" d="M560 160 H586"/>
+<rect class="ok" x="590" y="132" width="150" height="56" rx="8"/>
+<text class="c" x="665" y="157">Act</text><text class="c sm" x="665" y="175">only one label left</text>
+
+<path class="arr" d="M467 188 V232"/>
+<text class="sm" x="478" y="216">two or more left</text>
+<rect class="t2" x="352" y="236" width="230" height="60" rx="8"/>
+<text class="c" x="467" y="261">Pass 2: Laya or Jev</text><text class="c sm" x="467" y="280">choose among the k labels left</text>
+<path class="arr" d="M467 296 V328"/>
+<polygon class="t2" points="467,330 552,366 467,402 382,366"/>
+<text class="c" x="467" y="363">confidence</text><text class="c" x="467" y="381">≥ τ ?</text>
+<circle class="g2" cx="541" cy="341" r="11"/><text class="wt" x="541" y="346">τ</text>
+<path class="arr" d="M552 366 H586"/><text class="sm" x="558" y="358">yes</text>
+<rect class="ok" x="590" y="338" width="150" height="56" rx="8"/>
+<text class="c" x="665" y="371">Act automatically</text>
+<path class="arr" d="M382 366 H344"/><text class="sm" x="350" y="358">no</text>
+<rect class="th" x="190" y="338" width="150" height="56" rx="8"/>
+<text class="c" x="265" y="371">Human review</text>
+
+<rect class="bx" x="20" y="440" width="720" height="62" rx="8" stroke-dasharray="6 4"/>
+<text x="36" y="466">Calibration on a small labeled hold-out set</text>
+<text class="sm" x="36" y="487">picks α (pass 1) and τ (pass 2) together, so errors on automatic answers stay under a target ε</text>
+<circle class="g1" cx="676" cy="471" r="11"/><text class="wt" x="676" y="476">α</text>
+<circle class="g2" cx="708" cy="471" r="11"/><text class="wt" x="708" y="476">τ</text>
+</svg>
+</div>
+<p class="cap">Easy items leave at pass 1. Harder ones get one System 1 call. Doubtful ones go to a person.</p>
+
+<h2>One calibration, two dials</h2>
+<div class="dg">
+<svg id="dials" viewBox="0 0 360 250" role="img" aria-label="Grid of alpha and tau settings; the teal cells meet the error target and a star marks the cheapest valid pair" style="min-width:420px;max-width:520px"></svg>
+</div>
+<div class="leg"><span><i></i>meets the error target</span><span><i class="x"></i>does not</span><span>★ cheapest valid pair (illustrative)</span></div>
+
+<h2>What we borrow from Rush, and what we change</h2>
+<div class="two">
+  <div class="a"><b>Borrowed</b>
+    <p>Score labels as vectors, not as text in a window.</p>
+    <p>Conformal sets decide when to act and when to escalate.</p></div>
+  <div class="b"><b>Different here</b>
+    <p>No training: a frozen encoder plus existing Laya or Jev.</p>
+    <p>Shortlist and final answer are calibrated together.</p>
+    <p>Tested on a real domain, with data released.</p></div>
+</div>
+
+<h2>The plan</h2>
+<div class="road">
+  <span><b>Pilot</b>recall@k and Laya accuracy vs. label count</span>
+  <span><b>Domain + data</b>pick one, label it</span>
+  <span><b>Baselines + ablations</b>fair comparisons, several seeds</span>
+  <span><b>Write + release</b>code, data, limitations</span>
+</div>
+
+<h2>What an applied journal expects</h2>
+<div class="chips">
+  <span>Real domain data</span><span>Honest baselines</span><span>Cost and latency</span><span>Calibration metrics</span><span>Ablations</span><span>Related work done fairly</span><span>Released code and data</span><span>Limitations section</span>
+</div>
+
+<h2>Where you would fit</h2>
+<div class="chips">
+  <span>Data and labeling</span><span>Experiments</span><span>Calibration and statistics</span><span>Figures and writing</span>
+</div>
+
+</main>
+<script>
+(function(){
+  var s=document.getElementById('dials'),h='',best=null,bc=1e9,i,j,v,c;
+  for(i=0;i<8;i++)for(j=0;j<6;j++){
+    v=j>=1+0.55*i; c=(7-i)+1.4*j;
+    if(v&&c<bc){bc=c;best=[i,j];}
+  }
+  for(i=0;i<8;i++)for(j=0;j<6;j++){
+    v=j>=1+0.55*i;
+    h+='<rect x="'+(50+i*36)+'" y="'+(20+(5-j)*30)+'" width="34" height="28" rx="3" style="fill:'+(v?'var(--p1t)':'var(--rule)')+';stroke:'+(v?'var(--p1)':'var(--rule)')+';stroke-width:1.2;opacity:'+(v?1:.5)+'"/>';
+  }
+  h+='<text class="c" x="'+(50+best[0]*36+17)+'" y="'+(20+(5-best[1])*30+20)+'" style="font-size:18px">★</text>';
+  h+='<text class="sm c" x="194" y="228">α: how hard pass 1 prunes</text>';
+  h+='<text class="sm c" transform="translate(16 110) rotate(-90)">τ: confidence required</text>';
+  s.innerHTML=h;
+})();
+</script>
+</body>
+</html>
