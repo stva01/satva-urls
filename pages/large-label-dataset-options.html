@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#f5f7f4" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#101413" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" href="data:," />
+  <title>Large-Label Dataset Options</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap');
+
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7f4;
+      --surface: #ffffff;
+      --surface-2: #edf1ed;
+      --ink: #111917;
+      --muted: #52605c;
+      --line: #cbd4cf;
+      --line-strong: #81908a;
+      --accent: #ed5d2b;
+      --accent-ink: #391205;
+      --accent-soft: #ffdaca;
+      --teal: #087c6d;
+      --teal-soft: #d5f2eb;
+      --yellow: #f4c851;
+      --shadow: 0 18px 60px rgba(17, 25, 23, 0.10);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #101413;
+        --surface: #171d1b;
+        --surface-2: #202825;
+        --ink: #f0f4f1;
+        --muted: #b5c0bc;
+        --line: #35413d;
+        --line-strong: #77847f;
+        --accent: #ff7849;
+        --accent-ink: #2d0d03;
+        --accent-soft: #5d2919;
+        --teal: #55c9b7;
+        --teal-soft: #153b35;
+        --yellow: #e5ba4d;
+        --shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Manrope", sans-serif;
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    ::selection { background: var(--yellow); color: #17120a; }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 36px 0 80px;
+    }
+
+    .mast {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, .72fr);
+      gap: 34px;
+      align-items: end;
+      padding: 46px 0 34px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-family: "Newsreader", serif;
+      font-size: clamp(44px, 7.2vw, 92px);
+      line-height: .92;
+      letter-spacing: -.048em;
+      font-weight: 650;
+    }
+    .standfirst {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.55;
+    }
+    .mast-note {
+      padding: 22px 0 4px 24px;
+      border-left: 2px solid var(--accent);
+    }
+    .mast-note strong {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 17px;
+    }
+    .mast-note p { margin: 0; color: var(--muted); }
+
+    .jumpbar {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .jumpbar::-webkit-scrollbar { display: none; }
+    .jumpbar a {
+      flex: 0 0 auto;
+      padding: 8px 11px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .jumpbar a:hover, .jumpbar a:focus-visible { color: var(--ink); }
+    .jumpbar .date {
+      margin-left: auto;
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    section { scroll-margin-top: 68px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .55fr);
+      gap: 30px;
+      align-items: end;
+      margin: 76px 0 26px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: "Newsreader", serif;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+    .section-head p { margin: 0; color: var(--muted); }
+
+    .recommendation {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow);
+    }
+    .rec-lead {
+      padding: clamp(28px, 5vw, 58px);
+      background: var(--accent);
+      color: #fffaf7;
+    }
+    .rec-number {
+      display: block;
+      margin-bottom: 38px;
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .rec-lead h2 {
+      margin: 0 0 18px;
+      font-family: "Newsreader", serif;
+      font-size: clamp(40px, 6vw, 70px);
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+    .rec-lead p { margin: 0; max-width: 500px; font-size: 17px; }
+    .rec-body { padding: clamp(28px, 5vw, 58px); }
+    .proof-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+    .proof-list li {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .proof-list li:first-child { padding-top: 0; }
+    .proof-list li:last-child { border: 0; padding-bottom: 0; }
+    .proof-list b {
+      font-family: "DM Mono", monospace;
+      color: var(--teal);
+      font-size: 13px;
+    }
+    .proof-list strong { display: block; margin-bottom: 3px; }
+    .proof-list span { color: var(--muted); font-size: 14px; }
+
+    .dataset-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 26px;
+      background: var(--line-strong);
+      border: 1px solid var(--line-strong);
+    }
+    .dataset-card { background: var(--surface); padding: 26px; }
+    .dataset-card .name-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .dataset-card h3 { margin: 0; font-size: 24px; letter-spacing: -.02em; }
+    .dataset-card .label-count {
+      color: var(--accent);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .dataset-explainer {
+      margin: 0 0 22px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .dataset-explainer p { margin: 0; color: var(--muted); font-size: 14px; }
+    .dataset-explainer p + p { margin-top: 10px; }
+    .dataset-explainer strong { color: var(--ink); }
+    .application-line {
+      position: relative;
+      padding-left: 18px;
+    }
+    .application-line::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 8px;
+      height: 2px;
+      background: var(--accent);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 22px;
+      margin: 0;
+    }
+    .metric-grid div { min-width: 0; }
+    .metric-grid dt {
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .metric-grid dd { margin: 0; font-size: 14px; font-weight: 650; }
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 22px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+    }
+    .source-link::after { content: "↗"; font-family: sans-serif; }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 58px minmax(0, 1fr) 58px minmax(0, .82fr);
+      align-items: stretch;
+      margin: 30px 0 10px;
+    }
+    .stage {
+      min-height: 152px;
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+    .stage small {
+      display: block;
+      margin-bottom: 18px;
+      color: var(--teal);
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .stage strong { display: block; font-size: 18px; }
+    .stage p { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+    .arrow {
+      display: grid;
+      place-items: center;
+      color: var(--line-strong);
+      font-size: 28px;
+    }
+    .pipeline-caption {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .github-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      margin-top: 34px;
+      padding: 26px 30px;
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .github-strip .mono {
+      margin: 0 0 6px;
+      color: var(--yellow);
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .github-strip h3 { margin: 0; font-size: 20px; }
+    .github-strip p { margin: 5px 0 0; opacity: .78; font-size: 14px; }
+    .github-strip a {
+      display: inline-block;
+      padding: 12px 16px;
+      background: var(--yellow);
+      color: #18140a;
+      font-weight: 800;
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .filterbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 0 20px;
+    }
+    .filterbar button {
+      padding: 9px 13px;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .filterbar button[aria-pressed="true"] {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--bg);
+    }
+    .filterbar button:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+    .options { display: grid; gap: 18px; }
+    .option {
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1.05fr) minmax(250px, .95fr);
+      gap: 26px;
+      align-items: start;
+      padding: 28px 0;
+      border-top: 1px solid var(--line-strong);
+    }
+    .option[hidden] { display: none; }
+    .rank {
+      font-family: "Newsreader", serif;
+      font-size: 50px;
+      line-height: 1;
+      color: var(--line-strong);
+    }
+    .option h3 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.025em; }
+    .option .domain { margin: 0 0 16px; color: var(--teal); font-weight: 750; font-size: 14px; }
+    .option .verdict { margin: 0; color: var(--muted); }
+    .dataset-notes {
+      display: grid;
+      gap: 11px;
+      margin-top: 16px;
+    }
+    .dataset-notes p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .dataset-notes strong { color: var(--ink); }
+    .application-box {
+      margin-top: 18px;
+      padding: 14px 16px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .application-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--teal);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .facts { display: grid; gap: 10px; }
+    .fact-row {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .fact-row span:first-child {
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .flags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+    .flag {
+      padding: 5px 8px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+    }
+    .flag.warn { background: var(--accent-soft); color: var(--accent-ink); }
+
+    .claim-box {
+      display: grid;
+      grid-template-columns: minmax(0, .68fr) minmax(0, 1.32fr);
+      gap: 1px;
+      background: var(--line-strong);
+      border: 1px solid var(--line-strong);
+    }
+    .claim-box > div { background: var(--surface); padding: clamp(26px, 4vw, 42px); }
+    .claim-box h3 {
+      margin: 0 0 12px;
+      font-family: "Newsreader", serif;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.05;
+    }
+    .claim-box p { margin: 0; color: var(--muted); }
+    .protocol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 28px; }
+    .protocol strong { display: block; margin-bottom: 5px; }
+    .protocol span { color: var(--muted); font-size: 14px; }
+
+    .caveat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    details { background: var(--surface); padding: 20px 22px; }
+    summary { cursor: pointer; font-weight: 800; }
+    details p { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+
+    .sources {
+      margin-top: 76px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-strong);
+    }
+    .sources h2 { margin: 0 0 16px; font-size: 18px; }
+    .source-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 30px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .source-list a { overflow-wrap: anywhere; text-underline-offset: 3px; }
+    .source-list a:hover { color: var(--ink); }
+    .research-note {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 820px) {
+      .page { width: min(100% - 28px, 680px); padding-top: 10px; }
+      .mast, .section-head, .recommendation, .claim-box { grid-template-columns: 1fr; }
+      .mast { padding-top: 34px; }
+      .mast-note { padding: 16px 0 0; border-left: 0; border-top: 2px solid var(--accent); }
+      .section-head { gap: 12px; margin-top: 58px; }
+      .dataset-duo { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: 1fr; gap: 0; }
+      .arrow { height: 42px; transform: rotate(90deg); }
+      .github-strip { grid-template-columns: 1fr; }
+      .option { grid-template-columns: 42px minmax(0, 1fr); gap: 16px; }
+      .option .facts { grid-column: 2; }
+      .rank { font-size: 38px; }
+      .caveat-grid, .source-list { grid-template-columns: 1fr; }
+      .jumpbar .date { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .page { width: calc(100% - 24px); }
+      h1 { font-size: 47px; }
+      .jumpbar { position: static; margin-inline: -12px; padding-inline: 12px; flex-wrap: wrap; overflow: visible; }
+      .jumpbar a { flex: 1 1 28%; text-align: center; border: 1px solid var(--line); }
+      .rec-lead, .rec-body { padding: 25px 21px; }
+      .dataset-card { padding: 22px 19px; }
+      .metric-grid { grid-template-columns: 1fr; gap: 13px; }
+      .option { grid-template-columns: 1fr; }
+      .option .facts { grid-column: 1; }
+      .rank { font-size: 28px; }
+      .protocol { grid-template-columns: 1fr; }
+      .fact-row { grid-template-columns: 78px 1fr; }
+      .github-strip { padding: 22px; }
+      .github-strip a { text-align: center; white-space: normal; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="mast">
+      <div>
+        <p class="eyebrow">Dataset decision brief · 08 Oct 2026</p>
+        <h1>Pick the pair that makes the paper credible.</h1>
+        <p class="standfirst">The search surfaced one clean same-domain pair for a training-free, large-label intent pipeline: <strong>MASSIVE + HWU64</strong>. It preserves an applied dialogue-systems story without giving up the general-purpose argument.</p>
+      </div>
+      <aside class="mast-note">
+        <strong>Bottom line</strong>
+        <p>Use two conversational-assistant datasets as the main evaluation. Keep legal as a domain-prestige fallback, and WOS-46985 as an optional high-label stress test.</p>
+      </aside>
+    </header>
+
+    <nav class="jumpbar" aria-label="Jump to section">
+      <a href="#recommendation">Recommendation</a>
+      <a href="#github">GitHub trail</a>
+      <a href="#options">All options</a>
+      <a href="#paper">Paper shape</a>
+      <a href="#caveats">Caveats</a>
+      <span class="date">research snapshot / 2026-10-08</span>
+    </nav>
+
+    <section id="recommendation" aria-labelledby="rec-title">
+      <div class="section-head">
+        <h2 id="rec-title">The strongest pair</h2>
+        <p>Same task shape, related domain, different collection settings—and no licensing gate.</p>
+      </div>
+
+      <div class="recommendation">
+        <div class="rec-lead">
+          <span class="rec-number">Recommendation 01</span>
+          <h2>MASSIVE<br>+ HWU64</h2>
+          <p>Two short-utterance, single-label intent datasets with 60 and 64 labels. Both are CC BY 4.0 and available through Hugging Face.</p>
+        </div>
+        <div class="rec-body">
+          <ol class="proof-list">
+            <li><b>01</b><div><strong>Exact pipeline fit</strong><span>Both reduce naturally to “choose one intent from N,” without converting a multi-label task.</span></div></li>
+            <li><b>02</b><div><strong>Useful retrieval pressure</strong><span>Fine-grained calendar, list, reminder and scenario-level intents make shortlist recall genuinely consequential.</span></div></li>
+            <li><b>03</b><div><strong>A credible transfer story</strong><span>MASSIVE covers general voice-assistant interactions; HWU64 centers home-domain human–robot interaction.</span></div></li>
+            <li><b>04</b><div><strong>One anchor, one fresh test</strong><span>MASSIVE already appears in Jev benchmarking; no Jev/Laya-style benchmark was found for HWU64.</span></div></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="dataset-duo" aria-label="Recommended dataset comparison">
+        <article class="dataset-card">
+          <div class="name-row"><h3>MASSIVE</h3><span class="label-count">60 intents</span></div>
+          <div class="dataset-explainer">
+            <p><strong>What the dataset represents.</strong> MASSIVE is a multilingual natural-language-understanding collection built around single-turn requests to a general intelligent voice assistant. Each short utterance is assigned one intent inside one of 18 scenarios, so the model must distinguish closely related requests rather than broad topics.</p>
+            <p class="application-line"><strong>Application idea.</strong> Use it to prototype the intent router behind a general voice assistant: an incoming request is mapped to one of 60 actions before the appropriate skill or workflow is invoked.</p>
+          </div>
+          <dl class="metric-grid">
+            <div><dt>English split</dt><dd>11,514 train · 2,033 dev · 2,974 test</dd></div>
+            <div><dt>Coverage</dt><dd>18 scenarios; 51 languages in the paper</dd></div>
+            <div><dt>Text</dt><dd>Short, single utterances</dd></div>
+            <div><dt>License</dt><dd>CC BY 4.0 · verified live</dd></div>
+          </dl>
+          <a class="source-link" href="https://huggingface.co/datasets/AmazonScience/massive" target="_blank" rel="noreferrer">Open on Hugging Face</a>
+        </article>
+        <article class="dataset-card">
+          <div class="name-row"><h3>HWU64</h3><span class="label-count">64 intents</span></div>
+          <div class="dataset-explainer">
+            <p><strong>What the dataset represents.</strong> HWU64 collects very short home-domain utterances for human–robot interaction. Its 64 intents span 21 domains and include practical tasks, robot commands and chit-chat, creating a second assistant setting with a different collection distribution.</p>
+            <p class="application-line"><strong>Application idea.</strong> Use it to prototype a home-assistant or domestic-robot command router that turns a brief spoken instruction into the correct capability while keeping the full intent catalogue outside Laya’s decision window.</p>
+          </div>
+          <dl class="metric-grid">
+            <div><dt>Total</dt><dd>25,716 annotated utterances</dd></div>
+            <div><dt>Coverage</dt><dd>21 home-assistant domains</dd></div>
+            <div><dt>Text</dt><dd>Very short · ~7 words average</dd></div>
+            <div><dt>License</dt><dd>CC BY 4.0 · README stated</dd></div>
+          </dl>
+          <a class="source-link" href="https://huggingface.co/datasets/Salesforce/dialogstudio" target="_blank" rel="noreferrer">Open DialogStudio bundle</a>
+        </article>
+      </div>
+
+      <div class="pipeline" aria-label="Two-stage evaluation pipeline">
+        <div class="stage"><small>Full label space</small><strong>60 / 64 intents</strong><p>Embed the utterance against every label or label description.</p></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="stage"><small>Stage 1</small><strong>Top-k shortlist</strong><p>Measure recall@k first: if the true label is absent here, stage 2 cannot recover it.</p></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="stage"><small>Stage 2</small><strong>Jev / Laya choice</strong><p>Score the reduced option set and select the final intent.</p></div>
+      </div>
+      <p class="pipeline-caption">Evaluate several values of k rather than treating 20 as a fixed truth; the shortlist is the paper’s central bottleneck.</p>
+    </section>
+
+    <section id="github" aria-labelledby="github-title">
+      <div class="section-head">
+        <h2 id="github-title">The GitHub trail</h2>
+        <p>The exact Laya mechanism is already in the repository. The benchmark links below show where MASSIVE and Banking77 have been used with Jev.</p>
+      </div>
+      <div class="github-strip">
+        <div>
+          <p class="mono">The feature you asked for</p>
+          <h3>Laya → <code>predictShortlist</code> / <code>predict_shortlist</code></h3>
+          <p>The repository documents opt-in many-label shortlisting: embed the state and labels, retain top-k by cosine similarity, then run one decision pass. A dedicated bi-encoder can replace the model encoder.</p>
+        </div>
+        <a href="https://github.com/nandhakishorm/laya/blob/HEAD/laya-ts/README.md" target="_blank" rel="noreferrer">Open Laya shortlist docs ↗</a>
+      </div>
+      <div class="dataset-duo">
+        <article class="dataset-card">
+          <div class="name-row"><h3>IndicJevBench</h3><span class="label-count">benchmark datasheet</span></div>
+          <p class="verdict">Defines MASSIVE as a 60-way Jev choice task and also includes Banking77—the cleanest benchmark trail for the recommended pair.</p>
+          <a class="source-link" href="https://github.com/cmul8/indicjevbench/blob/HEAD/docs/DATASHEET.md" target="_blank" rel="noreferrer">Open benchmark datasheet</a>
+        </article>
+        <article class="dataset-card">
+          <div class="name-row"><h3>better-jev-bench</h3><span class="label-count">research notes</span></div>
+          <p class="verdict">Lists Banking77, CLINC150 and MASSIVE as large-label Jev benchmark datasets using the choice primitive.</p>
+          <a class="source-link" href="https://github.com/asp616848/better-jev-bench/blob/HEAD/research/03-nlp-beyond-nli.md" target="_blank" rel="noreferrer">Open the dataset note</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="options" aria-labelledby="options-title">
+      <div class="section-head">
+        <h2 id="options-title">Ranked options</h2>
+        <p>Filter the shortlist by role. “Ready” means the research found a clean, permissive path—not that every split detail is settled.</p>
+      </div>
+      <div class="filterbar" role="group" aria-label="Filter dataset options">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="pair" aria-pressed="false">Same-domain pairs</button>
+        <button type="button" data-filter="single" aria-pressed="false">Single stress tests</button>
+        <button type="button" data-filter="ready" aria-pressed="false">Permissive / ready</button>
+      </div>
+
+      <div class="options" aria-live="polite">
+        <article class="option" data-kind="pair ready">
+          <div class="rank">01</div>
+          <div>
+            <h3>MASSIVE + HWU64</h3>
+            <p class="domain">Conversational assistant / NLU</p>
+            <p class="verdict">Best overall. Both are short-text, single-label and fine-grained; the pair supports an applied dialogue-systems paper while testing transfer across general-assistant and home-robot settings.</p>
+            <div class="dataset-notes">
+              <p><strong>MASSIVE</strong> asks for one intent from 60 based on a single assistant utterance. Its scenario structure gives the shortlist stage many nearby candidates, making recall@k a meaningful test rather than an easy topic match.</p>
+              <p><strong>HWU64</strong> asks the same kind of question over 64 intents, but with home-domain human–robot language across tasks, commands and chit-chat. That makes it a useful transfer set instead of a near-duplicate of MASSIVE.</p>
+            </div>
+            <div class="application-box"><strong>Application sketch</strong>A two-stage intent router for voice assistants or domestic robots: embeddings retrieve the likely actions, then Jev or Laya chooses the final action from that reduced list.</div>
+            <div class="flags"><span class="flag">60 + 64 labels</span><span class="flag">CC BY 4.0</span><span class="flag">HF hosted</span></div>
+          </div>
+          <div class="facts">
+            <div class="fact-row"><span>Examples</span><b>MASSIVE en-US: 16,521 total across train/dev/test; HWU64: 25,716 total</b></div>
+            <div class="fact-row"><span>Task</span><b>Single-label intent choice</b></div>
+            <div class="fact-row"><span>Novelty</span><b>MASSIVE benchmarked; HWU64 fresh</b></div>
+            <div class="fact-row"><span>Sources</span><b><a href="https://huggingface.co/datasets/AmazonScience/massive" target="_blank" rel="noreferrer">MASSIVE</a> · <a href="https://github.com/salesforce/dialogstudio/blob/HEAD/natural-language-understanding/HWU64/README.md" target="_blank" rel="noreferrer">HWU64 README</a></b></div>
+          </div>
+        </article>
+
+        <article class="option" data-kind="pair ready">
+          <div class="rank">02</div>
+          <div>
+            <h3>LEDGAR + EUR-LEX</h3>
+            <p class="domain">Legal · contracts + legislation</p>
+            <p class="verdict">Best domain-prestige fallback for legal AI. It offers two recognizable legal document settings, but only LEDGAR matches the pipeline natively; EUR-LEX requires a clearly documented conversion because a law can have several labels.</p>
+            <div class="dataset-notes">
+              <p><strong>LEDGAR</strong> contains short contract provisions from US SEC filings, each assigned one of 100 provision types. The text is usually only one to three sentences, so it tests fine-grained legal clause classification without making document length the main difficulty.</p>
+              <p><strong>EUR-LEX</strong> contains full EU legislative documents tagged with 100 EuroVoc concepts. It is long-text and multi-label, so reducing it to a single choice changes the task and weakens a direct comparison with LEDGAR.</p>
+            </div>
+            <div class="application-box"><strong>Application sketch</strong>LEDGAR could drive a contract-review triage tool that routes each clause to its provision category. EUR-LEX could support legislative indexing by suggesting relevant concepts, but the experiment must preserve or explicitly simplify its multi-label nature.</div>
+            <div class="flags"><span class="flag">100 + 100 labels</span><span class="flag">CC BY 4.0</span><span class="flag warn">protocol conversion</span></div>
+          </div>
+          <div class="facts">
+            <div class="fact-row"><span>Examples</span><b>80k LEDGAR · 65k EUR-LEX</b></div>
+            <div class="fact-row"><span>Task</span><b>Single-label vs multi-label</b></div>
+            <div class="fact-row"><span>Text</span><b>Short provisions vs full laws</b></div>
+            <div class="fact-row"><span>Source</span><b><a href="https://huggingface.co/datasets/coastalcph/lex_glue" target="_blank" rel="noreferrer">LexGLUE on Hugging Face</a></b></div>
+          </div>
+        </article>
+
+        <article class="option" data-kind="pair">
+          <div class="rank">03</div>
+          <div>
+            <h3>Reuters-21578 + RCV1</h3>
+            <p class="domain">Newswire topic classification</p>
+            <p class="verdict">A genuine same-domain news pair, but a weak practical choice for this paper. Both datasets assign multiple topics to a document, and RCV1 adds access and hosting friction, so the evaluation would spend substantial effort adapting the task.</p>
+            <div class="dataset-notes">
+              <p><strong>Reuters-21578</strong> is a collection of 1987 Reuters newswire articles with 90 ModApte topics. Its medium-length articles and overlapping topic labels make it a document-tagging benchmark rather than a clean one-intent choice task.</p>
+              <p><strong>RCV1</strong> is the larger 1996–97 Reuters corpus with 103 topics and roughly 804,000 documents. It supplies scale and a later news distribution, but it is also multi-label and requires an RCV1 access agreement through NIST.</p>
+            </div>
+            <div class="application-box"><strong>Application sketch</strong>An automated newsroom tagging system could shortlist likely desks or subject codes for each incoming article and then assign the final topic set. That is useful, but it no longer matches a single-choice Jev/Laya evaluation without task conversion.</div>
+            <div class="flags"><span class="flag">90 + 103 topics</span><span class="flag warn">licensing friction</span><span class="flag warn">multi-label</span></div>
+          </div>
+          <div class="facts">
+            <div class="fact-row"><span>Examples</span><b>12,902 · ~804k documents</b></div>
+            <div class="fact-row"><span>Text</span><b>Medium newswire articles</b></div>
+            <div class="fact-row"><span>Hosting</span><b>Reuters on HF; RCV1 reformat only</b></div>
+            <div class="fact-row"><span>Sources</span><b><a href="https://huggingface.co/datasets/ucirvine/reuters21578" target="_blank" rel="noreferrer">Reuters</a> · <a href="https://github.com/wanxueyao/RCV1-Dataset" target="_blank" rel="noreferrer">RCV1 reformat</a></b></div>
+          </div>
+        </article>
+
+        <article class="option" data-kind="single ready">
+          <div class="rank">S1</div>
+          <div>
+            <h3>WOS-46985</h3>
+            <p class="domain">Academic subject classification</p>
+            <p class="verdict">The strongest standalone stress test. WOS-46985 contains 46,985 academic paper abstracts organized into 134 fine-grained subject classes under seven broader parents. Closely related research areas put real pressure on the embedding shortlist, although no clean 50+ label partner was found.</p>
+            <div class="dataset-notes">
+              <p>Unlike the assistant datasets, this is a short-to-medium document task rather than a spoken-request task. That makes it useful for checking whether the same retrieve-then-decide pipeline transfers beyond intent routing while keeping a single-label target.</p>
+            </div>
+            <div class="application-box"><strong>Application sketch</strong>An academic indexing or submission-routing tool could read an abstract, retrieve the most plausible subject categories, and let the decision model select the final fine-grained field for cataloguing or editorial triage.</div>
+            <div class="flags"><span class="flag">134 labels</span><span class="flag">46,985 abstracts</span><span class="flag warn">split counts open</span></div>
+          </div>
+          <div class="facts">
+            <div class="fact-row"><span>Task</span><b>Single-label, hierarchical</b></div>
+            <div class="fact-row"><span>Text</span><b>Short-to-medium abstracts</b></div>
+            <div class="fact-row"><span>License</span><b>MIT-style grant on HF card</b></div>
+            <div class="fact-row"><span>Source</span><b><a href="https://huggingface.co/datasets/HDLTex/web_of_science" target="_blank" rel="noreferrer">Web of Science on HF</a></b></div>
+          </div>
+        </article>
+
+        <article class="option" data-kind="single">
+          <div class="rank">S2</div>
+          <div>
+            <h3>MTOP</h3>
+            <p class="domain">Task-oriented dialogue NLU</p>
+            <p class="verdict">A compelling third conversational dataset if its release terms work for the paper. MTOP covers about 100,000 task-oriented utterances in six languages, with 117 intent types across 11 domains; the English portion contains 22,288 utterances.</p>
+            <div class="dataset-notes">
+              <p>Its multilingual, task-oriented setup would test whether the shortlist survives both a larger label space and language variation. It remains a secondary option because the research did not verify a permissive release license.</p>
+            </div>
+            <div class="application-box"><strong>Application sketch</strong>A multilingual assistant could use the pipeline to map a user request to one of 117 backend actions: embeddings narrow the catalogue, then Jev or Laya chooses the action that should handle the request.</div>
+            <div class="flags"><span class="flag">117 intents</span><span class="flag">11 domains</span><span class="flag warn">license unverified</span></div>
+          </div>
+          <div class="facts">
+            <div class="fact-row"><span>English</span><b>22,288 utterances</b></div>
+            <div class="fact-row"><span>Overall</span><b>~100k utterances · 6 languages</b></div>
+            <div class="fact-row"><span>Paper</span><b>EACL 2021</b></div>
+            <div class="fact-row"><span>Sources</span><b><a href="https://huggingface.co/datasets/Salesforce/dialogstudio" target="_blank" rel="noreferrer">DialogStudio</a> · <a href="https://arxiv.org/abs/2008.09335" target="_blank" rel="noreferrer">Paper</a></b></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="paper" aria-labelledby="paper-title">
+      <div class="section-head">
+        <h2 id="paper-title">How to frame the paper</h2>
+        <p>The dataset pair strengthens generality. It does not remove the need for classifier baselines.</p>
+      </div>
+      <div class="claim-box">
+        <div>
+          <h3>Don’t claim “not comparable.”</h3>
+          <p>Claim a different operating point: training-free, label-flexible classification under latency and cost constraints. Then compare against neural classifiers as a supervised reference rather than pretending the comparison is invalid.</p>
+        </div>
+        <div class="protocol">
+          <div><strong>1 · Shortlist quality</strong><span>Report recall@k across several k values. This is the hard ceiling on end-to-end accuracy.</span></div>
+          <div><strong>2 · End-to-end quality</strong><span>Measure final intent accuracy and errors by confusion cluster on both datasets.</span></div>
+          <div><strong>3 · Necessary baselines</strong><span>Include embedding top-1, direct all-label Jev/Laya where feasible, shortlisted decision model, and a supervised classifier reference.</span></div>
+          <div><strong>4 · Systems evidence</strong><span>Report latency and cost with the same hardware, batching and label descriptions across both datasets.</span></div>
+          <div><strong>5 · Calibration</strong><span>If confidence is part of the value proposition, measure it rather than treating model scores as calibrated by default.</span></div>
+          <div><strong>6 · Transfer claim</strong><span>Use the same pipeline and protocol unchanged on MASSIVE and HWU64; let distribution shift be the evidence.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="caveats" aria-labelledby="caveats-title">
+      <div class="section-head">
+        <h2 id="caveats-title">Open questions before you lock the benchmark</h2>
+        <p>These are research gaps, not reasons to abandon the recommendation.</p>
+      </div>
+      <div class="caveat-grid">
+        <details open><summary>HWU64 split protocol</summary><p>The native distribution uses 10-fold cross-validation; a commonly used fold is 9,960 train / 1,076 test, but the research did not find one canonical fixed split. Pre-register the fold strategy.</p></details>
+        <details><summary>MTOP license</summary><p>The exact release terms were not verified. Treat it as unavailable for the main paper until the Meta release license is confirmed.</p></details>
+        <details><summary>WOS split counts</summary><p>The Hugging Face upload shows a train split, but exact train/test counts were not verified. Confirm before writing the methods section.</p></details>
+        <details><summary>Domains that did not yield a pair</summary><p>No second 50+ finance-intent dataset was found beyond Banking77; no suitable 50+ medical short-text single-label set was found; e-commerce options were either below 50 labels or extreme-scale multi-label.</p></details>
+      </div>
+    </section>
+
+    <footer class="sources">
+      <h2>Source trail</h2>
+      <ol class="source-list">
+        <li><a href="https://huggingface.co/datasets/AmazonScience/massive" target="_blank" rel="noreferrer">AmazonScience / MASSIVE</a></li>
+        <li><a href="https://github.com/salesforce/dialogstudio/blob/HEAD/natural-language-understanding/HWU64/README.md" target="_blank" rel="noreferrer">HWU64 README</a></li>
+        <li><a href="https://huggingface.co/datasets/Salesforce/dialogstudio" target="_blank" rel="noreferrer">Salesforce / DialogStudio</a></li>
+        <li><a href="https://huggingface.co/datasets/coastalcph/lex_glue" target="_blank" rel="noreferrer">LexGLUE dataset card</a></li>
+        <li><a href="https://huggingface.co/datasets/HDLTex/web_of_science" target="_blank" rel="noreferrer">HDLTex / Web of Science</a></li>
+        <li><a href="https://huggingface.co/datasets/ucirvine/reuters21578" target="_blank" rel="noreferrer">Reuters-21578 dataset card</a></li>
+        <li><a href="https://github.com/nandhakishorm/laya/blob/HEAD/laya-ts/README.md" target="_blank" rel="noreferrer">Laya TypeScript shortlist documentation</a></li>
+        <li><a href="https://github.com/cmul8/indicjevbench/blob/HEAD/docs/DATASHEET.md" target="_blank" rel="noreferrer">IndicJevBench datasheet</a></li>
+        <li><a href="https://github.com/asp616848/better-jev-bench/blob/HEAD/research/03-nlp-beyond-nli.md" target="_blank" rel="noreferrer">better-jev-bench dataset note</a></li>
+        <li><a href="https://github.com/manjunathshiva/opendecider" target="_blank" rel="noreferrer">OpenDecider benchmark repository</a></li>
+        <li><a href="https://arxiv.org/abs/2008.09335" target="_blank" rel="noreferrer">MTOP paper</a></li>
+      </ol>
+      <p class="research-note">Research snapshot dated 08 October 2026. “Verified live” means the dataset page was read in-browser during research; “README stated” and “index” values retain that lighter verification status. Open questions are shown in place rather than silently resolved.</p>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
+      var options = Array.prototype.slice.call(document.querySelectorAll('.option[data-kind]'));
+
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var filter = button.getAttribute('data-filter');
+          buttons.forEach(function (item) {
+            item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+          });
+          options.forEach(function (option) {
+            var kinds = option.getAttribute('data-kind').split(' ');
+            option.hidden = filter !== 'all' && kinds.indexOf(filter) === -1;
+          });
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
