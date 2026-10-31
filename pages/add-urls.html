@@ -338,7 +338,7 @@
       showStatus('Adding redirect…', 'loading');
 
       try {
-        const response = await fetch(window.location.pathname, {
+        const response = await fetch('/api/add_url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ slug, url, secret, commit_msg })
