@@ -203,7 +203,7 @@ class handler(BaseHTTPRequestHandler):
         # Validate PIN passcode (Default: "0110")
         admin_secret = os.environ.get("ADMIN_SECRET", "0110")
         if user_secret != admin_secret:
-            return self._send_json(403, {"error": "Invalid PIN passcode. Please enter the correct PIN (0110)."})
+            return self._send_json(403, {"error": "Invalid PIN passcode. Please enter the correct PIN."})
 
         github_token = (
             os.environ.get("GITHUB_TOKEN")
