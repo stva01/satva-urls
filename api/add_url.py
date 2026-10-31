@@ -19,6 +19,11 @@ class handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self._send_json(200, {"status": "ok"})
 
+    def do_GET(self):
+        # Health check only: proves /api/add_url reaches this handler.
+        # Creating a redirect is POST-only, so GET must not change anything.
+        self._send_json(200, {"status": "ok", "endpoint": "add_url"})
+
     def do_POST(self):
         content_length = int(self.headers.get("Content-Length", 0))
         if content_length == 0:
