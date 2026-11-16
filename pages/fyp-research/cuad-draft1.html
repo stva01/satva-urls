@@ -18,6 +18,14 @@ h3{font-size:17px;margin:20px 0 8px} p{margin:8px 0} .lead{font-size:18px;color:
 section{margin-top:36px} .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:700px){.grid2{grid-template-columns:1fr} table{min-width:0;font-size:12px} th,td{padding:6px;word-break:break-word} .bit{width:26px;height:26px}}
 .callout{background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+.concern-box{background:#fef2f2;border:2px solid #b91c1c;border-radius:12px;padding:18px 20px;margin:18px 0}
+.concern-box h3{color:#991b1b;margin-top:0}
+.concern-box li{margin:8px 0}
+.warn-box{background:#fff7ed;border:1px solid #fdba74;border-radius:10px;padding:14px 16px;margin:14px 0}
+.result-box{background:#ecfdf5;border:1px solid #6ee7b7;border-radius:10px;padding:14px 16px;margin:12px 0}
+.plan-list li{margin:9px 0}
+.plan-steps li{margin:12px 0}
+.plan-steps strong{display:inline}
 .bitstrip{display:flex;flex-wrap:wrap;gap:3px;margin:10px 0}
 .bit{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-size:13px;font-weight:700;border-radius:6px;border:1px solid var(--line)}
 .bit.on{background:#0f766e;color:#fff;border-color:#0f766e} .bit.off{background:#f1efe9;color:#8a918c} .bit.hl{outline:3px solid #f59e0b;outline-offset:1px}
@@ -49,7 +57,7 @@ details.metric summary::-webkit-details-marker{display:none}
 <p class="kicker">Research pilot · CUAD · QA embeddings</p>
 <h1>Can you read an embedding?<br>10 contracts, 41 yes/no questions.</h1>
 <p class="lead">Instead of turning a contract into 768 mystery numbers, we asked an AI 41 plain questions about it — <em>“Does it cap liability? Can it be ended early?”</em> — and used the yes/no answers <strong>as</strong> the embedding. Every number can be read, checked, and argued with. This page shows the whole pilot: the contracts, the questions, the embeddings, a search query and its embedding, and the score against lawyers’ labels.</p>
-<nav class="toc"><a href="#what">1 · What is going on</a><a href="#example">2 · One worked example</a><a href="#retrieval">Retrieval test · Six query vectors</a><a href="#all">3 · All 10 contracts</a><a href="#banks">4 · The question banks</a><a href="#results">5 · Results &amp; what’s next</a><a href="#metrics">6 · Every metric, explained</a></nav>
+<nav class="toc"><a href="#what">1 · What is going on</a><a href="#example">2 · One worked example</a><a href="#retrieval">Retrieval test · Six query vectors &amp; results</a><a href="#all">3 · All 10 contracts</a><a href="#banks">4 · The question banks</a><a href="#results">5 · Results &amp; what’s next</a><a href="#metrics">6 · Every metric, explained</a><a href="#plan">7 · Plan of action</a></nav>
 <div class="hero-stats">
 <div><span>Accuracy</span><strong>0.917</strong><small>410 answers</small></div>
 <div><span>Precision</span><strong>0.866</strong><small>116 TP · 18 FP</small></div>
@@ -111,8 +119,8 @@ details.metric summary::-webkit-details-marker{display:none}
 
 <section id="retrieval"><div class="panel">
 <h2>The retrieval test &mdash; the six query vectors</h2>
-<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:14px 16px;margin:12px 0"><strong>Not run yet.</strong> The retrieval test itself has <strong>not</strong> been run. The six vectors below are the inputs the test <em>will</em> use &mdash; written out in full here so every bit can be checked and corrected <em>before</em> anything runs. No retrieval scores are claimed on this page yet.</div>
-<p>The pilot so far scored the <em>answering</em> step: whether each bit of each contract&rsquo;s embedding matches the lawyers&rsquo; labels. That is not the same as testing whether those embeddings actually <em>retrieve</em> the right contracts. This test is designed to answer that second question: take six lawyer-style requests, turn each one into a query vector, rank the 10 contracts against it, and check the ranking against the lawyers&rsquo; ground truth.</p>
+<div class="result-box"><strong>Run — 16 Nov 2026.</strong> The retrieval test <strong>has now been run</strong>. Method: hand-built query vectors (below), cosine similarity on the 32 yes/no dimensions, ties broken by contract index. Strict relevance = a contract has <em>both</em> categories the query asks for, in the lawyers&rsquo; ground truth. <strong>Headline result: ours — Precision@3 0.78, MRR 0.89. Oracle (lawyers&rsquo; own labels) — P@3 0.83, MRR 0.92. Random — P@3 0.75.</strong> Full per-query results are in the table at the end of this section. The pilot is now end to end: answering <em>and</em> retrieval have both been measured.</div>
+<p>The pilot first scored the <em>answering</em> step: whether each bit of each contract&rsquo;s embedding matches the lawyers&rsquo; labels. That is not the same as testing whether those embeddings actually <em>retrieve</em> the right contracts. This test answers that second question: take six lawyer-style requests, turn each one into a query vector, rank the 10 contracts against it, and check the ranking against the lawyers&rsquo; ground truth.</p>
 <h3>The rule for building a query vector</h3>
 <p><strong>A bit is 1 only if the query explicitly asks for that clause. Silence is 0.</strong> If the words of the query do not ask for a clause, that position stays 0 &mdash; no guessing, no &ldquo;probably relevant&rdquo; bits.</p>
 <p>Only the <strong>32 yes/no dimensions</strong> are used. The other 9 of the 41 categories &mdash; the value and metadata ones (document name, parties, agreement date, effective date, expiration date, renewal term, notice period, governing law, warranty duration) &mdash; are dropped for this test, because they appear in nearly every contract and would swamp the similarity: almost every contract would look alike on those bits, drowning out the clauses the query is actually about.</p>
@@ -193,7 +201,32 @@ details.metric summary::-webkit-details-marker{display:none}
 <p style="margin:8px 0 4px"><strong>Q3 &mdash; License Grant is a 1.</strong> A licence has to be granted before it can be irrevocable. Q3 asks for &ldquo;a licence that can&rsquo;t be taken away,&rdquo; so both the grant (dim 17) and the irrevocable/perpetual quality (dim 22) are part of what is being asked for.</p>
 <p style="margin:4px 0 0"><strong>Q1 &mdash; &ldquo;maximum payout is limited&rdquo; is Cap On Liability, not Liquidated Damages.</strong> A cap limits how much can be owed; liquidated damages are a pre-agreed amount payable on breach. Those are different clauses, so dim 27 (Cap On Liability) is 1 and dim 28 (Liquidated Damages) stays 0.</p>
 </div>
-<p class="small muted" style="margin-top:14px">If any bit above looks wrong, it can be changed before the test runs &mdash; that is the point of writing the vectors out here first.</p>
+<p class="small muted" style="margin-top:14px">These vectors were written out in full here first, so any wrong bit could be spotted and corrected before the test ran — that was the point of showing them.</p>
+
+<h3 style="margin-top:28px">Results — run 16 Nov 2026</h3>
+<p><strong>How to read this table.</strong> For each query, three rankings were made. <strong>Ours (A)</strong> ranks contracts using our predicted embeddings. <strong>Oracle (B)</strong> ranks using embeddings built from the lawyers&rsquo; own labels — the ceiling, what perfect answers would score. <strong>Random</strong> is the floor for Precision@3. Precision@3 (P@3) = how many of the top 3 are strictly relevant (both categories present in the ground truth). MRR = how high the first strictly relevant contract lands; 1.00 means it is at rank 1.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Query</th><th>Ours — P@3 / MRR</th><th>Ours — top 3</th><th>Oracle — P@3 / MRR</th><th>Oracle — top 3</th><th>Random P@3</th></tr></thead>
+<tbody>
+<tr><td><strong>Q1</strong> — walk away easily, payout limited</td><td class="center"><strong>1.00 / 1.00</strong></td><td class="center">3, 8, 9</td><td class="center">1.00 / 1.00</td><td class="center">3, 9, 8</td><td class="center">0.90</td></tr>
+<tr><td><strong>Q2</strong> — non-compete + exclusivity</td><td class="center"><strong>1.00 / 1.00</strong></td><td class="center">5, 8, 9</td><td class="center">1.00 / 1.00</td><td class="center">5, 9, 8</td><td class="center">0.90</td></tr>
+<tr><td><strong>Q3</strong> — licence that can&rsquo;t be taken away</td><td class="center"><strong>0.67 / 1.00</strong></td><td class="center">6, 9, 5</td><td class="center">0.67 / 1.00</td><td class="center">6, 9, 1</td><td class="center">0.60</td></tr>
+<tr><td><strong>Q4</strong> — buyout triggers something + audit</td><td class="center"><strong>1.00 / 1.00</strong></td><td class="center">1, 9, 8</td><td class="center">1.00 / 1.00</td><td class="center">1, 9, 8</td><td class="center">0.90</td></tr>
+<tr style="background:#fef2f2"><td><strong>Q5</strong> — duties after termination + easy way out</td><td class="center"><strong>0.33 / 0.33</strong></td><td class="center">3, 7, 6</td><td class="center">0.67 / 0.50</td><td class="center">3, 6, 9</td><td class="center">0.60</td></tr>
+<tr><td><strong>Q6</strong> — share revenue + own the IP</td><td class="center"><strong>0.67 / 1.00</strong></td><td class="center">8, 6, 9</td><td class="center">0.67 / 1.00</td><td class="center">9, 8, 6</td><td class="center">0.60</td></tr>
+<tr style="background:#f1efe9"><td><strong>Mean</strong></td><td class="center"><strong>0.78 / 0.89</strong></td><td class="center">—</td><td class="center"><strong>0.83 / 0.92</strong></td><td class="center">—</td><td class="center"><strong>0.75</strong></td></tr>
+</tbody></table></div>
+<p class="small muted">Top-3 lists are contract numbers in ranked order. Ties were broken by contract index. Only the 32 yes/no dimensions were used.</p>
+
+<h3>What the results actually say — plain words</h3>
+<ul class="plan-list">
+<li><strong>MRR is the real signal.</strong> Ours is <strong>0.89</strong>, against about <strong>0.45 for random</strong>. The first right answer is at rank 1 on <strong>5 of 6 queries</strong>. That is a real result: the embeddings usually put a correct contract first.</li>
+<li><strong>P@3 barely beats random — and at this scale it proves almost nothing.</strong> Ours is <strong>0.78</strong>, random is <strong>0.75</strong>. Why so close? There are only 10 contracts, and 2–3 of them are strictly relevant to each query. A random top 3 will therefore already contain relevant contracts most of the time, and averages 0.75. At this scale P@3 cannot tell a good system from luck. Do not quote 0.78 vs 0.75 as a win.</li>
+<li><strong>Q5 failed, exactly as designed.</strong> P@3 <strong>0.33</strong>, MRR <strong>0.33</strong>. Q5 was built to stress-test the known Post-Termination Services over-firing, and it did: the model says yes to that clause too often, so the wrong contracts rise to the top. Contract 7, which has <em>neither</em> category in the ground truth, ranked 2nd on a single false-alarm bit. This is not a surprise failure — it is the test catching a known bug.</li>
+<li><strong>Q4 looks perfect, but read it carefully.</strong> Q4 scores 1.00 / 1.00 despite the known miss of contract 8&rsquo;s Change Of Control clause. Contract 8 still ranks 3rd on its Audit Rights bit alone. So a perfect score here does <em>not</em> mean nothing was missed — it means the miss did not cost a top-3 place this time. The same pattern helps Q6.</li>
+<li><strong>Our embeddings are close to the ceiling.</strong> Ours 0.78 / 0.89 vs oracle 0.83 / 0.92. The gap between our answers and perfect answers is small. The bigger problem is the ceiling itself: even perfect labels only reach P@3 0.83, which points at the similarity measure, not just the answers — see the plan of action in section 7.</li>
+</ul>
+<p><strong>Bottom line:</strong> retrieval works on 5 of 6 queries, fails the Post-Termination stress test, and cannot be proved or disproved by P@3 on only 10 contracts. The pilot is complete end to end — nothing in the full project is missing from the pilot — but complete does not mean strong. The weaknesses are named in section 7.</p>
 </div></section>
 
 <section id="all">
@@ -486,6 +519,76 @@ details.metric summary::-webkit-details-marker{display:none}
 <details class="metric"><summary><span class="metric-name">Retrieval MRR — QA-Emb vs BM-25 <span class="metric-hint">— tap to explain</span></span><span class="metric-value">0.45 vs 0.77 · combined 0.80</span></summary><div class="metric-body"><p><strong>What it measures:</strong> document ranking, scored with MRR (mean reciprocal rank) — how high the right document lands in a ranked list. 1.0 means the right document is always first; the lower it lands, the lower the score. This is the fMRI paper’s one test that is the same <em>kind</em> of job as our contract search.</p><p><strong>What the numbers mean:</strong> QA embeddings alone scored 0.45 and lost to BM-25 — plain keyword search — at 0.77. But combining the two scored 0.80, beating either alone. The lesson travels directly to contracts: readable question-based vectors are not a replacement for keyword search, they are a complement to it — each catches matches the other misses.</p></div></details>
 
 <p class="small muted" style="margin-top:18px">Same idea, different yardsticks: our 0.872 F1 grades yes/no answers against lawyers; their 0.116 grades predictions against a noisy brain signal; MRR grades a ranked list. Keep the yardstick attached to the number and every score on this page is honest — detach it, and none of them are comparable.</p>
+</div></section>
+
+<section id="plan"><div class="panel">
+<h2>7 · Plan of action — what works, what doesn&rsquo;t, what to expect</h2>
+<p>This section is written plainly and critically, on purpose. We know this is not a revolutionary paper. Knowing exactly where it is weak is what lets us frame it honestly — and a paper that names its own weaknesses clearly is stronger than one that hides them. Every problem below has a fix next to it. Nothing here is sugarcoated.</p>
+
+<div class="concern-box">
+<h3>Concerns — read these first</h3>
+<p style="margin-top:4px">These are not footnotes. They are the limits on everything claimed above, and they shape the whole plan below.</p>
+<ul style="margin:8px 0 0;padding-left:20px">
+<li><strong>The pilot is 10 contracts — nothing here is a publishable claim yet.</strong> Every number on this page is a pilot-scale hint, not a result you can defend as a finding.</li>
+<li><strong>The Post-Termination Services question is the single biggest known defect.</strong> Fix it before scaling, or the 510-contract run inherits it in all 510.</li>
+<li><strong>Cosine&rsquo;s weakness is a finding about the method, not a bug to quietly patch.</strong> It belongs in the paper, stated openly.</li>
+<li><strong>There is no retrieval baseline yet — no BM25 / E5 comparison.</strong> Without it, the paper cannot claim QA embeddings retrieve better than existing methods.</li>
+<li><strong>Scaling may drop the numbers.</strong> That is expected, not a failure — but it must be reported, not hidden.</li>
+</ul>
+</div>
+
+<h3>What works</h3>
+<ul class="plan-list">
+<li><strong>The answering step.</strong> F1 <strong>0.872</strong>, accuracy <strong>0.917</strong>, and <strong>95.5%</strong> of evidence quotes verbatim. The model can read a contract and answer the 41 questions reliably. This part is solid.</li>
+<li><strong>Retrieval on 5 of 6 queries.</strong> MRR <strong>0.89</strong>, with the first right answer at rank 1 on five queries.</li>
+<li><strong>The embedding idea itself.</strong> Our embeddings track the lawyers&rsquo; own labels closely — ours <strong>0.78</strong> vs oracle <strong>0.83</strong> on P@3. The predicted vectors behave almost like vectors built from perfect answers.</li>
+<li><strong>Interpretability.</strong> Every bit is a readable yes/no answer with a quoted clause behind it. The core claim — you can read the embedding and check it — holds.</li>
+</ul>
+
+<h3>What doesn&rsquo;t work</h3>
+<ul class="plan-list">
+<li><strong>Post-Termination Services over-fires.</strong> <strong>6 of the 18</strong> false alarms. Q5 scored P@3 <strong>0.33</strong>. The question is too broad — the model treats any duty after termination as a hit, where the lawyers&rsquo; definition is narrower.</li>
+<li><strong>Expiration Date is missed.</strong> <strong>6 of the 16</strong> misses. Expiry is often written as a term length (&ldquo;ten years from&hellip;&rdquo;), not as a date, and the model does not recognise it.</li>
+<li><strong>Cosine similarity on sparse binary vectors is a weak ranker.</strong> One matching bit in a near-empty contract — contract 7 — scores <strong>0.707</strong> and outranks a dense contract matching both bits — contract 6, <strong>0.535</strong>. A contract with almost nothing in it should not beat a contract that matches everything asked for. Even perfect labels only reach P@3 <strong>0.83</strong>, so this is a problem with the ranking method, not only with the answers.</li>
+<li><strong>Non-Transferable License is confused with anti-assignment</strong> — <strong>3 false alarms</strong>. The model cannot reliably tell &ldquo;you cannot transfer this licence&rdquo; from &ldquo;you cannot assign this whole contract&rdquo;.</li>
+<li><strong>Affiliate License-Licensor is confused</strong> — <strong>2 false alarms, 0 correct</strong>. The direction of the licence (who grants to whose affiliates) is not being read correctly.</li>
+<li><strong>Long contracts are weakest</strong> — <strong>0.854</strong> accuracy on the two longest. Single-pass reading loses clauses buried deep in a long document.</li>
+<li><strong>P@3 barely beats random at pilot scale</strong> — <strong>0.78 vs 0.75</strong>. The 10-contract corpus is too small, and too dense with relevant documents, for P@3 to prove anything.</li>
+<li><strong>Evidence quotes are not always verbatim</strong> — <strong>6 of 134</strong> are not word-for-word. The model paraphrases sometimes. For a method whose selling point is checkable evidence, that matters.</li>
+</ul>
+
+<h3>What to expect — honest framing</h3>
+<ul class="plan-list">
+<li><strong>This is not a revolutionary paper.</strong> It does not beat the best uninterpretable models — Benara et al. were 7% below the best LLaMA, and we do not beat span-extraction baselines on their own task. Anyone who frames it as a breakthrough will be caught out in review.</li>
+<li><strong>The real contribution is narrower, and it is enough:</strong> interpretability, plus a working asymmetric retrieval design, validated end to end at pilot scale. Not a new state of the art.</li>
+<li><strong>The claim the paper should make is:</strong> readable embeddings that retrieve about as well as their own ground truth, with known failure modes. Not &ldquo;we beat X by Y%&rdquo;.</li>
+<li><strong>Scaling to 510 will likely lower the answering F1.</strong> Longer, more varied contracts mean more edge cases. New error patterns will appear that the pilot&rsquo;s 10 contracts did not contain. Expect it. Do not hide it.</li>
+</ul>
+
+<h3>Next steps — a fix for each problem, in order</h3>
+<ol class="plan-steps">
+<li><strong>Fix the questions BEFORE scaling — do not scale known bugs.</strong>
+<ul style="margin:6px 0 0;padding-left:20px">
+<li><em>Post-Termination Services:</em> tighten the definition. It should require transition / wind-down services — last-buy, support, data return — and explicitly exclude mere payment, repayment or return-of-materials duties.</li>
+<li><em>Expiration Date:</em> add an explicit instruction to treat term-length phrasing (&ldquo;ten years from the Effective Date&rdquo;) as an expiry date.</li>
+<li><em>Non-Transferable License vs Anti-Assignment:</em> add a distinguishing note in both questions — transfer of the licence itself vs assignment of the whole contract.</li>
+<li><em>Affiliate License-Licensor vs Licensee:</em> clarify the direction — who grants to whose affiliates.</li>
+<li><em>Evidence:</em> enforce verbatim copying. No paraphrase.</li>
+</ul></li>
+<li><strong>Fix the similarity BEFORE claiming retrieval works.</strong> Replace or supplement cosine with coverage-first ranking — require all query bits first, then rank by cosine — or weight the bits. The reason is simple: cosine rewards near-empty contracts. Re-run the 6-query test after the change. The oracle ceiling test shows whether the fix worked: the oracle should rise above <strong>0.83</strong>.</li>
+<li><strong>Fix the long-contract problem.</strong> Chunk contracts (about 20k characters) and OR-aggregate the answers per contract — a clause counts as present if any chunk says yes — before building the embedding.</li>
+<li><strong>Scale to all 510.</strong> One call per contract, about 7.4M tokens, 30–60 minutes, a few dollars. Then:
+<ul style="margin:6px 0 0;padding-left:20px">
+<li>Re-run answering with the fixed questions and chunking, and score against CUAD ground truth with the same metrics as the pilot.</li>
+<li>Re-run the retrieval test on a bigger corpus — for example 50 contracts, with more queries — so P@3 can actually discriminate from random.</li>
+<li>Add baselines: compare against BM25 and a standard dense retriever (E5 / Sentence-BERT) on the same queries. Without a baseline, the paper cannot say whether QA embeddings retrieve better or worse than existing methods. Benara&rsquo;s MRR 0.45 vs BM-25 0.77 is the warning: QA embeddings alone can lose to plain keywords.</li>
+<li>Train a small distilled model to mimic the LLM&rsquo;s answers — like Benara&rsquo;s RoBERTa, 88.5% agreement — so the method is cheap and reproducible, not dependent on repeated large-model calls.</li>
+<li>Run the query-side Variant B — LLM-answered query questions — to test the full pipeline end to end, errors on both sides included.</li>
+</ul></li>
+<li><strong>Frame the paper around the weaknesses.</strong> Lead with interpretability and end-to-end validation. State the failure modes and the cosine finding openly. Do not claim to beat span-extraction baselines on their task — it is a different task — and do not claim to beat dense retrieval without the baseline run to back it up.</li>
+</ol>
+
+<div class="warn-box"><strong>The order matters.</strong> Fix the questions first, then the ranking, then the chunking — and only then scale to 510. Scaling first would just produce 510 contracts&rsquo; worth of the same known errors, faster.</div>
 </div></section>
 
 <footer>Built from the pilot run of 16 Nov 2026. All numbers, embeddings, verdicts and evidence quotes on this page come from that run’s scored data file (pilot_data.json); contract excerpts are the opening text stored with each contract in that file. CUAD v1, CC BY 4.0, The Atticus Project.</footer>
