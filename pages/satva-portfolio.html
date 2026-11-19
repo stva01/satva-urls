@@ -459,6 +459,65 @@
     .flow a { text-decoration: underline; text-underline-offset: 3px; }
     @media (prefers-reduced-motion: reduce) { .fd *, .pd-wrap { transition: none !important; } }
 
+    /* ---------- SELECTED WORK: wide section, 4-up, reference-style header ---------- */
+    #experience { border-bottom: 1px solid var(--line); }
+
+    /* break this one section out of the 700px column; the rest of the page stays narrow */
+    #work {
+      --W: min(1120px, calc(100vw - 2 * var(--pad)));
+      width: var(--W);
+      margin-left: calc(50% - var(--W) / 2);
+      border-top: 0;
+      padding-top: 64px;
+    }
+
+    #work .label { margin-bottom: 18px; }
+
+    .work-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+    .work-title {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: clamp(2.8rem, 6.4vw, 4.6rem); line-height: .96; letter-spacing: -.035em;
+    }
+    .gh-link {
+      display: inline-flex; align-items: center; gap: 10px; margin-top: 14px;
+      font-size: 13px; text-decoration: none; color: var(--ink);
+    }
+    .gh-link i {
+      font-style: normal; width: 28px; height: 28px; display: grid; place-items: center;
+      border: 1px solid var(--line); border-radius: 8px; font-size: 14px;
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .gh-link:hover i { background: var(--accent-soft); border-color: var(--accent); }
+
+    .work-sub { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 28px 0 8px; }
+    .work-sub .body-text { max-width: 46ch; font-size: 1.02rem; }
+    .work-nav[hidden] { display: none; }
+
+    /* exactly N folders per page, no peeking sliver, edges line up with everything else */
+    .folders {
+      --n: 4; --fg: 22px;
+      display: grid; grid-auto-flow: column;
+      grid-auto-columns: calc((100% - (var(--n) - 1) * var(--fg)) / var(--n));
+      gap: var(--fg);
+      margin: 0; padding: 44px 0 8px; scroll-padding: 0;
+    }
+    .fd { min-width: 0; flex: none; }
+    @media (max-width: 1000px) { .folders { --n: 3; } }
+    @media (max-width: 720px)  { .folders { --n: 2; --fg: 16px; } }
+    @media (max-width: 480px)  { .folders { --n: 1.6; } }
+
+    /* folder face: smaller frosted panel, bigger title, so it isn't a big empty slab */
+    .fd-front { top: 44cqw; padding: 0 6cqw 5.5cqw;
+      background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(246,245,241,.82)); }
+    .fd-title { font-size: 8.2cqw; max-width: 62cqw; line-height: 1.05; letter-spacing: -.02em; }
+    .fd-key { width: 13cqw; height: 13cqw; }
+    .fd-cap { font-size: 12.5px; margin-top: 14px; }
+
+    /* details pane: a bit more room now that the container is wider */
+    .pd-body { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; }
+    .pd-vis { padding: 32px; }
+    @media (max-width: 560px) { .pd-body { grid-template-columns: 1fr; gap: 20px; } }
+
     /* ---------- CLOSING QUOTE ---------- */
     .closing {
       padding: 56px 0 64px;
@@ -740,14 +799,18 @@
     </section>
 
     <section id="work" class="reveal">
-      <div class="work-head">
-        <div class="label">03 — Selected Work</div>
-        <div class="work-nav">
+      <div class="label">03 — Selected Work</div>
+      <div class="work-top">
+        <h2 class="work-title">Featured<br>Projects</h2>
+        <a class="gh-link" href="https://github.com/stva01" target="_blank" rel="noopener">GitHub <i>&#8599;</i></a>
+      </div>
+      <div class="work-sub">
+        <p class="body-text">Independent and professional projects. Open a folder to explore the details.</p>
+        <div class="work-nav" id="worknav">
           <button type="button" id="fprev" aria-label="Previous project">&larr;</button>
           <button type="button" id="fnext" aria-label="Next project">&rarr;</button>
         </div>
       </div>
-      <p class="body-text" style="margin-bottom:6px">Independent and professional projects. Open a folder for the details.</p>
       <p class="fd-hint">Swipe to browse &rarr;</p>
       <div class="folders" id="folders"></div>
       <div class="pd-wrap" id="pdwrap"><div><div class="pd" id="pdpane" aria-live="polite"></div></div></div>
@@ -988,10 +1051,23 @@
       document.addEventListener("keydown", function (e) { if (e.key === "Escape" && cur > -1) close(); });
 
       // arrow buttons for mouse users; touch users swipe
-      var pv = document.getElementById("fprev"), nx = document.getElementById("fnext");
-      function upd() { pv.disabled = row.scrollLeft < 4; nx.disabled = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4; }
-      function by(d) { row.scrollBy({ left: d * (row.firstElementChild.offsetWidth + 16), behavior: "smooth" }); }
-      if (pv && nx) { pv.addEventListener("click", function () { by(-1); }); nx.addEventListener("click", function () { by(1); }); row.addEventListener("scroll", upd, { passive: true }); window.addEventListener("resize", upd); upd(); }
+      var pv = document.getElementById("fprev"), nx = document.getElementById("fnext"), nav = document.getElementById("worknav");
+      function upd() {
+        nav.hidden = row.scrollWidth <= row.clientWidth + 4;   // all projects fit → no arrows at all
+        pv.disabled = row.scrollLeft < 4;
+        nx.disabled = row.scrollLeft + row.clientWidth >= row.scrollWidth - 4;
+      }
+      function by(d) {
+        var step = row.firstElementChild.getBoundingClientRect().width + (parseFloat(getComputedStyle(row).columnGap) || 22);
+        row.scrollBy({ left: d * step, behavior: "smooth" });
+      }
+      if (pv && nx) {
+        pv.addEventListener("click", function () { by(-1); });
+        nx.addEventListener("click", function () { by(1); });
+        row.addEventListener("scroll", upd, { passive: true });
+        window.addEventListener("resize", upd);
+        upd();
+      }
     })();
   </script>
 
