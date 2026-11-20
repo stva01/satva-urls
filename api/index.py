@@ -123,6 +123,11 @@ class handler(BaseHTTPRequestHandler):
         if slug == "":
             slug = "/"
 
+        # Handle static asset requests (images, etc.)
+        if slug.startswith("assets/"):
+            self._serve_static_asset(slug)
+            return
+
         # Log the hit (Vercel captures stdout in function logs)
         ua = self.headers.get("User-Agent", "-")
         ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -164,6 +169,44 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
         self.wfile.write(body.encode())
+
+    def _serve_static_asset(self, slug):
+        """Serve static assets like images from the pages directory."""
+        # slug will be like "assets/char.webp"
+        pages_dir = os.path.join(os.path.dirname(__file__), "..", "pages")
+        asset_path = os.path.join(pages_dir, slug)
+        
+        # Security check: ensure the path is within pages directory
+        asset_path = os.path.abspath(asset_path)
+        pages_dir = os.path.abspath(pages_dir)
+        if not asset_path.startswith(pages_dir):
+            self._send_404(slug)
+            return
+        
+        try:
+            # Determine content type based on file extension
+            content_types = {
+                '.webp': 'image/webp',
+                '.png': 'image/png',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.gif': 'image/gif',
+                '.svg': 'image/svg+xml',
+                '.ico': 'image/x-icon',
+            }
+            ext = os.path.splitext(asset_path)[1].lower()
+            content_type = content_types.get(ext, 'application/octet-stream')
+            
+            with open(asset_path, "rb") as f:
+                content = f.read()
+            
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Cache-Control", "public, max-age=31536000, immutable")
+            self.end_headers()
+            self.wfile.write(content)
+        except FileNotFoundError:
+            self._send_404(slug)
 
     def _send_json(self, status_code: int, data: dict):
         body = json.dumps(data, indent=2).encode("utf-8")
