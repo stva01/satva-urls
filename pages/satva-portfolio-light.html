@@ -50,6 +50,7 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 80px;
     }
 
     body {
@@ -59,6 +60,13 @@
       font-size: 16px;
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* Smooth scroll with custom easing */
+    @media (prefers-reduced-motion: no-preference) {
+      * {
+        scroll-behavior: smooth;
+      }
     }
 
     ::selection {
@@ -569,7 +577,8 @@
     #cw-rear { z-index: 1; }
     #cw-front { z-index: 3; }
     .char { position: absolute; z-index: 2; left: 50%; bottom: 12px; transform: translateX(-50%); width: auto; max-width: none;
-      height: min(calc(var(--Z) * .8), 365px); user-select: none; -webkit-user-drag: none; pointer-events: none; }
+      height: min(calc(var(--Z) * .8), 365px); user-select: none; -webkit-user-drag: none; pointer-events: none; 
+      opacity: 0; transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1); }
     @media (max-width: 600px) {
       .hero2 { --Z: min(44vh, 360px); min-height: 600px; }
       .char { height: min(calc(var(--Z) * .8), 310px); }
@@ -1146,7 +1155,7 @@ void main(){
     function build() {
       var small = W < 600, nr = small ? 9 : Math.round(W / 46), nf = small ? 4 : Math.max(4, Math.round(W / 125));
       var sr = order(nr), sf = order(nf); walkers = [];
-      for (var i = 0; i < nr; i++) walkers.push({ s: sr[i], dir: 1, ph: (i + rnd(-0.3, 0.3)) / nr, dur: rnd(12, 16), h: Z * rnd(0.32, 0.38), base: Z * 0.7, amp: rnd(2, 7), bp: Math.random(), bf: rnd(1.8, 2.2), front: i % 5 < 2 });
+      for (var i = 0; i < nr; i++) walkers.push({ s: sr[i], dir: 1, ph: (i + rnd(-0.3, 0.3)) / nr, dur: rnd(12, 16), h: Z * rnd(0.32, 0.38), base: Z * 0.7, amp: rnd(2, 7), bp: Math.random(), bf: rnd(1.8, 2.2), front: false });
       for (i = 0; i < nf; i++) walkers.push({ s: sf[i], dir: -1, ph: (i + rnd(-0.35, 0.35)) / nf, dur: rnd(10, 13), h: Z * rnd(0.42, 0.48), base: Z * 1.06, amp: rnd(3, 9), bp: Math.random(), bf: rnd(1.8, 2.2), front: true });
       walkers.sort(function (a, b) { return a.h - b.h; });
     }
@@ -1165,7 +1174,7 @@ void main(){
         (k.front ? fx : rx).drawImage(img, r[0], r[1], r[2], r[3], x - w / 2, k.base - k.h + bob, w, k.h);
       });
     }
-    img.onload = function () { ready = true; size(); draw(cT); };
+    img.onload = function () { ready = true; size(); draw(cT); img.style.opacity = '0'; setTimeout(function() { img.style.transition = 'opacity 0.8s ease-in-out'; img.style.opacity = '1'; }, 50); };
     img.src = A.crowd || '';
     new ResizeObserver(function () { size(); draw(cT); }).observe(zone);
     return { draw: draw };
