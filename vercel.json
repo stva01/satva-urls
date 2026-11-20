@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/pages/assets/(.*)", "destination": "/pages/assets/$1" },
+    { "source": "/pages/(.*)", "destination": "/pages/$1" },
     { "source": "/(.*)", "destination": "/api/index.py?slug=$1" }
   ]
 }
