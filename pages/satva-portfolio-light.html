@@ -908,19 +908,19 @@
       </div>
       <div class="stack-cols">
         <div class="stack-col">
-          <h3>AI &amp; Machine Learning</h3>
-          <p>RAG Pipelines, Embeddings &amp; Semantic Search, Evaluation</p>
-          <ul class="chips"><li class="chip on">LLMs</li><li class="chip">Generative AI</li><li class="chip">RAG</li><li class="chip">Agentic Workflows</li><li class="chip on">LangChain</li><li class="chip">LangGraph</li><li class="chip">Prompt Engineering</li><li class="chip">Sentence Transformers</li><li class="chip on">RAGAS</li></ul>
+          <h3>AI &amp; Agentic Systems</h3>
+          <p>RAG, Multi-Agent Orchestration, Semantic Search</p>
+          <ul class="chips"><li class="chip on">RAG</li><li class="chip on">Agent Orchestration</li><li class="chip">Tool Calling</li><li class="chip on">MCP</li><li class="chip">AutoGen</li><li class="chip">Vector Embeddings</li><li class="chip">Semantic Search</li><li class="chip">OpenAI Whisper</li></ul>
         </div>
         <div class="stack-col">
-          <h3>Languages &amp; Frameworks</h3>
-          <p>REST API Design, LLM Integration, Full-Stack Builds</p>
-          <ul class="chips"><li class="chip on">Python</li><li class="chip">TypeScript</li><li class="chip">FastAPI</li><li class="chip">Django</li><li class="chip on">React</li><li class="chip">Next.js</li><li class="chip">Tailwind CSS</li><li class="chip">RESTful APIs</li></ul>
+          <h3>Backend &amp; Databases</h3>
+          <p>Async Pipelines, REST API Design, Message Queues</p>
+          <ul class="chips"><li class="chip on">Python</li><li class="chip">Go</li><li class="chip">SQL</li><li class="chip on">FastAPI</li><li class="chip">Django</li><li class="chip">Celery</li><li class="chip">Redis Streams</li><li class="chip">RabbitMQ</li><li class="chip">PostgreSQL</li></ul>
         </div>
         <div class="stack-col">
-          <h3>Tools, Databases &amp; Cloud</h3>
-          <p>Predictive Modeling, Data Processing, Deployment</p>
-          <ul class="chips"><li class="chip on">PostgreSQL</li><li class="chip">SQL</li><li class="chip">Qdrant</li><li class="chip">ChromaDB</li><li class="chip on">Pandas</li><li class="chip">NumPy</li><li class="chip">Scikit-learn</li><li class="chip">Docker</li><li class="chip on">Git &amp; GitHub</li><li class="chip">Playwright</li><li class="chip">Cloudflare</li><li class="chip">Vercel</li></ul>
+          <h3>Data Engineering &amp; Cloud</h3>
+          <p>ETL Pipelines, Data Warehousing, Infrastructure as Code</p>
+          <ul class="chips"><li class="chip on">PySpark</li><li class="chip">dbt Core</li><li class="chip on">Snowflake</li><li class="chip">AWS</li><li class="chip">GCP</li><li class="chip">Docker</li><li class="chip">Kubernetes</li><li class="chip on">Terraform</li><li class="chip">GitHub Actions</li></ul>
         </div>
       </div>
     </section>
@@ -1280,12 +1280,13 @@ void main(){
   function tick(now) {
     raf = 0;
     var dt = Math.min(now - prev, 64); prev = now;
-    var run = !reduce && inView && tabOn;
-    if (run) { gT += dt; if (!paused) { cT += dt; crowd.draw(cT); } }
-    if (glyph) glyph.draw(gT);
-    if (run) raf = requestAnimationFrame(tick);
+    var runCrowd = !reduce && inView && tabOn;
+    var runGlyph = !reduce && tabOn;
+    if (runCrowd) { gT += dt; if (!paused) { cT += dt; crowd.draw(cT); } }
+    if (runGlyph && glyph) { gT += dt; glyph.draw(gT); }
+    if (runGlyph || runCrowd) raf = requestAnimationFrame(tick);
   }
-  function kick() { if (!raf && !reduce && inView && tabOn) { prev = performance.now(); raf = requestAnimationFrame(tick); } }
+  function kick() { if (!raf && !reduce && tabOn) { prev = performance.now(); raf = requestAnimationFrame(tick); } }
 
   new IntersectionObserver(function (es) { inView = es[0].isIntersecting; if (inView) kick(); }).observe(hero);
   document.addEventListener('visibilitychange', function () { tabOn = !document.hidden; if (tabOn) kick(); });
