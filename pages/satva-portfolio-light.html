@@ -92,46 +92,6 @@
       padding: 0 var(--pad);
     }
 
-    /* ---------- NAV ---------- */
-    header {
-      position: sticky;
-      top: 0;
-      background: rgba(246, 245, 241, 0.88);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid var(--line);
-      z-index: 100;
-    }
-
-    nav.wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 16px;
-      padding-bottom: 16px;
-    }
-
-    .brand {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 14px;
-      letter-spacing: 0.02em;
-    }
-
-    .navlinks {
-      display: flex;
-      gap: 22px;
-      font-size: 14px;
-    }
-
-    .navlinks a {
-      text-decoration: none;
-      color: var(--muted);
-      transition: color .15s ease;
-    }
-
-    .navlinks a:hover {
-      color: var(--ink);
-    }
-
     /* ---------- HERO ---------- */
     .hero {
       padding: 96px 0 72px;
@@ -634,7 +594,6 @@
       --hwf-warm: #7FBFA8;
       --hwf-mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
       position: relative;
-      z-index: 1;
       width: 100%;
       height: clamp(460px, 44vw, 720px);
       overflow: hidden;
@@ -808,9 +767,6 @@
     }
     @media (max-width: 480px) {
       :root { --pad: 20px; }
-      nav.wrap { padding-top: 12px; padding-bottom: 12px; }
-      .navlinks { gap: 14px; font-size: 13px; }
-      .navlinks a { padding: 6px 2px; }
       .hero { padding: 56px 0 48px; }
       section { padding: 44px 0; }
       .lede { font-size: 1rem; }
@@ -849,27 +805,141 @@
         transition: none;
       }
     }
+
+    /* ================= HERO: bigger + bolder ================= */
+    .hero2 { height: 100vh; height: 100svh; min-height: 640px; }
+    .hero-copy { top: clamp(84px, 13vh, 150px); }
+    .hero-copy h1 {
+      font-size: clamp(3rem, min(14vw, 19.5vh), 12rem);
+      font-weight: 700;
+      line-height: .86;
+      letter-spacing: -.05em;
+      -webkit-text-stroke: .025em var(--ink);
+    }
+    .hero-copy h1 i { font-weight: 400; font-size: .8em; }
+    .hero-meta { max-width: min(1500px, 94vw); margin-top: clamp(10px, 2vh, 24px); }
+    .hero-meta .c { font-size: clamp(1.8rem, 4vw, 3.4rem); font-weight: 700; letter-spacing: -.03em; }
+    .hero-meta .tag { font: 500 clamp(.8rem, 1.6vw, 1.4rem)/1.2 'Space Grotesk', sans-serif; letter-spacing: -.01em; }
+    @media (max-width: 600px) {
+      .hero-copy h1 { font-size: clamp(2.6rem, 15.5vw, 5rem); }
+      .hero-meta .tag { font-size: .8rem; }
+    }
+
+    /* ================= PILL NAVBAR ================= */
+    .pill {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 200;
+      width: min(440px, calc(100vw - 32px));
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 9px 9px 22px;
+      background: #131313; color: #F6F5F1; border-radius: 18px;
+      box-shadow: 0 10px 30px -12px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .pill-brand { font: 700 1.35rem/1 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #fff; text-decoration: none; }
+    .pill-btn {
+      all: unset; box-sizing: border-box; position: relative; width: 48px; height: 42px;
+      display: grid; place-items: center; border-radius: 10px; background: #F6F5F1; cursor: pointer;
+      transition: background .2s ease;
+    }
+    .pill-btn:hover { background: #7FBFA8; }
+    .pill-btn:focus-visible { outline: 2px solid #7FBFA8; outline-offset: 3px; }
+    .dots { display: flex; gap: 4px; transition: transform .5s cubic-bezier(.65,.01,.05,.99), opacity .25s ease; }
+    .dots i { width: 5px; height: 5px; border-radius: 50%; background: #131313; }
+    .x { position: absolute; width: 18px; height: 18px; opacity: 0; transform: rotate(-90deg);
+      transition: transform .5s cubic-bezier(.65,.01,.05,.99), opacity .25s ease; }
+    .x::before, .x::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 2px; margin-top: -1px; background: #131313; border-radius: 2px; }
+    .x::before { transform: rotate(45deg); }
+    .x::after { transform: rotate(-45deg); }
+    .pill-btn[aria-expanded="true"] .dots { opacity: 0; transform: rotate(90deg); }
+    .pill-btn[aria-expanded="true"] .x { opacity: 1; transform: none; }
+
+    /* ================= SIDE MENU ================= */
+    .side { position: fixed; inset: 0; z-index: 150; visibility: hidden; transition: visibility 0s .7s; }
+    .side.open { visibility: visible; transition-delay: 0s; }
+    .side-overlay { position: absolute; inset: 0; background: rgba(20,23,26,.45); opacity: 0; transition: opacity .4s ease; }
+    .side.open .side-overlay { opacity: 1; }
+    .side-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(560px, 100vw); overflow: hidden; color: #F6F5F1; }
+    .side-layer { position: absolute; inset: 0; transform: translateX(101%); transition: transform .45s cubic-bezier(.65,.01,.05,.99); }
+    .side-layer.l1 { background: #7FBFA8; }
+    .side-layer.l2 { background: #2F5D50; }
+    .side-layer.l3 { background: #14171A; }
+    .side.open .side-layer { transform: none; transition-duration: .575s; }
+    .side.open .l2 { transition-delay: .12s; }
+    .side.open .l3 { transition-delay: .24s; }
+    .side-body { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; padding: 104px 44px 32px; }
+    .side-list { list-style: none; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+    .side-list li { overflow: hidden; padding: .02em 0; }
+    .side-list a {
+      display: flex; align-items: baseline; gap: 16px; color: #F6F5F1; text-decoration: none;
+      transform: translateY(140%) rotate(10deg); transform-origin: 0 100%; transition: transform .3s ease;
+    }
+    .side.open .side-list a { transform: none; transition: transform .7s cubic-bezier(.65,.01,.05,.99) calc(.35s + var(--i) * .05s); }
+    .num { font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: .06em; color: #7FBFA8; }
+    .side-foot {
+      display: flex; flex-wrap: wrap; gap: 22px; font: 500 12px 'IBM Plex Mono', monospace; letter-spacing: .14em; text-transform: uppercase;
+      opacity: 0; transition: opacity .2s ease;
+    }
+    .side.open .side-foot { opacity: .85; transition: opacity .5s ease .8s; }
+    .side-foot a { color: inherit; text-decoration: none; }
+    .side-foot a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    /* ================= TEXT-ROLL HOVER ================= */
+    .roll {
+      position: relative; display: block; overflow: hidden; padding-bottom: .06em;
+      font: 700 clamp(2.6rem, 7vw, 4.2rem)/.92 'Space Grotesk', sans-serif; letter-spacing: -.035em; text-transform: uppercase;
+    }
+    .roll span span { display: inline-block; transition: transform .6s ease-in-out; transition-delay: var(--d, 0s); }
+    .roll-b { position: absolute; inset: 0; color: #7FBFA8; }
+    .roll-b span { transform: translateY(100%); }
+    .side-list a:hover .roll-a span, .side-list a:focus-visible .roll-a span { transform: translateY(-100%); }
+    .side-list a:hover .roll-b span, .side-list a:focus-visible .roll-b span { transform: none; }
+    .side-list a:focus-visible { outline: 2px solid #7FBFA8; outline-offset: 4px; }
+
+    @media (max-width: 480px) { .side-body { padding: 96px 28px 28px; } }
+    @media (prefers-reduced-motion: reduce) {
+      .side *, .side, .dots, .x { transition: none !important; }
+      .side-list a { transform: none; }
+    }
   </style>
 </head>
 
 <body>
 
   <!-- Global glyph background -->
+  <!-- Global glyph background -->
   <canvas id="glyph" aria-hidden="true"></canvas>
 
-  <header>
-    <nav class="wrap">
-      <div class="brand">satva shah</div>
-      <div class="navlinks">
-        <a href="#experience">Experience</a>
-        <a href="#work">Work</a>
-        <a href="#beyond">Beyond</a>
+  <div class="pill">
+    <a class="pill-brand" href="#top">Satva</a>
+    <button class="pill-btn" id="menubtn" type="button" aria-expanded="false" aria-controls="sidemenu" aria-label="Open menu">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="x"></span>
+    </button>
+  </div>
+
+  <div class="side" id="sidemenu" aria-hidden="true">
+    <div class="side-overlay" id="sideoverlay"></div>
+    <div class="side-panel">
+      <div class="side-layer l1"></div>
+      <div class="side-layer l2"></div>
+      <div class="side-layer l3"></div>
+      <div class="side-body">
+        <ul class="side-list">
+          <li><a href="#top" style="--i:0"><span class="num">01</span><span class="roll" data-roll>Home</span></a></li>
+          <li><a href="#stack" style="--i:1"><span class="num">02</span><span class="roll" data-roll>Tech Stack</span></a></li>
+          <li><a href="#experience" style="--i:2"><span class="num">03</span><span class="roll" data-roll>Experience</span></a></li>
+          <li><a href="#work" style="--i:3"><span class="num">04</span><span class="roll" data-roll>Work</span></a></li>
+          <li><a href="#beyond" style="--i:4"><span class="num">05</span><span class="roll" data-roll>Beyond</span></a></li>
+        </ul>
+        <div class="side-foot">
+          <a href="mailto:satvalite@gmail.com">Email</a>
+          <a href="https://github.com/stva01" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/satva-shah/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
       </div>
-    </nav>
-  </header>
+    </div>
+  </div>
 
   <section class="hero2" id="top" aria-label="Introduction">
-    <div class="hero-copy go" id="herocopy">
       <h1><span class="hwf-sr">Satva Shah — </span><span class="l1" aria-hidden="true"><i class="ch" style="--i:0;--r:-14deg">&lt;</i><span class="ch" style="--i:1;--r:9deg">S</span><span class="ch" style="--i:2;--r:-8deg">o</span><span class="ch" style="--i:3;--r:12deg">f</span><span class="ch" style="--i:4;--r:-10deg">t</span><span class="ch" style="--i:5;--r:8deg">w</span><span class="ch" style="--i:6;--r:-12deg">a</span><span class="ch" style="--i:7;--r:10deg">r</span><span class="ch" style="--i:8;--r:-11deg">e</span></span><span class="l2" aria-hidden="true"><span class="ch" style="--i:9;--r:9deg">E</span><span class="ch" style="--i:10;--r:-8deg">n</span><span class="ch" style="--i:11;--r:12deg">g</span><span class="ch" style="--i:12;--r:-10deg">i</span><span class="ch" style="--i:13;--r:8deg">n</span><span class="ch" style="--i:14;--r:-12deg">e</span><span class="ch" style="--i:15;--r:10deg">e</span><span class="ch" style="--i:16;--r:-11deg">r</span><i class="ch" style="--i:17;--r:14deg">/&gt;</i></span></h1>
       <div class="hero-meta"><span class="c">&copy;2026</span><span class="tag">{{ /Backend &amp; Systems <span class="cursor"></span>}}</span></div>
     </div>
@@ -908,19 +978,19 @@
       </div>
       <div class="stack-cols">
         <div class="stack-col">
-          <h3>AI &amp; Agentic Systems</h3>
-          <p>RAG, Multi-Agent Orchestration, Semantic Search</p>
-          <ul class="chips"><li class="chip on">RAG</li><li class="chip on">Agent Orchestration</li><li class="chip">Tool Calling</li><li class="chip on">MCP</li><li class="chip">AutoGen</li><li class="chip">Vector Embeddings</li><li class="chip">Semantic Search</li><li class="chip">OpenAI Whisper</li></ul>
+          <h3>AI &amp; Machine Learning</h3>
+          <p>RAG Pipelines, Embeddings &amp; Semantic Search, Evaluation</p>
+          <ul class="chips"><li class="chip on">LLMs</li><li class="chip">Generative AI</li><li class="chip">RAG</li><li class="chip">Agentic Workflows</li><li class="chip on">LangChain</li><li class="chip">LangGraph</li><li class="chip">Prompt Engineering</li><li class="chip">Sentence Transformers</li><li class="chip on">RAGAS</li></ul>
         </div>
         <div class="stack-col">
-          <h3>Backend &amp; Databases</h3>
-          <p>Async Pipelines, REST API Design, Message Queues</p>
-          <ul class="chips"><li class="chip on">Python</li><li class="chip">Go</li><li class="chip">SQL</li><li class="chip on">FastAPI</li><li class="chip">Django</li><li class="chip">Celery</li><li class="chip">Redis Streams</li><li class="chip">RabbitMQ</li><li class="chip">PostgreSQL</li></ul>
+          <h3>Languages &amp; Frameworks</h3>
+          <p>REST API Design, LLM Integration, Full-Stack Builds</p>
+          <ul class="chips"><li class="chip on">Python</li><li class="chip">TypeScript</li><li class="chip">FastAPI</li><li class="chip">Django</li><li class="chip on">React</li><li class="chip">Next.js</li><li class="chip">Tailwind CSS</li><li class="chip">RESTful APIs</li></ul>
         </div>
         <div class="stack-col">
-          <h3>Data Engineering &amp; Cloud</h3>
-          <p>ETL Pipelines, Data Warehousing, Infrastructure as Code</p>
-          <ul class="chips"><li class="chip on">PySpark</li><li class="chip">dbt Core</li><li class="chip on">Snowflake</li><li class="chip">AWS</li><li class="chip">GCP</li><li class="chip">Docker</li><li class="chip">Kubernetes</li><li class="chip on">Terraform</li><li class="chip">GitHub Actions</li></ul>
+          <h3>Tools, Databases &amp; Cloud</h3>
+          <p>Predictive Modeling, Data Processing, Deployment</p>
+          <ul class="chips"><li class="chip on">PostgreSQL</li><li class="chip">SQL</li><li class="chip">Qdrant</li><li class="chip">ChromaDB</li><li class="chip on">Pandas</li><li class="chip">NumPy</li><li class="chip">Scikit-learn</li><li class="chip">Docker</li><li class="chip on">Git &amp; GitHub</li><li class="chip">Playwright</li><li class="chip">Cloudflare</li><li class="chip">Vercel</li></ul>
         </div>
       </div>
     </section>
