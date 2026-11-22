@@ -780,7 +780,44 @@
         transition: none;
       }
     }
-  </style>
+  /* NP:START */
+.np{--s:76px;--o:48px;position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:120;width:var(--s);height:var(--s)}
+.np-vinyl{position:absolute;left:0;top:0;width:var(--s);height:var(--s);z-index:1;opacity:0;pointer-events:none;
+  transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease}
+.np:hover .np-vinyl,.np:focus-within .np-vinyl,.np[data-state="playing"] .np-vinyl{opacity:1;transform:translateX(calc(var(--o) * -1))}
+.np-disc{position:relative;width:100%;height:100%;border-radius:50%;
+  background:
+    conic-gradient(transparent 0 8%,rgba(255,255,255,.16) 14%,transparent 22% 50%,rgba(255,255,255,.16) 62%,transparent 72%),
+    repeating-radial-gradient(circle at center,#1d2023 0 1px,#0a0c0d 1px 3px);
+  box-shadow:0 8px 20px -8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.1);
+  animation:np-spin 1.8s linear infinite;animation-play-state:paused}
+.np[data-state="playing"] .np-disc{animation-play-state:running}
+.np-disc img{position:absolute;inset:36%;width:28%;height:28%;border-radius:50%;object-fit:cover}
+.np-disc::after{content:"";position:absolute;left:50%;top:50%;width:7%;height:7%;margin:-3.5% 0 0 -3.5%;border-radius:50%;background:#131313}
+@keyframes np-spin{to{transform:rotate(360deg)}}
+.np-art{all:unset;box-sizing:border-box;display:block;position:absolute;inset:0;z-index:2;overflow:hidden;border-radius:10px;cursor:pointer;
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1);transition:transform .3s ease}
+.np-art:hover{transform:scale(1.05)}
+.np-art:focus-visible{outline:2px solid #7FBFA8;outline-offset:3px}
+.np-art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.np-art:hover img{transform:scale(1.08)}
+.np-fade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),transparent 60%);opacity:0;transition:opacity .3s ease}
+.np-icon{position:absolute;left:7px;bottom:7px;width:20px;height:20px;display:grid;place-items:center;opacity:0;transition:opacity .3s ease}
+.np-icon svg{position:absolute;width:11px;height:11px;fill:#fff;transition:opacity .2s ease}
+.np-icon .i-pause{opacity:0}
+.np[data-state="playing"] .i-play{opacity:0}
+.np[data-state="playing"] .i-pause{opacity:1}
+.np-art:hover .np-fade,.np-art:hover .np-icon,.np-art:focus-visible .np-fade,.np-art:focus-visible .np-icon{opacity:1}
+.np-tip{position:absolute;right:0;bottom:calc(100% + 10px);padding:7px 12px;border-radius:9px;white-space:nowrap;pointer-events:none;
+  background:rgba(20,23,26,.92);color:#EDEAE0;font:500 12px 'Inter',sans-serif;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 24px -10px rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transform:translateY(4px);transition:opacity .25s ease,transform .25s ease}
+.np-tip b{font-weight:700}
+.np:hover .np-tip,.np:focus-within .np-tip{opacity:1;transform:none}
+@media (hover:none){.np-icon,.np-fade{opacity:1}.np-tip{display:none}}
+@media (max-width:480px){.np{--s:64px;--o:40px;right:14px}}
+@media (prefers-reduced-motion:reduce){.np-disc{animation:none}}
+/* NP:END */
+</style>
 </head>
 
 <body>
@@ -1628,6 +1665,44 @@ void main(){
     })();
   </script>
 
+<!-- NP:START -->
+<div class="np" id="np" data-state="paused">
+  <div class="np-tip" aria-hidden="true"><b>Tame Impala</b> &nbsp;&bull;&nbsp; Loser</div>
+  <div class="np-vinyl" aria-hidden="true"><div class="np-disc"><img id="npcov2" src="https://i.ytimg.com/vi/s3a4OQR-10M/maxresdefault.jpg" alt=""></div></div>
+  <button class="np-art" id="npbtn" type="button" aria-pressed="false" aria-label="Play Loser by Tame Impala">
+    <img id="npcov" src="https://i.ytimg.com/vi/s3a4OQR-10M/maxresdefault.jpg" alt="Loser cover art">
+    <span class="np-fade"></span>
+    <span class="np-icon" aria-hidden="true">
+      <svg class="i-play" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z"/></svg>
+      <svg class="i-pause" viewBox="0 0 12 12"><path d="M2.5 1.5h2.6v9H2.5zM6.9 1.5h2.6v9H6.9z"/></svg>
+    </span>
+  </button>
+  <audio id="npa" src="assets/loser.mp3" preload="none" loop></audio>
+</div>
+<script>
+(function () {
+  var root = document.getElementById('np'), btn = document.getElementById('npbtn'), a = document.getElementById('npa');
+  if (!root || !btn || !a) return;
+  a.volume = 0.7;
+  ['npcov', 'npcov2'].forEach(function (id) {
+    var im = document.getElementById(id);
+    if (im) im.addEventListener('error', function () { im.src = 'https://i.ytimg.com/vi/s3a4OQR-10M/hqdefault.jpg'; }, { once: true });
+  });
+  function set(s) {
+    root.dataset.state = s;
+    btn.setAttribute('aria-pressed', String(s === 'playing'));
+    btn.setAttribute('aria-label', (s === 'playing' ? 'Pause' : 'Play') + ' Loser by Tame Impala');
+  }
+  btn.addEventListener('click', function () {
+    if (a.paused) { var p = a.play(); if (p && p.catch) p.catch(function () { set('paused'); }); }
+    else a.pause();
+  });
+  a.addEventListener('play', function () { set('playing'); });
+  a.addEventListener('pause', function () { set('paused'); });
+  a.addEventListener('error', function () { set('error'); btn.title = 'Audio file not found: assets/loser.mp3'; });
+})();
+</script>
+<!-- NP:END -->
 </body>
 
 </html>

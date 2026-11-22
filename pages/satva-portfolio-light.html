@@ -2,6 +2,11 @@
 <html lang="en">
 
 <head>
+<!-- SR:START -->
+<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.addEventListener('pageshow', function () { if (!location.hash) window.scrollTo(0, 0); });</script>
+<!-- SR:END -->
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Satva Shah — Software Engineer</title>
@@ -31,7 +36,7 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
     rel="stylesheet">
   <style>
-    :root {
+        :root {
       --bg: #F6F5F1;
       --ink: #171717;
       --muted: #6B6B63;
@@ -943,10 +948,57 @@
       .tl-svg path { stroke-dashoffset: 0 !important; transition: none !important; }
       .tl-pop { opacity: 1; transform: none; animation: none !important; }
     }
-  </style>
+  /* NP:START */
+.np{--s:76px;--o:48px;position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:120;width:var(--s);height:var(--s)}
+.np-vinyl{position:absolute;left:0;top:0;width:var(--s);height:var(--s);z-index:1;opacity:0;pointer-events:none;
+  transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .4s ease}
+.np:hover .np-vinyl,.np:focus-within .np-vinyl,.np[data-state="playing"] .np-vinyl{opacity:1;transform:translateX(calc(var(--o) * -1))}
+.np-disc{position:relative;width:100%;height:100%;border-radius:50%;
+  background:
+    conic-gradient(transparent 0 8%,rgba(255,255,255,.16) 14%,transparent 22% 50%,rgba(255,255,255,.16) 62%,transparent 72%),
+    repeating-radial-gradient(circle at center,#1d2023 0 1px,#0a0c0d 1px 3px);
+  box-shadow:0 8px 20px -8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.1);
+  animation:np-spin 1.8s linear infinite;animation-play-state:paused}
+.np[data-state="playing"] .np-disc{animation-play-state:running}
+.np-disc img{position:absolute;inset:36%;width:28%;height:28%;border-radius:50%;object-fit:cover}
+.np-disc::after{content:"";position:absolute;left:50%;top:50%;width:7%;height:7%;margin:-3.5% 0 0 -3.5%;border-radius:50%;background:#131313}
+@keyframes np-spin{to{transform:rotate(360deg)}}
+.np-art{all:unset;box-sizing:border-box;display:block;position:absolute;inset:0;z-index:2;overflow:hidden;border-radius:10px;cursor:pointer;
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1);transition:transform .3s ease}
+.np-art:hover{transform:scale(1.05)}
+.np-art:focus-visible{outline:2px solid #7FBFA8;outline-offset:3px}
+.np-art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.np-art:hover img{transform:scale(1.08)}
+.np-fade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),transparent 60%);opacity:0;transition:opacity .3s ease}
+.np-icon{position:absolute;left:7px;bottom:7px;width:20px;height:20px;display:grid;place-items:center;opacity:0;transition:opacity .3s ease}
+.np-icon svg{position:absolute;width:11px;height:11px;fill:#fff;transition:opacity .2s ease}
+.np-icon .i-pause{opacity:0}
+.np[data-state="playing"] .i-play{opacity:0}
+.np[data-state="playing"] .i-pause{opacity:1}
+.np-art:hover .np-fade,.np-art:hover .np-icon,.np-art:focus-visible .np-fade,.np-art:focus-visible .np-icon{opacity:1}
+.np-tip{position:absolute;right:0;bottom:calc(100% + 10px);padding:7px 12px;border-radius:9px;white-space:nowrap;pointer-events:none;
+  background:rgba(20,23,26,.92);color:#EDEAE0;font:500 12px 'Inter',sans-serif;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 10px 24px -10px rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;transform:translateY(4px);transition:opacity .25s ease,transform .25s ease}
+.np-tip b{font-weight:700}
+.np:hover .np-tip,.np:focus-within .np-tip{opacity:1;transform:none}
+@media (hover:none){.np-icon,.np-fade{opacity:1}.np-tip{display:none}}
+@media (max-width:480px){.np{--s:64px;--o:40px;right:14px}}
+@media (prefers-reduced-motion:reduce){.np-disc{animation:none}}
+/* NP:END */
+/* LENIS:START */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+.sp { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 190; background: var(--accent);
+  transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
+/* LENIS:END */
+</style>
 </head>
 
 <body>
+<div class="sp" id="sp" aria-hidden="true"></div>
 
   <!-- Global glyph background -->
   <canvas id="glyph" aria-hidden="true"></canvas>
@@ -1158,7 +1210,6 @@
       <button type="button" class="hwf-up" id="hwf-up">Back to top &uarr;</button>
     </div>
   </footer>
-
   <script>
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
@@ -1574,7 +1625,7 @@ void main(){
         Array.prototype.forEach.call(pane.querySelectorAll("canvas.fd-art"), mount);
         document.getElementById("pdx").addEventListener("click", close);
         wrap.setAttribute("data-open", "");
-        setTimeout(function () { wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 120);
+        setTimeout(function () { if (window.lenis) window.lenis.scrollTo(wrap, { offset: -Math.round(window.innerHeight * 0.3) }); else wrap.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 120);
       }
       row.addEventListener("click", function (e) { var t = e.target.closest(".fd-front"); if (t) open(+t.closest(".fd").getAttribute("data-i")); });
       document.addEventListener("keydown", function (e) { if (e.key === "Escape" && cur > -1) close(); });
@@ -1629,7 +1680,7 @@ void main(){
       };
 
       document.getElementById("hwf-up").addEventListener("click", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (window.lenis) window.lenis.scrollTo(0); else window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
       // ---- pure helpers, identical to the original component ----
@@ -1924,6 +1975,124 @@ void main(){
   }, { threshold: [0, 0.3] }).observe(tl);
 })();
 </script>
+<!-- NP:START -->
+<div class="np" id="np" data-state="paused">
+  <div class="np-tip" aria-hidden="true"><b>Tame Impala</b> &nbsp;&bull;&nbsp; Loser</div>
+  <div class="np-vinyl" aria-hidden="true"><div class="np-disc"><img id="npcov2" src="https://i.ytimg.com/vi/s3a4OQR-10M/maxresdefault.jpg" alt=""></div></div>
+  <button class="np-art" id="npbtn" type="button" aria-pressed="false" aria-label="Play Loser by Tame Impala">
+    <img id="npcov" src="https://i.ytimg.com/vi/s3a4OQR-10M/maxresdefault.jpg" alt="Loser cover art">
+    <span class="np-fade"></span>
+    <span class="np-icon" aria-hidden="true">
+      <svg class="i-play" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z"/></svg>
+      <svg class="i-pause" viewBox="0 0 12 12"><path d="M2.5 1.5h2.6v9H2.5zM6.9 1.5h2.6v9H6.9z"/></svg>
+    </span>
+  </button>
+  <audio id="npa" src="assets/loser.mp3" preload="none" loop></audio>
+</div>
+<script>
+(function () {
+  var root = document.getElementById('np'), btn = document.getElementById('npbtn'), a = document.getElementById('npa');
+  if (!root || !btn || !a) return;
+  a.volume = 0.7;
+  ['npcov', 'npcov2'].forEach(function (id) {
+    var im = document.getElementById(id);
+    if (im) im.addEventListener('error', function () { im.src = 'https://i.ytimg.com/vi/s3a4OQR-10M/hqdefault.jpg'; }, { once: true });
+  });
+  function set(s) {
+    root.dataset.state = s;
+    btn.setAttribute('aria-pressed', String(s === 'playing'));
+    btn.setAttribute('aria-label', (s === 'playing' ? 'Pause' : 'Play') + ' Loser by Tame Impala');
+  }
+  btn.addEventListener('click', function () {
+    if (a.paused) { var p = a.play(); if (p && p.catch) p.catch(function () { set('paused'); }); }
+    else a.pause();
+  });
+  a.addEventListener('play', function () { set('playing'); });
+  a.addEventListener('pause', function () { set('paused'); });
+  a.addEventListener('error', function () { set('error'); btn.title = 'Audio file not found: assets/loser.mp3'; });
+
+  /* AUTOPLAY */
+  var VOL = 0.7;
+  function fadeIn() { var t0 = performance.now(); (function s(n) { var k = Math.min(1, (n - t0) / 2000); a.volume = VOL * k; if (k < 1) requestAnimationFrame(s); })(t0); }
+  function start() { a.volume = 0; var p = a.play(); if (p && p.then) p.then(fadeIn, function () { a.volume = VOL; arm(); }); }
+  var EVS = ['pointerdown', 'touchend', 'keydown'], armed = false;
+  function arm() { if (armed) return; armed = true; EVS.forEach(function (ev) { document.addEventListener(ev, onGesture, true); }); }
+  function onGesture(e) {
+    if (e.type === 'keydown' && ['Shift', 'Control', 'Alt', 'Meta', 'Tab'].indexOf(e.key) > -1) return;
+    EVS.forEach(function (ev) { document.removeEventListener(ev, onGesture, true); });
+    if (e.target && e.target.closest && e.target.closest('#np')) return;
+    start();
+  }
+  start();
+})();
+</script>
+<!-- NP:END -->
+<!-- LENIS:START -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+(function () {
+  if (typeof Lenis === 'undefined' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* ---- tuning knobs ---- */
+  var SECTIONS = ['#intro', '#stack', '#experience', '#work', '#beyond'];
+  var SPEED = 1.5;      /* wheel speed, 1 = default */
+  var STRENGTH = 0.5;   // 0.6 = scroll at 40% speed at a section centre. 0 turns the slowdown off, 0.8 is very heavy
+  var ZONE = 0.5;       // size of the slow zone, as a fraction of the viewport height
+  var LERP = 0.09;      // smoothness: lower = floatier, higher = snappier
+
+  var lenis = new Lenis({ lerp: LERP, smoothWheel: true, virtualScroll: onWheel });
+  window.lenis = lenis;
+  (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+
+  /* how fast the wheel should move right now (1 = normal) */
+  function factor() {
+    var vh = window.innerHeight, R = vh * ZONE, best = 0;
+    for (var i = 0; i < SECTIONS.length; i++) {
+      var el = document.querySelector(SECTIONS[i]); if (!el) continue;
+      var r = el.getBoundingClientRect();
+      var d = Math.abs(r.top + r.height / 2 - vh / 2);   // distance of section centre from screen centre
+      if (d < R) { var t = d / R, k = 1 - t * t * (3 - 2 * t); if (k > best) best = k; }
+    }
+    return 1 - STRENGTH * best;
+  }
+
+  var tgt = null;
+  function onWheel(d) {
+    var e = d.event;
+    if (!e || e.type !== 'wheel' || e.ctrlKey || lenis.isStopped) return true;
+    if (!d.deltaY || Math.abs(d.deltaX) > Math.abs(d.deltaY)) return true;
+    if (e.target && e.target.closest && e.target.closest('[data-lenis-prevent]')) return true;
+    e.preventDefault();
+    if (tgt === null || !lenis.isScrolling) tgt = lenis.scroll;
+    tgt = Math.max(0, Math.min(lenis.limit, tgt + d.deltaY * SPEED * factor()));
+    lenis.scrollTo(tgt, { lerp: LERP, programmatic: false });
+    return false;
+  }
+
+  /* progress line */
+  var sp = document.getElementById('sp');
+  lenis.on('scroll', function (e) { if (sp) sp.style.transform = 'scaleX(' + (e.limit ? e.scroll / e.limit : 0) + ')'; });
+
+  /* freeze scrolling while the side menu is open */
+  var side = document.getElementById('sidemenu');
+  if (side) new MutationObserver(function () {
+    side.classList.contains('open') ? lenis.stop() : lenis.start();
+  }).observe(side, { attributes: true, attributeFilter: ['class'] });
+
+  /* smooth anchor links */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]'); if (!a) return;
+    var id = a.getAttribute('href');
+    var target = id.length > 1 ? document.querySelector(id) : null;
+    if (!target) return;
+    e.preventDefault(); lenis.start(); tgt = null;
+    if (id === '#top') lenis.scrollTo(0); else lenis.scrollTo(target, { offset: -24 });
+  });
+
+  lenis.scrollTo(0, { immediate: true, force: true });
+})();
+</script>
+<!-- LENIS:END -->
 </body>
 
 </html>

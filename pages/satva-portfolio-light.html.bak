@@ -31,6 +31,43 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
     rel="stylesheet">
   <style>
+    /* ================= MUSIC WIDGET ================= */
+.np {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 120;
+  display: flex; align-items: center; gap: 10px; padding: 5px 5px 5px 6px;
+  background: #131313; color: #F6F5F1; border-radius: 14px;
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06);
+  transition: transform .25s ease;
+}
+.np:hover { transform: translateY(-2px); }
+.np:focus-visible { outline: 2px solid #7FBFA8; outline-offset: 3px; }
+.np-disc {
+  position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%;
+  background:
+    conic-gradient(transparent 0 8%, rgba(255,255,255,.14) 14%, transparent 22% 50%, rgba(255,255,255,.14) 62%, transparent 72%),
+    repeating-radial-gradient(circle at center, #1c1f22 0 1px, #0b0d0e 1px 3px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+  animation: np-spin 1.8s linear infinite; animation-play-state: paused;
+}
+.np-disc img { position: absolute; inset: 10px; width: 18px; height: 18px; border-radius: 50%; object-fit: cover; }
+.np-disc::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: #131313; }
+.np[data-state="playing"] .np-disc { animation-play-state: running; }
+@keyframes np-spin { to { transform: rotate(360deg); } }
+.np-meta { display: flex; flex-direction: column; min-width: 0; max-width: 96px; line-height: 1.2; text-align: left; }
+.np-meta b { font: 600 12.5px 'Space Grotesk', sans-serif; white-space: nowrap; }
+.np-meta i { font: 400 10.5px 'IBM Plex Mono', monospace; font-style: normal; color: rgba(246,245,241,.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np-ctl { position: relative; flex: none; width: 30px; height: 30px; border-radius: 8px; background: #F6F5F1; display: grid; place-items: center; transition: background .2s ease; }
+.np:hover .np-ctl { background: #7FBFA8; }
+.np-ctl svg { position: absolute; width: 12px; height: 12px; fill: #131313; transition: opacity .2s ease; }
+.np-ctl .i-pause { opacity: 0; }
+.np[data-state="playing"] .i-play { opacity: 0; }
+.np[data-state="playing"] .i-pause { opacity: 1; }
+.np[data-state="loading"] .np-ctl { animation: np-pulse 1s ease-in-out infinite; }
+@keyframes np-pulse { 50% { opacity: .45; } }
+.np-yt { position: fixed; right: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; }
+@media (max-width: 480px) { .np-meta { display: none; } .np { right: 12px; } }
+@media (prefers-reduced-motion: reduce) { .np-disc { animation: none; } }
     :root {
       --bg: #F6F5F1;
       --ink: #171717;
@@ -808,43 +845,43 @@
 
     /* ================= HERO: bigger + bolder ================= */
     .hero2 { height: 100vh; height: 100svh; min-height: 640px; }
-    .hero-copy { top: clamp(84px, 13vh, 150px); }
+    .hero-copy { top: clamp(72px, 11vh, 130px); }
     .hero-copy h1 {
-      font-size: clamp(3rem, min(14vw, 19.5vh), 12rem);
+      font-size: clamp(2.6rem, min(11.5vw, 16vh), 10rem);
       font-weight: 700;
       line-height: .86;
       letter-spacing: -.05em;
       -webkit-text-stroke: .025em var(--ink);
     }
-    .hero-copy h1 i { font-weight: 400; font-size: .8em; }
+    .hero-copy h1 i { font-weight: 500; font-size: .8em; -webkit-text-stroke: .03em var(--accent); }
     .hero-meta { max-width: min(1500px, 94vw); margin-top: clamp(10px, 2vh, 24px); }
     .hero-meta .c { font-size: clamp(1.8rem, 4vw, 3.4rem); font-weight: 700; letter-spacing: -.03em; }
     .hero-meta .tag { font: 500 clamp(.8rem, 1.6vw, 1.4rem)/1.2 'Space Grotesk', sans-serif; letter-spacing: -.01em; }
     @media (max-width: 600px) {
-      .hero-copy h1 { font-size: clamp(2.6rem, 15.5vw, 5rem); }
+      .hero-copy h1 { font-size: clamp(2.4rem, 13vw, 4.2rem); }
       .hero-meta .tag { font-size: .8rem; }
     }
 
     /* ================= PILL NAVBAR ================= */
     .pill {
-      position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 200;
-      width: min(440px, calc(100vw - 32px));
+      position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 200;
+      width: min(228px, calc(100vw - 32px));
       display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 9px 9px 22px;
-      background: #131313; color: #F6F5F1; border-radius: 18px;
+      padding: 5px 5px 5px 18px;
+      background: #131313; color: #F6F5F1; border-radius: 14px;
       box-shadow: 0 10px 30px -12px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.06);
     }
-    .pill-brand { font: 700 1.35rem/1 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #fff; text-decoration: none; }
+    .pill-brand { font: 700 1rem/1 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #fff; text-decoration: none; }
     .pill-btn {
-      all: unset; box-sizing: border-box; position: relative; width: 48px; height: 42px;
-      display: grid; place-items: center; border-radius: 10px; background: #F6F5F1; cursor: pointer;
+      all: unset; box-sizing: border-box; position: relative; width: 40px; height: 32px;
+      display: grid; place-items: center; border-radius: 8px; background: #F6F5F1; cursor: pointer;
       transition: background .2s ease;
     }
     .pill-btn:hover { background: #7FBFA8; }
     .pill-btn:focus-visible { outline: 2px solid #7FBFA8; outline-offset: 3px; }
-    .dots { display: flex; gap: 4px; transition: transform .5s cubic-bezier(.65,.01,.05,.99), opacity .25s ease; }
-    .dots i { width: 5px; height: 5px; border-radius: 50%; background: #131313; }
-    .x { position: absolute; width: 18px; height: 18px; opacity: 0; transform: rotate(-90deg);
+    .dots { display: flex; gap: 3px; transition: transform .5s cubic-bezier(.65,.01,.05,.99), opacity .25s ease; }
+    .dots i { width: 4px; height: 4px; border-radius: 50%; background: #131313; }
+    .x { position: absolute; width: 14px; height: 14px; opacity: 0; transform: rotate(-90deg);
       transition: transform .5s cubic-bezier(.65,.01,.05,.99), opacity .25s ease; }
     .x::before, .x::after { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 2px; margin-top: -1px; background: #131313; border-radius: 2px; }
     .x::before { transform: rotate(45deg); }
@@ -898,6 +935,50 @@
     @media (prefers-reduced-motion: reduce) {
       .side *, .side, .dots, .x { transition: none !important; }
       .side-list a { transform: none; }
+    }
+  
+    /* ================= EXPERIENCE TIMELINE ================= */
+    #experience { --W: min(1120px, calc(100vw - 2 * var(--pad))); width: var(--W); margin-left: calc(50% - var(--W) / 2); border-top: 0; padding-top: 64px; }
+    .tl-note { font-size: 13px; color: var(--muted); max-width: 24ch; margin-top: 16px; line-height: 1.45; }
+    .tl { position: relative; margin-top: 48px; }
+    .tl-svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+    .tl-svg path { stroke: var(--ink); stroke-width: 1.4; stroke-dashoffset: var(--L, 0); }
+    .tl.go .tl-svg path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.3s linear; }
+    .tl-node .ring { fill: var(--bg); stroke: var(--ink); stroke-width: 1.4; }
+    .tl-node .dot { fill: var(--ink); }
+    .tl-node.cur .ring { fill: var(--ink); }
+    .tl-node.cur .dot { fill: var(--bg); }
+    .tl-node.up .ring { stroke-dasharray: 3 3; }
+    .tl-pop { opacity: 0; transform: scale(0); transform-box: fill-box; transform-origin: center; }
+    .tl.go .tl-pop { animation: tlpop .4s cubic-bezier(.34, 1.56, .64, 1) var(--d, 0s) both; }
+    @keyframes tlpop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+    .tl-cols { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding-top: 70px; }
+    .tl-item:nth-child(even) { margin-top: 56px; }
+    .tl-item { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; transition-delay: var(--d, 0s); }
+    .tl.go .tl-item { opacity: 1; transform: none; }
+    .tl-tag { display: inline-block; font: 500 11.5px/1 'Space Grotesk', sans-serif; background: #14171A; color: #F6F5F1; border-radius: 4px; padding: 6px 9px; margin-bottom: 10px; }
+    .tl-item.up .tl-tag { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+    .tl-date { font: 400 12.5px 'IBM Plex Mono', monospace; color: var(--muted); margin-bottom: 12px; }
+    .tl-item h3 { font: 600 clamp(1.35rem, 2.1vw, 1.8rem)/1.08 'Space Grotesk', sans-serif; letter-spacing: -.02em; margin-bottom: 14px; }
+    .tl-co { font: 500 1rem/1.3 'Space Grotesk', sans-serif; }
+    .tl-loc { font-size: 12.5px; color: var(--muted); }
+    .tl-desc { font-size: .9rem; line-height: 1.6; color: #4a4a44; margin-top: 12px; }
+    .tl-stack { font: 400 11px/1.5 'IBM Plex Mono', monospace; color: var(--muted); margin-top: 12px; }
+    @media (max-width: 860px) {
+      #experience .work-top { flex-direction: column; gap: 0; }
+      .tl-note { max-width: 34ch; }
+      .tl { margin-top: 36px; }
+      .tl-svg { display: none; }
+      .tl-cols { grid-template-columns: 1fr; gap: 0; padding-top: 0; margin-left: 9px; border-left: 1.5px solid var(--ink); }
+      .tl-item:nth-child(even) { margin-top: 0; }
+      .tl-item { position: relative; padding: 0 0 38px 26px; }
+      .tl-item::before { content: ""; position: absolute; left: -8.5px; top: 2px; width: 15px; height: 15px; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--ink); }
+      .tl-item.cur::before { background: var(--ink); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tl-item { opacity: 1; transform: none; transition: none; }
+      .tl-svg path { stroke-dashoffset: 0 !important; transition: none !important; }
+      .tl-pop { opacity: 1; transform: none; animation: none !important; }
     }
   </style>
 </head>
@@ -997,37 +1078,45 @@
 
     <section id="experience" class="reveal">
       <div class="label">02 — Experience</div>
-
-      <div class="entry">
-        <div class="entry-head">
-          <div class="entry-role">Software Engineering Intern</div>
-          <div class="entry-meta">Security Services Company · Pune</div>
-        </div>
-        <ul>
-          <li><span class="phase-tag">Phase 1</span>Built an asynchronous producer-consumer workflow in Go with RabbitMQ
-            for real-time messaging between services.</li>
-          <li><span class="phase-tag">Phase 2</span>Built an async multi-agent orchestration layer in FastAPI connected
-            to RAG pipelines, including a multilingual AI agent that translated ingredients across regional Indian
-            languages for a food platform.</li>
-          <li><span class="phase-tag">CI/CD</span>Took on CI/CD for an 8-module microservices repo with no prior
-            experience — GitHub Actions, Docker, a matrix build strategy, and dual image tagging (latest + commit SHA)
-            that wasn't asked for.</li>
-        </ul>
+      <div class="work-top">
+        <h2 class="work-title">Experience.</h2>
+        <p class="tl-note">Backend, AI pipelines and DevOps, one internship at a time.</p>
       </div>
-
-      <div class="entry">
-        <div class="entry-head">
-          <div class="entry-role">India AI Impact Summit</div>
-          <div class="entry-meta">Top 200 of 38,000 teams</div>
-        </div>
-        <ul>
-          <li>Built a multi-agent system to detect and intercept digital scams targeting senior citizens with low
-            digital literacy.</li>
-          <li>Independent research surfaced service-based phishing — fake repair calls, fraudulent agents — a pattern
-            underreported in mainstream data but confirmed by NGOs as the most common real-world case.</li>
-          <li>Presented live to a non-technical panel, reframing the pitch around human outcomes rather than
-            architecture.</li>
-        </ul>
+      <div class="tl" id="tl">
+        <svg class="tl-svg" id="tlsvg" aria-hidden="true"><path id="tlpath" fill="none"></path></svg>
+        <ol class="tl-cols">
+          <li class="tl-item cur">
+            <span class="tl-tag">Ongoing</span>
+            <div class="tl-date">Present</div>
+            <h3>Intern</h3>
+            <div class="tl-co">IDfy</div>
+            <p class="tl-desc">Internship at IDfy.</p>
+          </li>
+          <li class="tl-item">
+            <div class="tl-date">March 2026 – July 2026</div>
+            <h3>DevOps<br>Intern</h3>
+            <div class="tl-co">Eagle Industrial Services Pvt. Ltd.</div>
+            <div class="tl-loc">Mumbai</div>
+            <p class="tl-desc">Built a GitHub Actions CI/CD pipeline for an 8-module microservice repo using matrix builds, and provisioned GCP infrastructure and IAM with Terraform.</p>
+            <div class="tl-stack">GitHub Actions / Terraform / GCP / Docker</div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-date">June 2025 – August 2025</div>
+            <h3>Backend Developer Intern</h3>
+            <div class="tl-co">Senkusha Technologies</div>
+            <div class="tl-loc">Mumbai</div>
+            <p class="tl-desc">Architected a Redis Streams, Celery and FastAPI worker pipeline reaching 2.2x concurrency, 1.7x throughput and 150 RPS, plus a multi-agent RAG system translating across 98 regional language variants.</p>
+            <div class="tl-stack">FastAPI / Redis Streams / Celery / RAG</div>
+          </li>
+          <li class="tl-item">
+            <div class="tl-date">May 2023 – July 2023</div>
+            <h3>Junior Developer Intern</h3>
+            <div class="tl-co">Senkusha Technologies</div>
+            <div class="tl-loc">Mumbai</div>
+            <p class="tl-desc">Built a RabbitMQ and Go message queue for push, SMS and email delivery via Twilio and GoMail, and tuned PostgreSQL schemas with indexing and connection pooling.</p>
+            <div class="tl-stack">Go / RabbitMQ / PostgreSQL</div>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -1106,6 +1195,15 @@
       <button type="button" class="hwf-up" id="hwf-up">Back to top &uarr;</button>
     </div>
   </footer>
+  <button class="np" id="np" type="button" data-state="idle" aria-pressed="false" aria-label="Play Loser by Tame Impala">
+  <span class="np-disc" aria-hidden="true"><img src="https://i.ytimg.com/vi/s3a4OQR-10M/hqdefault.jpg" alt=""></span>
+  <span class="np-meta"><b>Loser</b><i>Tame Impala</i></span>
+  <span class="np-ctl" aria-hidden="true">
+    <svg class="i-play" viewBox="0 0 12 12"><path d="M3 1.5v9l7.5-4.5z"/></svg>
+    <svg class="i-pause" viewBox="0 0 12 12"><path d="M2.5 1.5h2.6v9H2.5zM6.9 1.5h2.6v9H6.9z"/></svg>
+  </span>
+</button>
+<div class="np-yt" id="npyt" aria-hidden="true"></div>
 
   <script>
     const io = new IntersectionObserver((entries) => {
@@ -1821,6 +1919,110 @@ void main(){
 })();
 </script>
 
+<script>
+(function () {
+  var tl = document.getElementById('tl');
+  if (!tl) return;
+  var svg = document.getElementById('tlsvg'), path = document.getElementById('tlpath');
+  var items = [].slice.call(tl.querySelectorAll('.tl-item')), NS = 'http://www.w3.org/2000/svg';
+  var DUR = 1.3, HI = 26, LO = 82, H = 110, made = [];
+  var delay = function (i) { return (i / (items.length - 1) * DUR).toFixed(2) + 's'; };
+  items.forEach(function (el, i) { el.style.setProperty('--d', (i / (items.length - 1) * DUR + 0.1).toFixed(2) + 's'); });
+
+  function build() {
+    made.forEach(function (n) { n.remove(); }); made = [];
+    if (getComputedStyle(svg).display === 'none') return;
+    var r = tl.getBoundingClientRect();
+    var pts = items.map(function (el, i) {
+      var b = el.getBoundingClientRect();
+      return { x: b.left - r.left + Math.min(96, b.width * 0.42), y: i % 2 ? LO : HI };
+    });
+    svg.setAttribute('width', r.width); svg.setAttribute('height', H); svg.setAttribute('viewBox', '0 0 ' + r.width + ' ' + H);
+    var d = 'M' + pts[0].x + ' ' + pts[0].y;
+    for (var i = 1; i < pts.length; i++) {
+      var a = pts[i - 1], b = pts[i], m = (a.x + b.x) / 2;
+      d += ' C' + m + ' ' + a.y + ' ' + m + ' ' + b.y + ' ' + b.x + ' ' + b.y;
+    }
+    path.setAttribute('d', d);
+    var L = path.getTotalLength();
+    path.style.strokeDasharray = L; path.style.setProperty('--L', L);
+    pts.forEach(function (p, i) {
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('transform', 'translate(' + p.x + ' ' + p.y + ')');
+      g.setAttribute('class', 'tl-node' + (items[i].classList.contains('cur') ? ' cur' : '') + (items[i].classList.contains('up') ? ' up' : ''));
+      g.style.setProperty('--d', delay(i));
+      g.innerHTML = '<g class="tl-pop"><circle class="ring" r="17"></circle><circle class="dot" r="3.5"></circle></g>';
+      svg.appendChild(g); made.push(g);
+    });
+  }
+
+  var tick = 0;
+  function rebuild() { cancelAnimationFrame(tick); tick = requestAnimationFrame(build); }
+  build();
+  new ResizeObserver(rebuild).observe(tl);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(rebuild);
+
+  // play when it scrolls into view, reset when it leaves so it replays
+  new IntersectionObserver(function (es) {
+    var e = es[0];
+    if (e.intersectionRatio >= 0.3) tl.classList.add('go');
+    else if (e.intersectionRatio === 0) tl.classList.remove('go');
+  }, { threshold: [0, 0.3] }).observe(tl);
+})();
+</script>
+<script>
+(function () {
+  var VIDEO_ID = 's3a4OQR-10M';              // swap this to change the song
+  var root = document.getElementById('np');
+  if (!root) return;
+  var player = null, ready = false, wantPlay = false, loading = false;
+
+  function setState(s) {
+    root.dataset.state = s;
+    root.setAttribute('aria-pressed', String(s === 'playing'));
+    root.setAttribute('aria-label', (s === 'playing' ? 'Pause' : 'Play') + ' Loser by Tame Impala');
+  }
+
+  function loadApi() {
+    if (loading) return; loading = true;
+    window.onYouTubeIframeAPIReady = function () {
+      var vars = { controls: 0, disablekb: 1, fs: 0, playsinline: 1, rel: 0, loop: 1, playlist: VIDEO_ID };
+      if (location.protocol.indexOf('http') === 0) vars.origin = location.origin;
+      player = new YT.Player('npyt', {
+        width: '1', height: '1', videoId: VIDEO_ID, host: 'https://www.youtube-nocookie.com', playerVars: vars,
+        events: {
+          onReady: function () { ready = true; player.setVolume(70); if (wantPlay) player.playVideo(); },
+          onStateChange: function (e) {
+            if (e.data === 1 || e.data === 3) setState('playing');
+            else if (e.data === 2) setState('paused');
+            else if (e.data === 0) player.playVideo();
+          },
+          onAutoplayBlocked: function () { wantPlay = false; setState('paused'); },
+          onError: function () { wantPlay = false; setState('error'); }
+        }
+      });
+    };
+    var s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+  }
+
+  // warm up on hover or focus so the first click starts instantly
+  root.addEventListener('pointerenter', loadApi, { once: true });
+  root.addEventListener('focus', loadApi, { once: true });
+
+  root.addEventListener('click', function () {
+    var st = root.dataset.state;
+    if (st === 'error') { window.open('https://www.youtube.com/watch?v=' + VIDEO_ID, '_blank', 'noopener'); return; }
+    if (!ready) {
+      wantPlay = !wantPlay; setState(wantPlay ? 'loading' : 'idle');
+      if (wantPlay) loadApi();
+      return;
+    }
+    if (st === 'playing') player.pauseVideo(); else player.playVideo();
+  });
+})();
+</script>
 </body>
 
 </html>
