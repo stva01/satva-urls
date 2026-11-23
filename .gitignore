@@ -5,3 +5,7 @@ node_modules/
 .env*
 **/.env*
 .aider*
+
+# backups
+*.bak
+*.bak[0-9]
